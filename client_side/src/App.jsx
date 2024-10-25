@@ -1,16 +1,19 @@
-import { useState } from 'react'
-function App() {
-  const [count, setCount] = useState(0)
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import SignIn from './components/auth/SignIn';
+import PasswordResetEmail from './components/auth/PasswordResetEmail';
 
+function App() {
   return (
-    <>
-      <div className="bg-gray-200 p-4">
-        <h1 className="text-3xl font-bold text-blue-500">Hello, Tailwind CSS!</h1>
-        <p className="text-gray-700 mt-2">This is a simple React application styled with Tailwind CSS.</p>
-      </div>
-      
-    </>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/reset-password" element={<PasswordResetEmail />} />
+      </Routes>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick pauseOnFocusLoss draggable pauseOnHover />
+    </Router>
+  );
 }
 
-export default App
+export default App;

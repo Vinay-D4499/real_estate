@@ -31,3 +31,14 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
 });
 
 module.exports = { sequelize, createDatabaseIfNotExists };
+
+
+
+
+// DB_NAME=real_estate
+// DB_USER=root
+// DB_PASSWORD=root
+// DB_HOST=localhost
+// DB_DIALECT=mysql
+
+// PORT=3000

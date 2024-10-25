@@ -13,6 +13,30 @@ const validateCreateUser = [
     body('role').optional().isIn(['SUPER ADMIN', 'ADMIN', 'CUSTOMER']).withMessage('Invalid role'),
 ];
 
+const validateUpdateUser = [
+    body('name').isString().withMessage('Name must be a string').isLength({ min: 3, max: 50 }).withMessage('Name must be between 3 and 50 characters'),
+
+    body('role').optional().isIn(['SUPER ADMIN', 'ADMIN', 'CUSTOMER']).withMessage('Invalid role'),
+];
+
+const validateEmail = [
+    body('email').isEmail().withMessage('Invalid email format'),
+]
+
+const validatePassword = [
+    body('newPassword')
+        .isLength({ min: 8 })
+        .withMessage('Password must be at least 8 characters long')
+        .matches(/\d/)
+        .withMessage('Password must contain a number')
+        .matches(/[a-zA-Z]/)
+        .withMessage('Password must contain a letter')
+];
+
+
 module.exports = {
     validateCreateUser,
+    validateUpdateUser,
+    validateEmail,
+    validatePassword,
 };
