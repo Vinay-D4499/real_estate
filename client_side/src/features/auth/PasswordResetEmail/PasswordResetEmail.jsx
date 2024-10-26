@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import PasswordResetEmailForm from './PasswordResetEmailForm';
 import { passwordResetEmail } from '../authAPI';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 const PasswordResetEmail = () => {
     const [loading, setLoading] = useState(false);
@@ -14,8 +15,8 @@ const PasswordResetEmail = () => {
             const response = await passwordResetEmail(email);
             toast.success(response.message || "Password reset email sent successfully!");
         } catch (error) {
-            const errorMessage = error.response?.data?.message || "An error occurred while sending the reset email.";
-            toast.error(errorMessage);
+            // console.log(error.statusCode)
+            toast.error(error.message || "An error occurred!");
         } finally {
             setLoading(false);
         }

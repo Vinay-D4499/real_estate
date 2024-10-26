@@ -7,7 +7,7 @@ const validate = require('../validators/userValidator')
 
 authRouter.post('/signIn', validate.validateEmail, authController.signIn);
 
-authRouter.post('/updatePassword', verifyToken, validate.validatePassword, authController.updatePassword);
+authRouter.post('/updatePassword', verifyToken, authController.updatePassword);
 
 authRouter.post('/sendPasswordResetEmail',  validate.validateEmail, authController.sendPasswordResetEmail);
 

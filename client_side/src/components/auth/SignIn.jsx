@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { baseURL } from '../config/baseURL';
 import { Link } from 'react-router-dom';
 import { Rings } from 'react-loader-spinner'; 
+import toast from 'react-hot-toast';
+import { baseURL } from '../../config/baseURL';
 
 const SignIn = () => {
     const [email, setEmail] = useState('');

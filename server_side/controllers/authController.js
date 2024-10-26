@@ -10,7 +10,7 @@ const { baseURL } = require("../config/baseURL");
 const signIn = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return next(new BadRequestError('Validation failed'));
+        return next(new BadRequestError('Invalid Email'));
     }
 
     try {
@@ -30,12 +30,16 @@ const signIn = async (req, res, next) => {
 const updatePassword = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return next(new BadRequestError('New Password must be at least 8 characters'));
+        return next(new BadRequestError('Password must be 8 characters with a number and a letter'));
     }
 
     try {
         const id = req.user;  
         const { oldPassword, newPassword } = req.body;
+        console.log('password ', req.body)
+        console.log("oldpasss ----->", oldPassword)
+        console.log("new pass  ----->", newPassword)
+        console.log("id ====>",id )
 
         const result = await authService.updatePassword(id, oldPassword, newPassword);
         
