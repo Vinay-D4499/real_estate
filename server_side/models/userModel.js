@@ -2,31 +2,56 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/dbConfig");
 
 const Users = sequelize.define('Users', {
-    name : {
-        type : DataTypes.STRING,
-        allowNull : false,
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
-    email : {
-        type : DataTypes.STRING,
-        allowNull : false,
-        unique : true,
+    phone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique:true
     },
-    phone : {
-        type : DataTypes.STRING,
-        allowNull : false
+    location: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
-    password : {
-        type : DataTypes.STRING,
-        allowNull : false
+    profile_picture_url: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    budget_min: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    budget_max: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false
+    },
+    address: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    referred_by: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     role: {
-        type: DataTypes.ENUM('SUPER ADMIN','ADMIN','CUSTOMER'),
+        type: DataTypes.ENUM('ADMIN', 'CUSTOMER'),
         allowNull: false,
-        defaultValue: 'CUSTOMER'  // CUSTOMER WILL BE THE DEFAULT ROLE
-    },    
-},{
-    timestamps : true, //createdAt and updatedAt
-    tableName : 'Users'
-})
+        defaultValue: 'CUSTOMER' // CUSTOMER will be the default role
+    },
+}, {
+    timestamps: true,
+    tableName: 'Users'
+});
 
 module.exports = Users;

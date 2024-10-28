@@ -10,6 +10,7 @@ const axios = require('axios');
 
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
+const propertyRoutes = require('./routes/propertyRoutes');
 const { baseURL } = require('./config/baseURL');
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(express.json()); // Middleware to parse JSON request body
 // Route setup
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/properties', propertyRoutes);
 app.use(errorHandler); // Error handler should be placed after all routes
 
 // Method to create ADMIN automatically when the server starts

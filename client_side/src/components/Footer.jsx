@@ -67,7 +67,7 @@ const Footer = () => {
 
                 {/* Footer Bottom */}
                 <div className="mt-8 border-t border-gray-700 pt-4 text-center text-gray-500">
-                    <p>&copy; 2024 Company Name. All rights reserved.</p>
+                    <p>&copy; 2024 TOT FD PVT LTD. All rights reserved.</p>
                 </div>
             </div>
         </footer>

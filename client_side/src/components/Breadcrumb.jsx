@@ -7,7 +7,7 @@ const Breadcrumb = () => {
   return (
     <nav className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-md md:px-6 md:py-3 text-sm">
       <Link to="/" className="text-blue-600 hover:underline">
-        Home
+        Home 
       </Link>
       {pathnames.map((name, index) => {
         const routeTo = `/${pathnames.slice(0, index + 1).join('/')}`;
@@ -23,7 +23,7 @@ const Breadcrumb = () => {
             to={routeTo}
             className="text-blue-600 hover:underline"
           >
-            {name}
+            {name} 
           </Link>
         );
       })}

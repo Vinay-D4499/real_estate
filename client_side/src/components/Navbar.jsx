@@ -4,6 +4,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import { fetchUserData } from '../features/user/components/userAPI';
 import { toast } from 'react-hot-toast';
 import logo from '../assets/logo/tot.png';
+import DisplayProfilePicture from '../features/user/components/DisplayProfilePicture';
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -66,7 +67,10 @@ const Navbar = () => {
                         <Link to="/about" className="hover:text-indigo-400">About</Link>
                     </li>
                     <li>
-                        <Link to="/contact" className="hover:text-indigo-400">Contact</Link>
+                        <Link to="/add-customer" className="hover:text-indigo-400">Add Customer</Link>
+                    </li>
+                    <li>
+                        <Link to="/view-customers" className="hover:text-indigo-400">Customers</Link>
                     </li>
                 </ul>
 
@@ -75,9 +79,10 @@ const Navbar = () => {
                     {isLoggedIn ? (
                         <>
                             {/* Profile Section */}
-                            <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
+                            {/* <div className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
                                 {user.name?.charAt(0) || "U"}
-                            </div>
+                            </div> */}
+                            <DisplayProfilePicture id={user.id} height="h-8" width="w-8"/>  
                             <span className="text-sm">{user.email || "User"}</span>
 
                             {/* Logout Button */}
@@ -104,6 +109,7 @@ const Navbar = () => {
                     <Link to="/explore" onClick={toggleMenu} className="block hover:text-indigo-400">Explore</Link>
                     <Link to="/about" onClick={toggleMenu} className="block hover:text-indigo-400">About</Link>
                     <Link to="/contact" onClick={toggleMenu} className="block hover:text-indigo-400">Contact</Link>
+                    <Link to="/add-customer" onClick={toggleMenu} className="block hover:text-indigo-400">Add Customer</Link>
 
                     {/* Auth Button for Mobile */}
                     {isLoggedIn ? (

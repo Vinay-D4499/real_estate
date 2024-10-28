@@ -2,6 +2,12 @@ const { sequelize, createDatabaseIfNotExists } = require('../config/dbConfig');
 
 //import the created models here in order to create table in the database 
 const Users = require('./userModel');
+const PropertyTypes = require('./propertyTypesModel');
+const UserPropertyInterests = require('./userPropertyInterestsModel');
+
+//Associations 
+Users.belongsToMany(PropertyTypes, {through : UserPropertyInterests, foreignKey : 'userId'});
+PropertyTypes.belongsToMany(Users, {through : UserPropertyInterests, foreignKey : 'propertyTypeId'});
 
 const initDatabase = async () => {
   try {
@@ -21,5 +27,7 @@ const initDatabase = async () => {
 module.exports = { 
     sequelize, 
     initDatabase,
-    Users  
+    Users,
+    PropertyTypes,
+    UserPropertyInterests,
 };
