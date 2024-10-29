@@ -1,17 +1,20 @@
-// App.js
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import SignIn from './features/auth/SignIn/SignIn';
-import PasswordResetEmail from './features/auth/PasswordResetEmail/PasswordResetEmail';
-import UserProfile from './features/user/components/UserProfile';
+import React, { Suspense, lazy } from 'react';
+
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Breadcrumb from './components/Breadcrumb';
 import ProtectedRoute from './routes/ProtectedRoute';
-import PasswordUpdate from './features/auth/PasswordUpdate/PasswordUpdate';
-import CreateUser from './features/user/components/CreateUser';
-import AllCustomerDetails from './features/user/components/AllCustomerDetails';
-import UserUpdateForm from './features/user/components/UserUpdateForm';
+import LoadingAnimation from './common/LoadingAnimation';
+
+const SignIn = lazy(() => import('./features/auth/SignIn/SignIn'));
+const PasswordResetEmail = lazy(() => import('./features/auth/PasswordResetEmail/PasswordResetEmail'));
+const UserProfile = lazy(() => import('./features/user/components/UserProfile'));
+const PasswordUpdate = lazy(() => import('./features/auth/PasswordUpdate/PasswordUpdate'));
+const AllCustomerDetails = lazy(() => import('./features/user/components/AllCustomerDetails'));
+const UserUpdateForm = lazy(() => import('./features/user/components/UserUpdateForm'));
+const AddCustomerForm = lazy(() => import('./features/user/components/AddCustomerForm'));
 
 function App() {
   return (
@@ -28,7 +31,6 @@ function App() {
 
 function MainContent() {
   const location = useLocation();
-
   const noBreadcrumbRoutes = ['/', '/reset-password'];
 
   return (
@@ -36,50 +38,52 @@ function MainContent() {
       <div className="mx-auto max-w-md flex items-center justify-center">
         {!noBreadcrumbRoutes.includes(location.pathname) && <Breadcrumb />}
       </div>
-      <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/reset-password" element={<PasswordResetEmail />} />
-        <Route
-          path="/user"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <UserProfile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/add-customer"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <CreateUser />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/view-customers"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AllCustomerDetails />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/update-user/:id"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <UserUpdateForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/update-password"
-          element={
-            <ProtectedRoute>
-              <PasswordUpdate />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      <Suspense fallback={<><LoadingAnimation /> </>}>
+        <Routes>
+          <Route path="/" element={<SignIn />} />
+          <Route path="/reset-password" element={<PasswordResetEmail />} />
+          <Route
+            path="/user"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-customer"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AddCustomerForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/view-customers"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AllCustomerDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/update-user/:id"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <UserUpdateForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/update-password"
+            element={
+              <ProtectedRoute>
+                <PasswordUpdate />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
     </main>
   );
 }

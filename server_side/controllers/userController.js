@@ -4,6 +4,8 @@ const path = require('path');
 const userService = require('../services/userService');
 const propertyServices = require('../services/propertyService');
 const { sequelize } = require('../models');
+const { baseURL } = require('../config/baseURL');
+const { default: axios } = require('axios');
 
 // const createUser = async (req, res, next) => {
 //     // const errors = validationResult(req);
@@ -25,15 +27,40 @@ const { sequelize } = require('../models');
 //     }
 // };
 
+// const createUser = async (req, res, next) => {
+//     const transaction = await sequelize.transaction(); 
+//     try {
+//         const id = req.user;
+//         const { name, email, phone, propertyTypeIds, budget_min, budget_max } = req.body;
+//         console.log("====><=====",req.body)
+//         const password = 'User@12345';
+//         const role = req.body.role || 'CUSTOMER';
+
+//         const newUser = await userService.createUser(id, { name, email, phone, password, role, budget_min, budget_max }, { transaction });
+
+//         if (propertyTypeIds && Array.isArray(propertyTypeIds)) {
+//             await propertyServices.assignPropertyTypesToUser(newUser.id, propertyTypeIds, { transaction });
+//         }
+
+//         await transaction.commit(); 
+
+//         return res.status(201).json({ message: 'Customer added successfully', user: newUser });
+//     } catch (error) {
+//         await transaction.rollback(); 
+//         console.log("error ", error);
+//         next(error);
+//     }
+// };
+
 const createUser = async (req, res, next) => {
     const transaction = await sequelize.transaction(); 
     try {
         const id = req.user;
-        const { name, email, phone, propertyTypeIds } = req.body;
+        const { name, email, phone, propertyTypeIds, budget_min, budget_max } = req.body;
         const password = 'User@12345';
         const role = req.body.role || 'CUSTOMER';
 
-        const newUser = await userService.createUser(id, { name, email, phone, password, role }, { transaction });
+        const newUser = await userService.createUser(id, { name, email, phone, password, role, budget_min, budget_max }, { transaction });
 
         if (propertyTypeIds && Array.isArray(propertyTypeIds)) {
             await propertyServices.assignPropertyTypesToUser(newUser.id, propertyTypeIds, { transaction });
@@ -41,13 +68,47 @@ const createUser = async (req, res, next) => {
 
         await transaction.commit(); 
 
+        // Send WhatsApp message
+        await sendTextMessage(phone, phone, email, password);
+        console.log("executed send Text Message");
         return res.status(201).json({ message: 'Customer added successfully', user: newUser });
     } catch (error) {
         await transaction.rollback(); 
-        console.log("error ", error);
+        console.error("Error creating user:", error);
         next(error);
     }
 };
+
+
+async function sendTextMessage(to, phone, email, password) {
+    try {
+        console.log("inside send text message ")
+        console.log("===> : ", to, " ====> ", )
+        const response = await axios({
+            url: 'https://graph.facebook.com/v20.0/487309167791872/messages',
+            method: 'post',
+            headers: {
+                'Authorization': `Bearer ${process.env.WHATSAPP_TOKEN}`,
+                'Content-Type': 'application/json'
+            },
+            data: {
+                messaging_product: 'whatsapp',
+                to: `91${to}`, 
+                type: 'text',
+                text: {
+                    body: `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`
+                    // body:'hello'
+                }
+            }
+        });
+        console.log("response from whatsapp api =====>>>>>>", response);
+        console.log("Message Sent successfully!!");
+        return response.data;
+    } catch (error) {
+        console.error('Error sending text message:', error.response ? error.response.data : error.message);
+        return { error: 'Failed to send message' };
+    }
+}
 
 
 const createUserByRquest = async (req, res, next) => {

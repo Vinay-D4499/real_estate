@@ -81,7 +81,9 @@ const getAllCustomerDetails = async (requesterId) => {
             throw new ForbiddenError('Access Forbidden');
         }
 
-        const customers = await Users.findAll();
+        const customers = await Users.findAll({
+            order: [['id', 'DESC']],
+        });
         
         return customers;
         
@@ -91,7 +93,7 @@ const getAllCustomerDetails = async (requesterId) => {
         }
         throw error;
     }
-}
+};
 
 const findUserByEmail = async (email) => {
     try {

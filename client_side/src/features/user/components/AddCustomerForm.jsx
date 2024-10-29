@@ -1,23 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { createUser } from './userAPI';
-import { getAllPropertyTypes } from './propertyAPI'; 
+import { getAllPropertyTypes } from './propertyAPI';
 import toast from 'react-hot-toast';
 import AllCustomerDetails from './AllCustomerDetails';
 
-const CreateUser = () => {
+const AddCustomerForm = () => {
     const [userData, setUserData] = useState({
         name: '',
-        email: '', // Email is optional
-        phone: ''
+        phone: '',
+        budgetRange: {}  // For storing selected budget range with min and max values
     });
-    const [propertyTypes, setPropertyTypes] = useState([]); // State for property types
-    const [selectedPropertyTypes, setSelectedPropertyTypes] = useState([]); // State for selected property types
+    const [propertyTypes, setPropertyTypes] = useState([]);
+    const [selectedPropertyTypes, setSelectedPropertyTypes] = useState([]);
+
+    // Common budget ranges with numeric values
+    const budgetRanges = [
+        { label: '< ₹1 Lakh', min: 0, max: 100000 },
+        { label: '₹1-5 Lakhs', min: 100000, max: 500000 },
+        { label: '₹5-10 Lakhs', min: 500000, max: 1000000 },
+        { label: '₹10-20 Lakhs', min: 1000000, max: 2000000 },
+        { label: '₹20-50 Lakhs', min: 2000000, max: 5000000 },
+        { label: '₹50 Lakhs - ₹1 Crore', min: 5000000, max: 10000000 },
+        { label: '> ₹1 Crore', min: 10000000, max: Infinity }
+    ];
 
     useEffect(() => {
         const fetchPropertyTypes = async () => {
             try {
                 const response = await getAllPropertyTypes();
-                setPropertyTypes(response.properties); // Set the fetched property types
+                setPropertyTypes(response.properties);
             } catch (error) {
                 console.error('Failed to fetch property types:', error);
                 toast.error('Failed to fetch property types');
@@ -32,25 +43,36 @@ const CreateUser = () => {
         setUserData({ ...userData, [name]: value });
     };
 
+    const handleBudgetRangeChange = (range) => {
+        setUserData({ ...userData, budgetRange: { min: range.min, max: range.max } });
+    };
+
     const handleCheckboxChange = (e) => {
         const { value } = e.target;
         if (selectedPropertyTypes.includes(value)) {
-            setSelectedPropertyTypes(selectedPropertyTypes.filter(id => id !== value)); // Remove from selection
+            setSelectedPropertyTypes(selectedPropertyTypes.filter(id => id !== value));
         } else {
-            setSelectedPropertyTypes([...selectedPropertyTypes, value]); // Add to selection
+            setSelectedPropertyTypes([...selectedPropertyTypes, value]);
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const { min: budget_min, max: budget_max } = userData.budgetRange;
         try {
-            const response = await createUser({ ...userData, propertyTypeIds: selectedPropertyTypes });
+            const response = await createUser({
+                ...userData,
+                propertyTypeIds: selectedPropertyTypes,
+                budget_min,
+                budget_max,
+            });
             toast.success(response.message);
         } catch (error) {
             console.log(error);
             toast.error(error.message || 'Failed to create user');
         }
     };
+    
 
     return (
         <>
@@ -58,6 +80,7 @@ const CreateUser = () => {
                 <form onSubmit={handleSubmit} className="w-full max-w-lg p-8 bg-white rounded-lg shadow-md">
                     <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Add Customer</h2>
 
+                    {/* Customer Name */}
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
                         <input
@@ -70,19 +93,7 @@ const CreateUser = () => {
                         />
                     </div>
 
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                            Email <span className="text-gray-500">(optional)</span>
-                        </label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={userData.email}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-
+                    {/* Phone Number */}
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">Phone</label>
                         <input
@@ -95,11 +106,32 @@ const CreateUser = () => {
                         />
                     </div>
 
+                    {/* Budget Range Selection */}
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Budget Range</label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {budgetRanges.map((range, index) => (
+                                <label key={index} className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="budgetRange"
+                                        value={range.label}
+                                        checked={userData.budgetRange.min === range.min && userData.budgetRange.max === range.max}
+                                        onChange={() => handleBudgetRangeChange(range)}
+                                        className="mr-2"
+                                    />
+                                    {range.label}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Property Types */}
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2">Property Types</label>
-                        <div className="flex flex-col">
+                        <div className="grid grid-cols-2 gap-2">
                             {propertyTypes.map(property => (
-                                <label key={property.id} className="flex items-center mb-2 uppercase">
+                                <label key={property.id} className="flex items-center uppercase">
                                     <input
                                         type="checkbox"
                                         value={property.id}
@@ -126,4 +158,4 @@ const CreateUser = () => {
     );
 };
 
-export default CreateUser;
+export default AddCustomerForm;
