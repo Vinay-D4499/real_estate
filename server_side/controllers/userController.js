@@ -6,6 +6,8 @@ const propertyServices = require('../services/propertyService');
 const { sequelize } = require('../models');
 const { baseURL } = require('../config/baseURL');
 const { default: axios } = require('axios');
+const s3 = require('../config/digitalOceanConfig');
+const { v4: uuidv4 } = require('uuid');
 
 // const createUser = async (req, res, next) => {
 //     // const errors = validationResult(req);
@@ -53,7 +55,7 @@ const { default: axios } = require('axios');
 // };
 
 const createUser = async (req, res, next) => {
-    const transaction = await sequelize.transaction(); 
+    const transaction = await sequelize.transaction();
     try {
         const id = req.user;
         const { name, email, phone, propertyTypeIds, budget_min, budget_max } = req.body;
@@ -66,14 +68,14 @@ const createUser = async (req, res, next) => {
             await propertyServices.assignPropertyTypesToUser(newUser.id, propertyTypeIds, { transaction });
         }
 
-        await transaction.commit(); 
+        await transaction.commit();
 
         // Send WhatsApp message
         await sendTextMessage(phone, phone, email, password);
         console.log("executed send Text Message");
         return res.status(201).json({ message: 'Customer added successfully', user: newUser });
     } catch (error) {
-        await transaction.rollback(); 
+        await transaction.rollback();
         console.error("Error creating user:", error);
         next(error);
     }
@@ -82,8 +84,6 @@ const createUser = async (req, res, next) => {
 
 async function sendTextMessage(to, phone, email, password) {
     try {
-        console.log("inside send text message ")
-        console.log("===> : ", to, " ====> ", )
         const response = await axios({
             url: 'https://graph.facebook.com/v20.0/487309167791872/messages',
             method: 'post',
@@ -93,7 +93,7 @@ async function sendTextMessage(to, phone, email, password) {
             },
             data: {
                 messaging_product: 'whatsapp',
-                to: `91${to}`, 
+                to: `91${to}`,
                 type: 'text',
                 text: {
                     body: `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`
@@ -101,8 +101,6 @@ async function sendTextMessage(to, phone, email, password) {
                 }
             }
         });
-        console.log("response from whatsapp api =====>>>>>>", response);
-        console.log("Message Sent successfully!!");
         return response.data;
     } catch (error) {
         console.error('Error sending text message:', error.response ? error.response.data : error.message);
@@ -136,7 +134,6 @@ const createUserByRquest = async (req, res, next) => {
 const findUserById = async (req, res, next) => {
     // const { id } = req.params;
     const id = req.user;
-    console.log(id);
     try {
         const user = await userService.findUserById(id);
         return res.status(200).json(user);
@@ -157,7 +154,7 @@ const getUserById = async (req, res, next) => {
     }
 };
 
-const getAllCustomerDetails = async(req, res, next) => {
+const getAllCustomerDetails = async (req, res, next) => {
     const id = req.user;
     try {
         const customers = await userService.getAllCustomerDetails(id);
@@ -173,9 +170,8 @@ const updateUserById = async (req, res, next) => {
         return next(new BadRequestError('Validation failed'));
     }
 
-    // Retrieve the user ID from the URL parameters
-    const userIdToUpdate = req.params.id; // ID of the user to update
-    const requesterId = req.user; // ID of the requester (from JWT)
+    const userIdToUpdate = req.params.id; 
+    const requesterId = req.user; 
 
     const {
         name,
@@ -210,39 +206,113 @@ const updateUserById = async (req, res, next) => {
     }
 }
 
+// const updateProfilePicture = async (req, res, next) => {
+//     const userId = req.user; 
+
+//     if (!req.file) {
+//         return res.status(400).json({ message: 'No file uploaded' });
+//     }
+
+//     try {
+//         const user = await userService.findUserById(userId);
+//         if (!user) {
+//             return res.status(404).json({ message: 'User not found' });
+//         }
+
+//         // Check if the user has an existing profile picture
+//         const oldProfilePicture = user.profile_picture_url;
+//         if (oldProfilePicture) {
+//             const oldFilePath = path.join(__dirname, '..', 'uploads', 'profile_pictures', oldProfilePicture);
+
+//             // deletes the old profile picture
+//             if (fs.existsSync(oldFilePath)) {
+//                 fs.unlinkSync(oldFilePath);
+//             }
+//         }
+
+//         user.profile_picture_url = req.file.filename;
+//         await user.save();
+
+//         return res.status(200).json({ message: 'Profile picture updated successfully', user });
+
+//     } catch (error) {
+//         next(error);
+//     }
+// };
+
 const updateProfilePicture = async (req, res, next) => {
-    const userId = req.user; 
-    
+    const { id } = req.params;
+    console.log("updated =============>>>>>>>", id)
     if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
     }
 
     try {
-        const user = await userService.findUserById(userId);
+        const user = await userService.findUserById(id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check if the user has an existing profile picture
-        const oldProfilePicture = user.profile_picture_url;
-        if (oldProfilePicture) {
-            const oldFilePath = path.join(__dirname, '..', 'uploads', 'profile_pictures', oldProfilePicture);
-            
-            // deletes the old profile picture
-            if (fs.existsSync(oldFilePath)) {
-                fs.unlinkSync(oldFilePath);
-            }
+        // to create specific folder structure based on client name
+        const clientName = process.env.CLIENT_NAME || 'default_client';
+        
+        /* The image will be stored inside <CLIENT_NAME>/profile_pictures folder */
+        const fileKey = `${clientName}/profile_pictures/${uuidv4()}_${req.file.originalname}`;
+
+        const params = {
+            Bucket: 'real_estate', // DigitalOcean space name 
+            Key: fileKey,
+            Body: req.file.buffer,
+            ACL: 'public-read',
+            ContentType: req.file.mimetype,
+        };
+
+        const uploadResult = await s3.upload(params).promise();
+
+        // Delete old profile picture if it exists
+        if (user.profile_picture_url) {
+            const oldFileKey = path.basename(user.profile_picture_url);
+
+            await s3.deleteObject({
+                Bucket: 'real_estate', // DigitalOcean Space name
+                Key: `${clientName}/profile_pictures/${oldFileKey}`,
+            }).promise();
         }
 
-        user.profile_picture_url = req.file.filename;
+        user.profile_picture_url = uploadResult.Location;
+        console.log(user.profile_picture_url);
         await user.save();
 
         return res.status(200).json({ message: 'Profile picture updated successfully', user });
-
     } catch (error) {
         next(error);
     }
 };
+
+
+// const getProfilePicture = async (req, res, next) => {
+//     const { id } = req.body;
+
+//     try {
+//         const user = await userService.findUserById(id);
+//         if (!user) {
+//             return res.status(404).json({ message: 'User not found' });
+//         }
+
+//         const profilePicturePath = user.profile_picture_url
+//             ? path.join(__dirname, '..', 'uploads', 'profile_pictures', user.profile_picture_url)
+//             : path.join(__dirname, '..', 'uploads', 'profile_pictures', 'default.png');
+
+//         if (fs.existsSync(profilePicturePath)) {
+//             return res.sendFile(profilePicturePath);
+//         } else {
+//             return res.status(404).json({ message: 'Profile picture not found' });
+//         }
+
+//     } catch (error) {
+//         next(error);
+//     }
+// };
 
 const getProfilePicture = async (req, res, next) => {
     const { id } = req.body;
@@ -253,20 +323,28 @@ const getProfilePicture = async (req, res, next) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        const profilePicturePath = user.profile_picture_url 
-            ? path.join(__dirname, '..', 'uploads', 'profile_pictures', user.profile_picture_url) 
-            : path.join(__dirname, '..', 'uploads', 'profile_pictures', 'default.png'); 
+        // Check if the user has a profile picture URL in the database
+        const profilePictureUrl = user.profile_picture_url || 'https://lara.blr1.cdn.digitaloceanspaces.com/real_estate/profile_pictures/default.png';
 
-        if (fs.existsSync(profilePicturePath)) {
-            return res.sendFile(profilePicturePath);
-        } else {
-            return res.status(404).json({ message: 'Profile picture not found' });
-        }
+        return res.status(200).json({ profilePictureUrl });
 
     } catch (error) {
         next(error);
     }
 };
+
+const deleteUserById = async (req, res, next) => {
+    const { id } = req.params; 
+    console.log(`Attempting to delete user with ID: ${id}`);
+    
+    try {
+        const result = await userService.deactivateUserById(id);
+        return res.status(200).json({ message: 'User deactivated successfully', result });
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 module.exports = {
     createUser,
@@ -276,5 +354,6 @@ module.exports = {
     createUserByRquest,
     updateProfilePicture,
     getProfilePicture,
-    getAllCustomerDetails
+    getAllCustomerDetails,
+    deleteUserById
 };

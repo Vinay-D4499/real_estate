@@ -4,7 +4,10 @@ const userController = require('../controllers/userController');
 const validate = require('../validators/userValidator')
 const verifyToken = require('../middlewares/authMiddleware')
 const router = express.Router();
-const upload = require('../config/uploadConfig');
+// const upload = require('../config/uploadConfig');
+const multer = require('multer');
+const storage = multer.memoryStorage(); // Store files in memory
+const upload = multer({ storage });
 
 router.post('/createUser', verifyToken, userController.createUser);
 
@@ -18,8 +21,10 @@ router.get('/getAllCustomerDetails',verifyToken, userController.getAllCustomerDe
 
 router.put('/updateUserById/:id',verifyToken, validate.validateUpdateUser, userController.updateUserById);
 
-router.put('/updateProfilePicture', verifyToken, upload.single('profile_picture'), userController.updateProfilePicture);
+router.put('/updateProfilePicture/:id', upload.single('profilePicture'), userController.updateProfilePicture);
 
 router.post('/getProfilePicture', userController.getProfilePicture);
+
+router.put('/deleteUserById/:id', userController.deleteUserById);
 
 module.exports = router;

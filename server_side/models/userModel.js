@@ -49,6 +49,11 @@ const Users = sequelize.define('Users', {
         allowNull: false,
         defaultValue: 'CUSTOMER' // CUSTOMER will be the default role
     },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true, // Set default to true
+    },
 }, {
     timestamps: true,
     tableName: 'Users'

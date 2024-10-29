@@ -1,6 +1,7 @@
 import React from 'react';
 import DisplayProfilePicture from './DisplayProfilePicture';
 import { Link } from 'react-router-dom';
+import DeactivateUser from './DeactivateUser';
 
 const CustomerTable = ({ customers }) => {
     return (
@@ -18,34 +19,36 @@ const CustomerTable = ({ customers }) => {
                         <th className="p-2 text-sm font-semibold text-left">Address</th>
                         <th className="p-2 text-sm font-semibold text-left">Referred By</th>
                         <th className="p-2 text-sm font-semibold text-left">Update Details</th>
+                        <th className="p-2 text-sm font-semibold text-left">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {customers.length > 0 ? (
-                        customers.map((customer) => (
-                            <tr key={customer.id} className="border-b hover:bg-gray-100">
-                                <td className="p-2 text-sm">{customer.id}</td>
-                                <td className="p-2 text-sm">
-                                    <DisplayProfilePicture id={customer.id} />
-                                </td>
-                                <td className="p-2 text-sm">{customer.name}</td>
-                                <td className="p-2 text-sm">{customer.phone}</td>
-                                <td className="p-2 text-sm">{customer.location || 'N/A'}</td>
-                                <td className="p-2 text-sm">
-                                    {customer.budget_min && customer.budget_max
-                                        ? `₨ ${customer.budget_min} - ₨ ${customer.budget_max}`
-                                        : 'N/A'}
-                                </td>
-                                <td className="p-2 text-sm">{customer.email || 'N/A'}</td>
-                                <td className="p-2 text-sm">{customer.address || 'N/A'}</td>
-                                <td className="p-2 text-sm">{customer.referred_by || 'N/A'}</td>
-                                <td className="p-2 text-sm">
-                                    <Link to={`/update-user/${customer.id}`} className="hover:text-indigo-400">
-                                        Update Details
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))
+                       customers.map((customer, index) => (
+                        <tr key={customer.id} className="border-b hover:bg-gray-100">
+                            <td className="p-2 text-sm">{index + 1}</td> 
+                            <td className="p-2 text-sm">
+                                <DisplayProfilePicture id={customer.id} isEditable={true} />
+                            </td>
+                            <td className="p-2 text-sm">{customer.name}</td>
+                            <td className="p-2 text-sm">{customer.phone}</td>
+                            <td className="p-2 text-sm">{customer.location || 'N/A'}</td>
+                            <td className="p-2 text-sm">
+                                {customer.budget_min && customer.budget_max
+                                    ? `₨ ${customer.budget_min} - ₨ ${customer.budget_max}`
+                                    : 'N/A'}
+                            </td>
+                            <td className="p-2 text-sm">{customer.email || 'N/A'}</td>
+                            <td className="p-2 text-sm">{customer.address || 'N/A'}</td>
+                            <td className="p-2 text-sm">{customer.referred_by || 'N/A'}</td>
+                            <td className="p-2 text-sm">
+                                <Link to={`/update-user/${customer.id}`} className="hover:text-indigo-400">
+                                    Update Details
+                                </Link>
+                            </td>
+                            <td><DeactivateUser id={customer.id}/></td>
+                        </tr>
+                    ))
                     ) : (
                         <tr>
                             <td colSpan="9" className="p-4 text-center text-sm text-gray-500">

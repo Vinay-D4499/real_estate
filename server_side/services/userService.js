@@ -82,6 +82,9 @@ const getAllCustomerDetails = async (requesterId) => {
         }
 
         const customers = await Users.findAll({
+            where: {
+                isActive: true
+            },
             order: [['id', 'DESC']],
         });
         
@@ -158,6 +161,26 @@ const updateUserProfilePicById = async (userId, userData) => {
     }
 };
 
+const deactivateUserById = async (userId) => {
+    try {
+        const user = await Users.findByPk(userId);
+
+        if (!user) {
+            throw new NotFoundError('User not found');
+        }
+
+        user.isActive = false;
+        await user.save(); 
+
+        return user; 
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        throw error;
+    }
+};
+
 
 module.exports = {
     createUser,
@@ -166,5 +189,6 @@ module.exports = {
     updateUserById,
     createUserByRquest,
     updateUserProfilePicById,
-    getAllCustomerDetails
+    getAllCustomerDetails,
+    deactivateUserById
 };
