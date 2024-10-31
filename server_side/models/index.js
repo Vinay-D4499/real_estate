@@ -4,6 +4,7 @@ const { sequelize, createDatabaseIfNotExists } = require('../config/dbConfig');
 const Users = require('./userModel');
 const PropertyTypes = require('./propertyTypesModel');
 const UserPropertyInterests = require('./userPropertyInterestsModel');
+const groupsModel = require('./groupsModel');
 
 //Associations 
 Users.belongsToMany(PropertyTypes, {through : UserPropertyInterests, foreignKey : 'userId'});
@@ -30,4 +31,5 @@ module.exports = {
     Users,
     PropertyTypes,
     UserPropertyInterests,
+    groupsModel,
 };
