@@ -84,29 +84,32 @@ app.get("/webhook",(req,res)=>{
  app.post("/webhook", (req, res) => {
     const bodyParam = req.body;
 
+    // Check if the request contains a message event
     if (bodyParam.object && bodyParam.entry) {
         const changes = bodyParam.entry[0].changes;
+        
+        // Extract message data if it exists
         if (changes && changes[0].value.messages && changes[0].value.messages[0]) {
             const messageData = changes[0].value;
             const phoneNumberId = messageData.metadata.phone_number_id;
             const from = messageData.messages[0].from; // Sender's WhatsApp number
             const msgBody = messageData.messages[0].text.body; // Text message content
-
+            
             console.log("Phone Number ID:", phoneNumberId);
             console.log("From:", from);
             console.log("Message Body:", msgBody);
 
-            // Send a reply using the sendTextMessage function (defined below)
-            sendTextMessage(from, "Your phone number", "Your email", "Your password")
-                .then(response => console.log("Reply sent:", response))
-                .catch(err => console.error("Error in sendTextMessage:", err));
+            // You can send an automatic reply or process this message further here
 
-            res.sendStatus(200); // Acknowledge the message
+            res.sendStatus(200); // Acknowledge receipt of the message
         } else {
-            res.sendStatus(404);
+            res.sendStatus(404); // Message data not found
         }
+    } else {
+        res.sendStatus(404); // Invalid webhook event
     }
 });
+
 
 async function sendTextMessage(to, phone, email, password) {
     try {
