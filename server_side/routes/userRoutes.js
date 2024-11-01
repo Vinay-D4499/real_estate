@@ -15,7 +15,7 @@ router.post('/createUserByRquest',  userController.createUserByRquest);
 
 router.get('/findUserById',verifyToken, userController.findUserById);
  
-router.get('/getUserById/:id',verifyToken, userController.getUserById); 
+router.get('/getUserById/:id',verifyToken, userController.getUserById);  
 
 router.get('/getAllCustomerDetails',verifyToken, userController.getAllCustomerDetails); 
 
