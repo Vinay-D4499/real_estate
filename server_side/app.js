@@ -18,7 +18,7 @@ const PORT = process.env.PORT;
 
 // Middleware setup
 app.use(cors({
-    origin: `${baseURL}`, // Client side URL
+    origin: `https://estate.laragrooming.com`, // Client side URL
 }));
 app.use(express.json()); // Middleware to parse JSON request body
 
