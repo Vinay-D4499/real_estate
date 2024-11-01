@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware setup
 app.use(cors({
-    origin: 'http://localhost:5173', // Client side URL
+    origin: `${baseURL}`, // Client side URL
 }));
 app.use(express.json()); // Middleware to parse JSON request body
 
@@ -31,7 +31,8 @@ app.use(errorHandler); // Error handler should be placed after all routes
 // Method to create ADMIN automatically when the server starts
 const createAdminUserOnStart = async () => {
     try {
-        const response = await axios.post(`http://localhost:3000/api/user/createUserByRquest`); 
+        // const response = await axios.post(`http://localhost:3000/api/user/createUserByRequest`); 
+        const response = await axios.post(`https://api.estate.laragrooming.com/api/user/createUserByRequest`); 
         console.log(response.data.message);
     } catch (error) {
         console.log(error)
@@ -55,6 +56,6 @@ initDatabase().then(async () => {
 });
 
 // For testing 
-// app.get('/', (req, res) => {
-//     res.send('Hello World!');
-// });
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});

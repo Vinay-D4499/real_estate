@@ -11,20 +11,30 @@ const upload = multer({ storage });
 
 router.post('/createUser', verifyToken, userController.createUser);
 
-router.post('/createUserByRquest',  userController.createUserByRquest);
+router.post('/createUserByRequest',  userController.createUserByRequest);
 
 router.get('/findUserById',verifyToken, userController.findUserById);
+
+router.get('/getAdminDetails',verifyToken, userController.getAdminDetails);
  
 router.get('/getUserById/:id',verifyToken, userController.getUserById); 
 
 router.get('/getAllCustomerDetails',verifyToken, userController.getAllCustomerDetails); 
 
+router.get('/getInactiveCustomerDetails',verifyToken, userController.getInactiveCustomerDetails); 
+
 router.put('/updateUserById/:id',verifyToken, validate.validateUpdateUser, userController.updateUserById);
 
 router.put('/updateProfilePicture/:id', upload.single('profilePicture'), userController.updateProfilePicture);
 
+router.put('/updateAdminProfilePicture/:id', upload.single('profilePicture'), userController.updateAdminProfilePicture);
+
 router.post('/getProfilePicture', userController.getProfilePicture);
 
+router.post('/getAdminProfilePicture', userController.getAdminProfilePicture);
+
 router.put('/deleteUserById/:id', userController.deleteUserById);
+
+router.put('/activateUserById/:id', userController.activateUserById);
 
 module.exports = router;

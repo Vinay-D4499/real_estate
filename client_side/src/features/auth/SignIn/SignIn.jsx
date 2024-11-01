@@ -18,12 +18,26 @@ const SignIn = () => {
             localStorage.setItem("role", response.user.role);
 
             toast.success(response.message || "Sign in successful!");
-            setTimeout(() => {
-                // navigate('/user')
-                window.location.href = '/user'
-            }, 2000);
+            const role = response.user.role
+            if(role === 'ADMIN'){
+                setTimeout(() => {
+                    // navigate('/user')
+                    window.location.href = '/user'
+                }, 2000);
+            }else if(role === 'CUSTOMER'){
+                setTimeout(() => {
+                    // navigate('/user')
+                    window.location.href = '/user'
+                }, 2000);
+            }else{
+                setTimeout(() => {
+                    // navigate('/user')
+                    window.location.href = '/'
+                }, 2000);
+            }
+           
         } catch (error) {
-
+            console.log(error)
             toast.error(error.message || "An error occurred!");
         } finally {
             setLoading(false);

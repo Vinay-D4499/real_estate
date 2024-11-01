@@ -1,0 +1,47 @@
+This Webhooks setup enables you to receive notifications whenever specific events occur within your app. For instance, in this scenario, the webhook notifies you whenever a user changes their photo. Here’s an explanation of the steps involved and how it works based on the provided information:
+
+### 1. **Create an Endpoint to Receive Webhook Notifications**
+   - **Endpoint Setup**: You need to create an HTTPS endpoint that can handle secure HTTPS requests. Your server needs to have a valid SSL or TLS certificate, as self-signed certificates are not supported.
+   - **Requests to Handle**: The endpoint must handle two types of HTTPS requests:
+     - **Verification Requests**: Used to verify that your endpoint is functional and secure.
+     - **Event Notifications**: Used to notify you about actual changes (such as a user updating their photo).
+
+### 2. **Handling Verification Requests**
+   - **Purpose**: When setting up Webhooks in your App Dashboard, a `GET` request (verification request) is sent to your endpoint to confirm that the endpoint is set up correctly.
+   - **Verification Request Parameters**:
+     - `hub.mode`: This will always be set to `subscribe`.
+     - `hub.challenge`: This is a random integer that your server must return as-is.
+     - `hub.verify_token`: A string you set in your App Dashboard; your server should check if it matches.
+   - **Response to Verification**: 
+     - When your endpoint receives a verification request, verify that `hub.verify_token` matches your setup in the App Dashboard.
+     - Respond with the value of `hub.challenge` to confirm successful setup.
+
+### 3. **Receiving Event Notifications**
+   - **Event Subscriptions**: Configure your Webhook to listen to changes in specific fields, like the `photos` field on the `user` object. When a user updates their photo, an event notification is sent to your endpoint.
+   - **Example Notification**:
+     - A `POST` request is sent to your endpoint, containing JSON data about the change (e.g., a photo update).
+     - The notification contains several important fields:
+       - `object`: The object type, such as `user`.
+       - `entry`: An array with details about the change, including fields like `time`, `changes`, and `object_id`.
+   - **Validating the Payload**:
+     - The notification payload includes an `X-Hub-Signature-256` header with a SHA256 signature. 
+     - To verify authenticity, generate a SHA256 hash using the payload and your app’s App Secret, then compare it to the signature in the header. If they match, the payload is genuine.
+
+### 4. **Configuring Webhooks in the App Dashboard**
+   - **Dashboard Setup**: In the App Dashboard, go to **Products > Webhooks** and select the object you want to subscribe to, like `User`.
+   - **Callback URL**: Enter the URL of your endpoint and set a `Verify Token`. This token will be used to validate verification requests.
+   - **Field Subscriptions**: Select specific fields you want to monitor, such as `photos` for user photo updates.
+   - **Include Values Setting**: Decide whether the payload should include only the field names or the new values as well when changes are detected.
+
+### 5. **Mutual TLS (mTLS) for Enhanced Security**
+   - **mTLS Setup**: mTLS adds an additional layer of security by ensuring both parties in the network connection verify each other’s identity.
+   - **Configuration**: 
+     - Obtain root and intermediate certificates from DigiCert.
+     - Configure your server (e.g., Nginx or AWS ALB) to validate the certificates and ensure the sender’s identity.
+     - Use the `client.webhooks.fbclientcerts.com` common name (CN) to verify the source of requests.
+
+### 6. **Handling Frequency and Retry of Event Notifications**
+   - **Batching**: Event notifications can be batched with up to 1000 updates in one request, but this isn’t guaranteed.
+   - **Retries**: If your server fails to acknowledge an event, retries will happen with decreasing frequency over 36 hours. To avoid duplicate processing, ensure deduplication is handled on your end.
+
+This setup ensures that you reliably receive notifications about specific changes (like user photo updates) with security measures in place, enabling you to take action based on these real-time events.

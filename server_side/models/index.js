@@ -2,6 +2,7 @@ const { sequelize, createDatabaseIfNotExists } = require('../config/dbConfig');
 
 //import the created models here in order to create table in the database 
 const Users = require('./userModel');
+const Admin = require('./adminModel');
 const PropertyTypes = require('./propertyTypesModel');
 const UserPropertyInterests = require('./userPropertyInterestsModel');
 
@@ -28,6 +29,7 @@ module.exports = {
     sequelize, 
     initDatabase,
     Users,
+    Admin,
     PropertyTypes,
     UserPropertyInterests,
 };

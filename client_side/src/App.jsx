@@ -11,8 +11,10 @@ import LoadingAnimation from './common/LoadingAnimation';
 const SignIn = lazy(() => import('./features/auth/SignIn/SignIn'));
 const PasswordResetEmail = lazy(() => import('./features/auth/PasswordResetEmail/PasswordResetEmail'));
 const UserProfile = lazy(() => import('./features/user/components/UserProfile'));
+const AdminProfile = lazy(() => import('./features/admin/AdminProfile'));
 const PasswordUpdate = lazy(() => import('./features/auth/PasswordUpdate/PasswordUpdate'));
 const AllCustomerDetails = lazy(() => import('./features/user/components/AllCustomerDetails'));
+const InactiveCustomers = lazy(() => import('./features/user/components/InactiveCustomers'));
 const UserUpdateForm = lazy(() => import('./features/user/components/UserUpdateForm'));
 const AddCustomerForm = lazy(() => import('./features/user/components/AddCustomerForm'));
 
@@ -43,10 +45,10 @@ function MainContent() {
           <Route path="/" element={<SignIn />} />
           <Route path="/reset-password" element={<PasswordResetEmail />} />
           <Route
-            path="/user"
+            path="/admin-profile"
             element={
               <ProtectedRoute requiredRole="ADMIN">
-                <UserProfile />
+                <AdminProfile />
               </ProtectedRoute>
             }
           />
@@ -75,10 +77,26 @@ function MainContent() {
             }
           />
           <Route
+            path="/inactive-customers"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <InactiveCustomers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/update-password"
             element={
               <ProtectedRoute>
                 <PasswordUpdate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
               </ProtectedRoute>
             }
           />

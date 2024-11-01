@@ -14,6 +14,7 @@ export const signInUser = async (email, password) => {
         const response = await axios.post(`${baseURL}/api/auth/signin`, { email, password });
         return response.data;
     } catch (error) {
+        // console.log(error)
         throw new Error(error.response?.data?.message || "An error occurred!");
     }
 };

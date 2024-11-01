@@ -7,6 +7,26 @@ const jwt_token = process.env.JWT_SECRET;
 const nodemailer = require('nodemailer');
 const { baseURL } = require("../config/baseURL");
 
+// const signIn = async (req, res, next) => {
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//         return next(new BadRequestError('Invalid Email'));
+//     }
+
+//     try {
+//         const { email, password } = req.body;
+//         const { token, user } = await authService.signIn(email, password);
+        
+//         return res.status(200).json({
+//             message: "Sign in Success", 
+//             token, 
+//             user: { id: user.id, name: user.name, email: user.email, role: user.role }
+//         });
+//     } catch (error) {
+//         next(error);
+//     }
+// }
+
 const signIn = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -16,16 +36,17 @@ const signIn = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const { token, user } = await authService.signIn(email, password);
-        
+
         return res.status(200).json({
-            message: "Sign in Success", 
-            token, 
+            message: "Sign in Success",
+            token,
             user: { id: user.id, name: user.name, email: user.email, role: user.role }
         });
     } catch (error) {
         next(error);
     }
-}
+};
+
 
 const updatePassword = async (req, res, next) => {
     const errors = validationResult(req);

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { getProfilePicture, uploadProfilePicture } from './userAPI';
+import { getAdminProfilePicture,  uploadProfilePicture } from './userAPI';
 import { toast } from 'react-hot-toast';
 import { PencilIcon } from '@heroicons/react/24/solid';
 
-const DisplayProfilePicture = ({ id, height = 'w-10', width = 'h-10', isEditable = false }) => {
+const AdminProfilePicture = ({ id, height = 'w-10', width = 'h-10', isEditable = false }) => {
     const [profilePictureUrl, setProfilePictureUrl] = useState(null);
 
     useEffect(() => {
         const fetchProfileImage = async () => {
             try {
-                const url = await getProfilePicture(id);
+                const url = await getAdminProfilePicture(id);
                 setProfilePictureUrl(url);
             } catch (error) {
                 console.error('Failed to fetch profile picture:', error.message);
             }
-        };
+        };  
 
         fetchProfileImage();
     }, [id]);
@@ -76,4 +76,4 @@ const DisplayProfilePicture = ({ id, height = 'w-10', width = 'h-10', isEditable
     );
 };
 
-export default DisplayProfilePicture;
+export default AdminProfilePicture;

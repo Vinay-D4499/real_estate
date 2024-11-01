@@ -4,15 +4,14 @@ import { getUserById, updateUserById } from './userAPI';
 import toast from 'react-hot-toast';
 
 const UserUpdateForm = () => {
-    const { id } = useParams(); 
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const [userDetails, setUserDetails] = useState({
         name: '',
         phone: '',
         location: '',
-        budget_min: '',
-        budget_max: '',
+        budgetRange: { min: '', max: '' },  // Initialize budgetRange here
         email: '',
         address: '',
         referred_by: ''
@@ -24,7 +23,10 @@ const UserUpdateForm = () => {
         const fetchUserDetails = async () => {
             try {
                 const response = await getUserById(id);
-                setUserDetails(response);
+                setUserDetails({
+                    ...response,
+                    budgetRange: response.budgetRange || { min: '', max: '' }  // Ensure budgetRange has a default value
+                });
             } catch (error) {
                 toast.error(error.message || 'Failed to fetch user details');
             } finally {
@@ -43,17 +45,40 @@ const UserUpdateForm = () => {
         }));
     };
 
+    const handleBudgetRangeChange = (range) => {
+        setUserDetails(prevDetails => ({
+            ...prevDetails,
+            budgetRange: { min: range.min, max: range.max }
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const { budgetRange, ...updatedUserDetails } = userDetails;
+
         try {
-            const { role, ...updatedUserDetails } = userDetails;
-            await updateUserById(id, updatedUserDetails);
+            await updateUserById(id, {
+                ...updatedUserDetails,
+                budget_min: budgetRange?.min || null,  // Set to `null` if empty
+                budget_max: budgetRange?.max || null   // Set to `null` if empty
+            });
             toast.success('User updated successfully');
-            navigate('/view-customers'); 
+            navigate('/view-customers');
         } catch (error) {
             toast.error(error.message || 'Failed to update user details');
         }
     };
+
+
+    const budgetRanges = [
+        { label: '< ₹1 Lakh', min: 0, max: 100000 },
+        { label: '₹1-5 Lakhs', min: 100000, max: 500000 },
+        { label: '₹5-10 Lakhs', min: 500000, max: 1000000 },
+        { label: '₹10-20 Lakhs', min: 1000000, max: 2000000 },
+        { label: '₹20-50 Lakhs', min: 2000000, max: 5000000 },
+        { label: '₹50 Lakhs - ₹1 Crore', min: 5000000, max: 10000000 },
+        { label: '> ₹1 Crore', min: 10000000, max: Infinity }
+    ];
 
     if (loading) {
         return <div>Loading...</div>;
@@ -73,17 +98,6 @@ const UserUpdateForm = () => {
                     className="mt-1 block w-full p-2 border border-gray-300 rounded"
                 />
             </div>
-            {/* <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Role</label>
-                <input
-                    type="text"
-                    name="role"
-                    value={userDetails.role}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                />
-            </div> */}
             <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Phone</label>
                 <input
@@ -100,41 +114,30 @@ const UserUpdateForm = () => {
                 <input
                     type="text"
                     name="location"
-                    value={userDetails.location}
+                    value={userDetails.location || ''}
                     onChange={handleChange}
                     required
                     className="mt-1 block w-full p-2 border border-gray-300 rounded"
                 />
             </div>
-            {/* <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Profile Picture URL</label>
-                <input
-                    type="text"
-                    name="profile_picture_url"
-                    value={userDetails.profile_picture_url}
-                    onChange={handleChange}
-                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                />
-            </div> */}
+
             <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Minimum Budget</label>
-                <input
-                    type="number"
-                    name="budget_min"
-                    value={userDetails.budget_min}
-                    onChange={handleChange}
-                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                />
-            </div>
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Maximum Budget</label>
-                <input
-                    type="number"
-                    name="budget_max"
-                    value={userDetails.budget_max}
-                    onChange={handleChange}
-                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                />
+                <label className="block text-sm font-medium text-gray-700">Budget Range</label>
+                <div className="grid grid-cols-2 gap-2">
+                    {budgetRanges.map((range, index) => (
+                        <label key={index} className="flex items-center">
+                            <input
+                                type="radio"
+                                name="budgetRange"
+                                value={range.label}
+                                checked={userDetails.budgetRange.min === range.min && userDetails.budgetRange.max === range.max}
+                                onChange={() => handleBudgetRangeChange(range)}
+                                className="mr-2"
+                            />
+                            {range.label}
+                        </label>
+                    ))}
+                </div>
             </div>
             <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Email</label>

@@ -11,9 +11,9 @@ const DeactivateUser = ({ id, refreshCustomerData }) => {
         try {
             await deleteUserById(id); 
             toast.success("User deactivated successfully!");
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 2000);
             setIsModalOpen(false); 
         } catch (error) {
             console.error('Failed to deactivate user:', error.message);

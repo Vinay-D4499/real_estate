@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { fetchAllCustomers } from './userAPI';
+import { fetchAllInactiveCustomers } from './userAPI';
 import toast from 'react-hot-toast';
 import CustomerTable from './CustomerTable';
 import CustomerFilters from './CustomerFilters';
 import Pagination from './Pagination';
-import InactiveCustomers from './InactiveCustomers';
 
-const AllCustomerDetails = () => {
+const InactiveCustomers = () => {
     const [customers, setCustomers] = useState([]);
     const [filteredCustomers, setFilteredCustomers] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -22,7 +21,7 @@ const AllCustomerDetails = () => {
         const getCustomersData = async () => {
             setLoading(true);
             try {
-                const response = await fetchAllCustomers();
+                const response = await fetchAllInactiveCustomers();
                 setCustomers(response);
                 setFilteredCustomers(response);
             } catch (error) {
@@ -76,7 +75,7 @@ const AllCustomerDetails = () => {
 
     return (
         <div className="min-h-screen flex flex-col items-center bg-gray-100 p-4">
-            <h2 className="text-2xl font-bold text-gray-800 py-4">Customer Details</h2>
+            <h2 className="text-2xl font-bold text-red-600 py-4">Inactive Customer Details</h2>
 
             {loading && <div className="text-gray-600">Loading customers...</div>}
             {error && <div className="text-red-600">{error}</div>}
@@ -103,7 +102,7 @@ const AllCustomerDetails = () => {
             <CustomerTable 
                 customers={currentCustomers} 
                 refreshCustomerData={refreshCustomerData} 
-                isCustomersActive={true}
+                isCustomersActive={false}
             />
 
             {/* Pagination */}
@@ -112,9 +111,8 @@ const AllCustomerDetails = () => {
                 totalPages={totalPages}
                 setCurrentPage={setCurrentPage}
             />
-            {/* <InactiveCustomers /> */}
         </div>
     );
 };
 
-export default AllCustomerDetails;
+export default InactiveCustomers;
