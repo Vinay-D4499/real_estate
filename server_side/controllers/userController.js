@@ -125,6 +125,7 @@ async function sendTextMessage(to, phone, email, password) {
                 }
             }
         });
+        console.log("response received ", response)
         console.log("Message sent successfully:", response.data);
         return response.data;
     } catch (error) {

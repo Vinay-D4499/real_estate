@@ -86,6 +86,7 @@ app.get("/webhook",(req,res)=>{
 
     // Check if the request contains a message event
     if (bodyParam.object && bodyParam.entry) {
+        console.log("inside body pramas +++++")
         const changes = bodyParam.entry[0].changes;
         
         // Extract message data if it exists
@@ -99,8 +100,7 @@ app.get("/webhook",(req,res)=>{
             console.log("From:", from);
             console.log("Message Body:", msgBody);
 
-            // You can send an automatic reply or process this message further here
-
+            // You can  send an automatic reply or process this message further here
             res.sendStatus(200); // Acknowledge receipt of the message
         } else {
             res.sendStatus(404); // Message data not found
