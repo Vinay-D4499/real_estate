@@ -81,58 +81,7 @@ app.get("/webhook",(req,res)=>{
  
  });
  
-//  app.post('/webhook', (req, res) => {
-//     const body_param = req.body;
-
-//     console.log("Received webhook payload:", JSON.stringify(body_param, null, 2));
-
-//     if (body_param.object === 'whatsapp_business_account') {
-//         if (
-//             body_param.entry &&
-//             body_param.entry[0].changes &&
-//             body_param.entry[0].changes[0].value.messages &&
-//             body_param.entry[0].changes[0].value.messages[0]
-//         ) {
-//             const phone_no_id = body_param.entry[0].changes[0].value.metadata.phone_number_id;
-//             const from = body_param.entry[0].changes[0].value.messages[0].from;
-//             const msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
-
-//             console.log("New message received:");
-//             console.log("Phone Number ID:", phone_no_id);
-//             console.log("From:", from);
-//             console.log("Message Body:", msg_body);
-
-//             // Respond to the user with a custom message using the sendTextMessage function
-//             axios({
-//                 method: "POST",
-//                 url: `https://graph.facebook.com/v13.0/${phone_no_id}/messages?access_token=${token}`,
-//                 data: {
-//                     messaging_product: "whatsapp",
-//                     to: from,
-//                     text: {
-//                         body: `Hi.. I'm vinay, "`
-//                     }
-//                 },
-//                 headers: {
-//                     "Content-Type": "application/json"
-//                 }
-//             })
-//             .then(response => console.log("Reply sent:", response.data))
-//             .catch(error => console.error("Error sending message:", error.response ? error.response.data : error.message));
-
-//             // Respond to WhatsApp to acknowledge the message receipt
-//             res.sendStatus(200);
-//         } else {
-//             console.log("No valid message found in the webhook payload.");
-//             res.sendStatus(404); // No message found in the payload
-//         }
-//     } else {
-//         console.log("Invalid webhook event received.");
-//         res.sendStatus(404); // Invalid webhook event
-//     }
-// });
-
-app.post('/webhook', (req, res) => {
+ app.post('/webhook', (req, res) => {
     const body_param = req.body;
 
     console.log("Received webhook payload:", JSON.stringify(body_param, null, 2));
@@ -153,8 +102,23 @@ app.post('/webhook', (req, res) => {
             console.log("From:", from);
             console.log("Message Body:", msg_body);
 
-
-            // console.log(response.data)
+            // Respond to the user with a custom message using the sendTextMessage function
+            // axios({
+            //     method: "POST",
+            //     url: `https://graph.facebook.com/v13.0/${phone_no_id}/messages?access_token=${token}`,
+            //     data: {
+            //         messaging_product: "whatsapp",
+            //         to: from,
+            //         text: {
+            //             body: `Hi.. I'm vinay, "`
+            //         }
+            //     },
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     }
+            // })
+            // .then(response => console.log("Reply sent:", response.data))
+            // .catch(error => console.error("Error sending message:", error.response ? error.response.data : error.message));
 
             // Respond to WhatsApp to acknowledge the message receipt
             res.sendStatus(200);
@@ -167,6 +131,42 @@ app.post('/webhook', (req, res) => {
         res.sendStatus(404); // Invalid webhook event
     }
 });
+
+// app.post('/webhook', (req, res) => {
+//     const body_param = req.body;
+
+//     console.log("Received webhook payload:", JSON.stringify(body_param, null, 2));
+
+//     if (body_param.object === 'whatsapp_business_account') {
+//         if (
+//             body_param.entry &&
+//             body_param.entry[0].changes &&
+//             body_param.entry[0].changes[0].value.messages &&
+//             body_param.entry[0].changes[0].value.messages[0]
+//         ) {
+//             const phone_no_id = body_param.entry[0].changes[0].value.metadata.phone_number_id;
+//             const from = body_param.entry[0].changes[0].value.messages[0].from;
+//             const msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
+
+//             console.log("New message received:");
+//             console.log("Phone Number ID:", phone_no_id);
+//             console.log("From:", from);
+//             console.log("Message Body:", msg_body);
+
+
+//             // console.log(response.data)
+
+//             // Respond to WhatsApp to acknowledge the message receipt
+//             res.sendStatus(200);
+//         } else {
+//             console.log("No valid message found in the webhook payload.");
+//             res.sendStatus(404); // No message found in the payload
+//         }
+//     } else {
+//         console.log("Invalid webhook event received.");
+//         res.sendStatus(404); // Invalid webhook event
+//     }
+// });
 
 
 async function sendTextMessage(to, phone, email, password) {
