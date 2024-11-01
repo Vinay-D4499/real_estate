@@ -33,6 +33,7 @@ const createUserByRquest = async (userData) => {
     try {
         // Check if the user already exists
         const existingUser = await Users.findOne({ where: { email: userData.email } });
+        console.log(existingUser , "============================>existingUser");
         if (existingUser) {
             // If user exists, return 
             return { message: 'User already exists', user: existingUser };

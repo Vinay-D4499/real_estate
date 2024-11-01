@@ -5,8 +5,9 @@ const UserPropertyInterests = require('../models/userPropertyInterestsModel');
 
 const addPropertyType = async (id, propertyType) => {
     try {
-        const requester = await Users.findByPk(id);
-
+        console.log(id,"-------------------------------------------id service");
+        const requester = await Admin.findByPk(id);
+          console.log(requester , "requester===================================> service")
         if (!requester) {
             throw new NotFoundError('Requester not found');
         }
@@ -16,6 +17,7 @@ const addPropertyType = async (id, propertyType) => {
         }
 
         const newPropertyType = await PropertyTypes.create({ propertyType })
+        console.log(newPropertyType, "====================================>newPropertyType");
         return newPropertyType;
     } catch (error) {
         if (!error.statusCode) {

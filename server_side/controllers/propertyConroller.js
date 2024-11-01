@@ -3,8 +3,11 @@ const propertyServices = require('../services/propertyService');
 
 const addPropertyType = async (req,res, next)=>{
     try {
-        const id = req.user;
+        // const id = req.user;
+        console.log(id,"===================================>id");
         const {propertyType} = req.body;
+        
+        console.log(propertyType , "====================> propertytype")
         const property = await propertyServices.addPropertyType(id,{propertyType});
 
         return res.status(201).json({ message: 'Proerty added successfully', property: property });
