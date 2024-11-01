@@ -154,7 +154,7 @@ app.post('/webhook', (req, res) => {
             console.log("Message Body:", msg_body);
 
 
-            console.log(response.data)
+            // console.log(response.data)
 
             // Respond to WhatsApp to acknowledge the message receipt
             res.sendStatus(200);
