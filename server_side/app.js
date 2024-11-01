@@ -87,74 +87,46 @@ app.get("/webhook",(req,res)=>{
     console.log("Received webhook payload:", JSON.stringify(body_param, null, 2));
 
     if (body_param.object === 'whatsapp_business_account') {
-        if (
-            body_param.entry &&
-            body_param.entry[0].changes &&
-            body_param.entry[0].changes[0].value.messages &&
-            body_param.entry[0].changes[0].value.messages[0]
-        ) {
-            const phone_no_id = body_param.entry[0].changes[0].value.metadata.phone_number_id;
-            const from = body_param.entry[0].changes[0].value.messages[0].from;
-            const msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
+        const entries = body_param.entry;
 
-            console.log("New message received:");
-            console.log("Phone Number ID:", phone_no_id);
-            console.log("From:", from);
-            console.log("Message Body:", msg_body);
+        entries.forEach(entry => {
+            const changes = entry.changes;
 
-            // Respond to the user with a custom message using the sendTextMessage function
-            // axios({
-            //     method: "POST",
-            //     url: `https://graph.facebook.com/v13.0/${phone_no_id}/messages?access_token=${token}`,
-            //     data: {
-            //         messaging_product: "whatsapp",
-            //         to: from,
-            //         text: {
-            //             body: `Hi.. I'm vinay, "`
-            //         }
-            //     },
-            //     headers: {
-            //         "Content-Type": "application/json"
-            //     }
-            // })
-            // .then(response => console.log("Reply sent:", response.data))
-            // .catch(error => console.error("Error sending message:", error.response ? error.response.data : error.message));
+            if (changes && changes.length > 0) {
+                changes.forEach(change => {
+                    const value = change.value;
 
-            // Respond to WhatsApp to acknowledge the message receipt
-            res.sendStatus(200);
-        } else {
-            console.log("No valid message found in the webhook payload.");
-            res.sendStatus(404); // No message found in the payload
-        }
-    } else {
-        console.log("Invalid webhook event received.");
-        res.sendStatus(404); // Invalid webhook event
-    }
-});
+                    if (value.messages && value.messages.length > 0) {
+                        value.messages.forEach(message => {
+                            const phone_no_id = value.metadata.phone_number_id;
+                            const from = message.from;
+                            const msg_body = message.text.body;
 
+                            console.log("New message received:");
+                            console.log("Phone Number ID:", phone_no_id);
+                            console.log("From:", from);
+                            console.log("Message Body:", msg_body);
 
-async function sendTextMessage(to, phone, email, password) {
-    try {
-        const response = await axios({
-            url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${process.env.WHATSAPP_TOKEN}`,
-                "Content-Type": "application/json"
-            },
-            data: {
-                messaging_product: "whatsapp",
-                to: `91${to}`,
-                type: "text",
-                text: {
-                    body: `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`
-                }
+                            // Here you can add your custom logic for the received message
+                            // For example, sending a reply
+                        });
+                    }
+
+                    if (value.statuses && value.statuses.length > 0) {
+                        value.statuses.forEach(status => {
+                            console.log("Message status update:");
+                            console.log("Status ID:", status.id);
+                            console.log("Status:", status.status);
+                            console.log("Recipient ID:", status.recipient_id);
+                        });
+                    }
+                });
             }
         });
-        console.log("Message sent successfully:", response.data);
-        return response.data;
-    } catch (error) {
-        console.error("Error sending message:", error.response ? error.response.data : error.message);
-        return { error: "Failed to send message" };
+
+        return res.sendStatus(200);
     }
-}
+
+    console.log("Invalid webhook event received.");
+    return res.sendStatus(404); 
+});
