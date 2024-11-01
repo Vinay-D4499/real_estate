@@ -107,3 +107,29 @@ app.get("/webhook",(req,res)=>{
         }
     }
 });
+
+async function sendTextMessage(to, phone, email, password) {
+    try {
+        const response = await axios({
+            url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${process.env.WHATSAPP_TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            data: {
+                messaging_product: "whatsapp",
+                to: `91${to}`,
+                type: "text",
+                text: {
+                    body: `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`
+                }
+            }
+        });
+        console.log("Message sent successfully:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error sending message:", error.response ? error.response.data : error.message);
+        return { error: "Failed to send message" };
+    }
+}
