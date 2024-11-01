@@ -81,34 +81,35 @@ app.get("/webhook",(req,res)=>{
  
  });
  
- app.post("/webhook", (req, res) => {
+ app.post('/webhook', (req, res) => {
     const bodyParam = req.body;
 
-    // Check if the request contains a message event
-    if (bodyParam.object && bodyParam.entry) {
-        console.log("inside body pramas +++++")
+    // Check for incoming messages
+    if (bodyParam.object === 'whatsapp_business_account') {
         const changes = bodyParam.entry[0].changes;
-        
-        // Extract message data if it exists
         if (changes && changes[0].value.messages && changes[0].value.messages[0]) {
             const messageData = changes[0].value;
-            const phoneNumberId = messageData.metadata.phone_number_id;
             const from = messageData.messages[0].from; // Sender's WhatsApp number
-            const msgBody = messageData.messages[0].text.body; // Text message content
-            
-            console.log("Phone Number ID:", phoneNumberId);
+            const msgBody = messageData.messages[0].text.body; // Text content of the message
+
+            // Log the message details
+            console.log("New message received:");
             console.log("From:", from);
             console.log("Message Body:", msgBody);
 
-            // You can  send an automatic reply or process this message further here
-            res.sendStatus(200); // Acknowledge receipt of the message
+            // Example: Store the response in a database or further process it
+            // db.saveMessage({ from, body: msgBody });
+
+            // Respond to WhatsApp to acknowledge message receipt
+            res.sendStatus(200);
         } else {
-            res.sendStatus(404); // Message data not found
+            res.sendStatus(404); // No message found in the payload
         }
     } else {
         res.sendStatus(404); // Invalid webhook event
     }
 });
+
 
 
 async function sendTextMessage(to, phone, email, password) {
