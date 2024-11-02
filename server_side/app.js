@@ -158,7 +158,7 @@ app.post('/webhook', async (req, res) => {
                             const phoneNumberId = value.metadata.phone_number_id;
                             const from = message.from;
                             const messageId = message.id;
-                            const timestamp = new Date(message.timestamp * 1000);
+                            const timestamp = new Date(message.timestamp * 1000); 
 
                             const messageData = {
                                 whatsappUserId: from,
@@ -194,9 +194,11 @@ app.post('/webhook', async (req, res) => {
                     // Handling message status updates
                     if (value.statuses && value.statuses.length > 0) {
                         for (const status of value.statuses) {
+                            const statusTimestamp = new Date(status.timestamp * 1000); 
+
                             const statusData = {
                                 status: status.status,
-                                timestamp: new Date(status.timestamp * 1000),
+                                timestamp: statusTimestamp,
                                 recipientId: status.recipient_id,
                                 conversationId: status.conversation ? status.conversation.id : null,
                                 conversationCategory: status.conversation ? status.conversation.origin.type : null,
@@ -207,25 +209,23 @@ app.post('/webhook', async (req, res) => {
                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
                             };
 
-                            // Find the corresponding message using recipientId and timestamp with a time margin
                             try {
-                                const timestamp = new Date(status.timestamp * 1000);
-                                const timeMargin = 5000; // 5 seconds margin
+                                const timeMargin = 5000;
 
                                 const message = await WebhookMessage.findOne({
                                     where: {
                                         whatsappUserId: status.recipient_id,
                                         timestamp: {
                                             [Op.between]: [
-                                                new Date(timestamp - timeMargin),
-                                                new Date(timestamp + timeMargin)
+                                                new Date(statusTimestamp - timeMargin),
+                                                new Date(statusTimestamp + timeMargin)
                                             ]
                                         }
                                     }
                                 });
 
                                 if (message) {
-                                    statusData.messageId = message.messageId; // Link status to the found message
+                                    statusData.messageId = message.messageId; 
                                     await WebhookMessageStatus.create(statusData);
                                     console.log("Status saved to WebhookMessageStatus table");
                                 } else {
