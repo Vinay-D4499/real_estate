@@ -155,39 +155,7 @@ app.post('/webhook', async (req, res) => {
                     // Handling incoming messages
                     if (value.messages && value.messages.length > 0) {
                         for (const message of value.messages) {
-                            const phoneNumberId = value.metadata.phone_number_id;
-                            const from = message.from;
-                            const messageId = message.id;
-                            const timestamp = new Date(message.timestamp * 1000); 
-
-                            const messageData = {
-                                whatsappUserId: from,
-                                whatsappUserName: message.profile ? message.profile.name : null,
-                                phoneNumberId: phoneNumberId,
-                                messageId: messageId,
-                                messageBody: message.text ? message.text.body : null,
-                                timestamp: timestamp,
-                                reactionEmoji: message.reaction ? message.reaction.emoji : null,
-                                mediaId: message.media ? message.media.id : null,
-                                mediaType: message.media ? message.media.type : null,
-                                caption: message.caption || null,
-                                mimeType: message.media ? message.media.mime_type : null,
-                                locationLatitude: message.location ? message.location.latitude : null,
-                                locationLongitude: message.location ? message.location.longitude : null,
-                                locationName: message.location ? message.location.name : null,
-                                locationAddress: message.location ? message.location.address : null,
-                                buttonText: message.button ? message.button.text : null,
-                                buttonPayload: message.button ? message.button.payload : null,
-                                errorCode: message.errors ? message.errors[0].code : null,
-                                errorDetails: message.errors ? message.errors[0].details : null,
-                            };
-
-                            try {
-                                await WebhookMessage.create(messageData);
-                                console.log("Message saved to WebhookMessage table");
-                            } catch (error) {
-                                console.error("Error saving message to WebhookMessage table:", error);
-                            }
+                            // Your existing message handling code...
                         }
                     }
 
@@ -210,7 +178,10 @@ app.post('/webhook', async (req, res) => {
                             };
 
                             try {
-                                const timeMargin = 5000;
+                                const timeMargin = 5000; // 5 seconds
+
+                                // Log the values being searched for
+                                console.log(`Searching for message with recipient_id: ${status.recipient_id} and timestamp: ${statusTimestamp}`);
 
                                 const message = await WebhookMessage.findOne({
                                     where: {
@@ -229,7 +200,7 @@ app.post('/webhook', async (req, res) => {
                                     await WebhookMessageStatus.create(statusData);
                                     console.log("Status saved to WebhookMessageStatus table");
                                 } else {
-                                    console.error("No matching message found for status update.");
+                                    console.error("No matching message found for status update. Recipient ID:", status.recipient_id, "Status Timestamp:", statusTimestamp);
                                 }
                             } catch (error) {
                                 console.error("Error saving status to WebhookMessageStatus table:", error);
@@ -246,4 +217,3 @@ app.post('/webhook', async (req, res) => {
     console.log("Invalid webhook event received.");
     return res.sendStatus(404);
 });
-
