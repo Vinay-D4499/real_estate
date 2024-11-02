@@ -18,25 +18,13 @@ PropertyTypes.belongsToMany(Users, { through: UserPropertyInterests, foreignKey:
 WebhookMessage.hasMany(WebhookMessageStatus, {
   foreignKey: 'messageId',
   sourceKey: 'messageId',
-  as: 'statuses' 
+  as: 'statuses'
 });
 
 WebhookMessageStatus.belongsTo(WebhookMessage, {
   foreignKey: 'messageId',
   targetKey: 'messageId',
-  as: 'message' 
-});
-
-WebhookMessage.hasMany(WebhookMessageStatus, {
-  foreignKey: 'recipientId',
-  sourceKey: 'whatsappUserId',
-  as: 'statusesByRecipient' 
-});
-
-WebhookMessageStatus.belongsTo(WebhookMessage, {
-  foreignKey: 'recipientId',
-  targetKey: 'whatsappUserId',
-  as: 'whatsappUser' 
+  as: 'message'
 });
 
 const initDatabase = async () => {
