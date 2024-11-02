@@ -3,6 +3,11 @@ const { sequelize } = require("../config/dbConfig");
 const WebhookMessage = require("./webhookMessageModel");
 
 const WebhookMessageStatus = sequelize.define('WebhookMessageStatus', {
+    statusId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     messageId: { 
         type: DataTypes.STRING, 
         allowNull: false,
@@ -21,6 +26,10 @@ const WebhookMessageStatus = sequelize.define('WebhookMessageStatus', {
     errorTitle: { type: DataTypes.STRING },
     errorMessage: { type: DataTypes.STRING },
     errorDetails: { type: DataTypes.STRING },
+}, {
+    timestamps: true,
+    tableName: 'WebhookMessageStatuses'
 });
+
 
 module.exports = WebhookMessageStatus;

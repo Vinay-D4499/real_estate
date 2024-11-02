@@ -135,13 +135,15 @@ app.get("/webhook",(req,res)=>{
 //     return res.sendStatus(404); 
 // });
 
-app.post('/webhook', async (req, res) => {
-    const body_param = req.body;
-    console.log("Received webhook payload at:", new Date().toISOString());
-    console.log("Received webhook payload:", JSON.stringify(body_param, null, 2));
 
-    if (body_param.object === 'whatsapp_business_account') {
-        const entries = body_param.entry;
+
+app.post('/webhook', async (req, res) => {
+    const bodyParam = req.body;
+    console.log("Received webhook payload at:", new Date().toISOString());
+    console.log("Received webhook payload:", JSON.stringify(bodyParam, null, 2));
+
+    if (bodyParam.object === 'whatsapp_business_account') {
+        const entries = bodyParam.entry;
 
         for (const entry of entries) {
             const changes = entry.changes;
@@ -156,7 +158,7 @@ app.post('/webhook', async (req, res) => {
                             const phoneNumberId = value.metadata.phone_number_id;
                             const from = message.from;
                             const messageId = message.id;
-                            const timestamp = new Date(message.timestamp * 1000); 
+                            const timestamp = new Date(message.timestamp * 1000);
 
                             const messageData = {
                                 whatsappUserId: from,
@@ -189,13 +191,12 @@ app.post('/webhook', async (req, res) => {
                         }
                     }
 
-                    console.log("Statuses data:", JSON.stringify(value.statuses, null, 2));
                     // Handling message status updates
                     if (value.statuses && value.statuses.length > 0) {
                         for (const status of value.statuses) {
                             const statusData = {
                                 status: status.status,
-                                timestamp: new Date(status.timestamp * 1000), 
+                                timestamp: new Date(status.timestamp * 1000),
                                 recipientId: status.recipient_id,
                                 conversationId: status.conversation ? status.conversation.id : null,
                                 conversationCategory: status.conversation ? status.conversation.origin.type : null,
@@ -206,23 +207,25 @@ app.post('/webhook', async (req, res) => {
                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
                             };
 
-                            // Find the corresponding message using recipientId and timestamp
+                            // Find the corresponding message using recipientId and timestamp with a time margin
                             try {
                                 const timestamp = new Date(status.timestamp * 1000);
                                 const timeMargin = 5000; // 5 seconds margin
-                                
+
                                 const message = await WebhookMessage.findOne({
                                     where: {
                                         whatsappUserId: status.recipient_id,
                                         timestamp: {
-                                            [Op.gte]: new Date(timestamp - timeMargin),
-                                            [Op.lte]: new Date(timestamp + timeMargin)
+                                            [Op.between]: [
+                                                new Date(timestamp - timeMargin),
+                                                new Date(timestamp + timeMargin)
+                                            ]
                                         }
                                     }
                                 });
 
                                 if (message) {
-                                    statusData.messageId = message.messageId; // Add the found messageId
+                                    statusData.messageId = message.messageId; // Link status to the found message
                                     await WebhookMessageStatus.create(statusData);
                                     console.log("Status saved to WebhookMessageStatus table");
                                 } else {
@@ -243,3 +246,4 @@ app.post('/webhook', async (req, res) => {
     console.log("Invalid webhook event received.");
     return res.sendStatus(404);
 });
+

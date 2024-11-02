@@ -9,11 +9,23 @@ const WebhookMessage = require('./webhookMessageModel');
 const WebhookMessageStatus = require('./webhookMessageStatusModel');
 
 //Associations 
-Users.belongsToMany(PropertyTypes, {through : UserPropertyInterests, foreignKey : 'userId'});
-PropertyTypes.belongsToMany(Users, {through : UserPropertyInterests, foreignKey : 'propertyTypeId'});
+Users.belongsToMany(PropertyTypes, { through: UserPropertyInterests, foreignKey: 'userId' });
+PropertyTypes.belongsToMany(Users, { through: UserPropertyInterests, foreignKey: 'propertyTypeId' });
 
-WebhookMessage.hasMany(WebhookMessageStatus, { foreignKey: 'messageId', sourceKey: 'messageId' });
-WebhookMessageStatus.belongsTo(WebhookMessage, { foreignKey: 'messageId', targetKey: 'messageId' });
+// WebhookMessage.hasMany(WebhookMessageStatus, { foreignKey: 'messageId', sourceKey: 'messageId' });
+// WebhookMessageStatus.belongsTo(WebhookMessage, { foreignKey: 'messageId', targetKey: 'messageId' });
+
+WebhookMessage.hasMany(WebhookMessageStatus, {
+  foreignKey: 'messageId',
+  sourceKey: 'messageId',
+  as: 'statuses'
+});
+
+WebhookMessageStatus.belongsTo(WebhookMessage, {
+  foreignKey: 'messageId',
+  targetKey: 'messageId',
+  as: 'message'
+});
 
 const initDatabase = async () => {
   try {
@@ -30,11 +42,11 @@ const initDatabase = async () => {
   }
 };
 
-module.exports = { 
-    sequelize, 
-    initDatabase,
-    Users,
-    Admin,
-    PropertyTypes,
-    UserPropertyInterests,
+module.exports = {
+  sequelize,
+  initDatabase,
+  Users,
+  Admin,
+  PropertyTypes,
+  UserPropertyInterests,
 };
