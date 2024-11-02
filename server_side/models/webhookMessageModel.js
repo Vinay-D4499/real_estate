@@ -2,10 +2,11 @@ const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/dbConfig");
 
 const WebhookMessage = sequelize.define('WebhookMessage', {
-    whatsappUserId: { type: DataTypes.STRING, allowNull: false },
+    whatsappUserId: 
+    { type: DataTypes.STRING, allowNull: false },
     whatsappUserName: { type: DataTypes.STRING },
     phoneNumberId: { type: DataTypes.STRING, allowNull: false },
-    messageId: { type: DataTypes.STRING, allowNull: false, primaryKey: true }, 
+    messageId: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
     messageBody: { type: DataTypes.TEXT },
     timestamp: { type: DataTypes.DATE, allowNull: false },
     reactionEmoji: { type: DataTypes.STRING },

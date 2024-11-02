@@ -208,12 +208,15 @@ app.post('/webhook', async (req, res) => {
 
                             // Find the corresponding message using recipientId and timestamp
                             try {
+                                const timestamp = new Date(status.timestamp * 1000);
+                                const timeMargin = 5000; // 5 seconds margin
+                                
                                 const message = await WebhookMessage.findOne({
                                     where: {
                                         whatsappUserId: status.recipient_id,
                                         timestamp: {
-                                            [Op.gte]: new Date(status.timestamp * 1000) - 1000, // Allow for a 1 second range
-                                            [Op.lte]: new Date(status.timestamp * 1000) + 1000
+                                            [Op.gte]: new Date(timestamp - timeMargin),
+                                            [Op.lte]: new Date(timestamp + timeMargin)
                                         }
                                     }
                                 });
