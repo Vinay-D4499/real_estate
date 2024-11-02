@@ -150,7 +150,7 @@ app.post('/webhook', async (req, res) => {
                 for (const change of changes) {
                     const value = change.value;
 
-                    // Incoming messages
+                    // Handling incoming messages
                     if (value.messages && value.messages.length > 0) {
                         for (const message of value.messages) {
                             const phoneNumberId = value.metadata.phone_number_id;
@@ -206,7 +206,7 @@ app.post('/webhook', async (req, res) => {
                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
                             };
 
-                            // Find the corresponding message using whatsappUserId and timestamp
+                            // Find the corresponding message using recipientId and timestamp
                             try {
                                 const message = await WebhookMessage.findOne({
                                     where: {
