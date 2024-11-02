@@ -14,6 +14,7 @@ const propertyRoutes = require('./routes/propertyRoutes');
 const { baseURL } = require('./config/baseURL');
 const WebhookMessage = require('./models/webhookMessageModel');
 const WebhookMessageStatus = require('./models/webhookMessageStatusModel');
+const { Op } = require('sequelize');
 
 const app = express();
 const PORT = process.env.PORT;
@@ -149,7 +150,7 @@ app.post('/webhook', async (req, res) => {
                 for (const change of changes) {
                     const value = change.value;
 
-                    //  incoming messages
+                    // Incoming messages
                     if (value.messages && value.messages.length > 0) {
                         for (const message of value.messages) {
                             const phoneNumberId = value.metadata.phone_number_id;
@@ -188,11 +189,11 @@ app.post('/webhook', async (req, res) => {
                         }
                     }
 
+                    console.log("Statuses data:", JSON.stringify(value.statuses, null, 2));
                     // Handling message status updates
                     if (value.statuses && value.statuses.length > 0) {
                         for (const status of value.statuses) {
                             const statusData = {
-                                messageId: status.id,
                                 status: status.status,
                                 timestamp: new Date(status.timestamp * 1000), 
                                 recipientId: status.recipient_id,
@@ -205,9 +206,25 @@ app.post('/webhook', async (req, res) => {
                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
                             };
 
+                            // Find the corresponding message using whatsappUserId and timestamp
                             try {
-                                await WebhookMessageStatus.create(statusData);
-                                console.log("Status saved to WebhookMessageStatus table");
+                                const message = await WebhookMessage.findOne({
+                                    where: {
+                                        whatsappUserId: status.recipient_id,
+                                        timestamp: {
+                                            [Op.gte]: new Date(status.timestamp * 1000) - 1000, // Allow for a 1 second range
+                                            [Op.lte]: new Date(status.timestamp * 1000) + 1000
+                                        }
+                                    }
+                                });
+
+                                if (message) {
+                                    statusData.messageId = message.messageId; // Add the found messageId
+                                    await WebhookMessageStatus.create(statusData);
+                                    console.log("Status saved to WebhookMessageStatus table");
+                                } else {
+                                    console.error("No matching message found for status update.");
+                                }
                             } catch (error) {
                                 console.error("Error saving status to WebhookMessageStatus table:", error);
                             }
