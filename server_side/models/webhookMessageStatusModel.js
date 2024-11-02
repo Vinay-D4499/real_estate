@@ -11,14 +11,17 @@ const WebhookMessageStatus = sequelize.define('WebhookMessageStatus', {
     messageId: { 
         type: DataTypes.STRING, 
         allowNull: false,
+    },
+    recipientId: { 
+        type: DataTypes.STRING, 
+        allowNull: false,
         references: {
             model: WebhookMessage,
-            key: 'messageId'
+            key: 'whatsappUserId'  
         }
     },
     status: { type: DataTypes.STRING, allowNull: false },
     timestamp: { type: DataTypes.DATE, allowNull: false },
-    recipientId: { type: DataTypes.STRING, allowNull: false },
     conversationId: { type: DataTypes.STRING },
     conversationCategory: { type: DataTypes.STRING },
     isBillable: { type: DataTypes.BOOLEAN, defaultValue: false },

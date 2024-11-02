@@ -27,6 +27,19 @@ WebhookMessageStatus.belongsTo(WebhookMessage, {
   as: 'message'
 });
 
+WebhookMessage.hasMany(WebhookMessageStatus, {
+  foreignKey: 'recipientId',
+  sourceKey: 'whatsappUserId',
+  as: 'statusesByRecipient'
+});
+
+WebhookMessageStatus.belongsTo(WebhookMessage, {
+  foreignKey: 'recipientId',
+  targetKey: 'whatsappUserId',
+  as: 'whatsappUser'
+});
+
+
 const initDatabase = async () => {
   try {
     // Creates the database if it doesn't exist
