@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/dbConfig");
-const WebhookMessage = require("./webhookMessageModel");
+const WebhookMessage = require("./webhookMessageModel"); 
 
 const WebhookMessageStatus = sequelize.define('WebhookMessageStatus', {
     statusId: {
@@ -11,13 +11,17 @@ const WebhookMessageStatus = sequelize.define('WebhookMessageStatus', {
     messageId: { 
         type: DataTypes.STRING, 
         allowNull: false,
+        references: {
+            model: WebhookMessage,
+            key: 'messageId' 
+        }
     },
     recipientId: { 
         type: DataTypes.STRING, 
         allowNull: false,
         references: {
             model: WebhookMessage,
-            key: 'whatsappUserId'  
+            key: 'whatsappUserId' 
         }
     },
     status: { type: DataTypes.STRING, allowNull: false },
@@ -33,6 +37,5 @@ const WebhookMessageStatus = sequelize.define('WebhookMessageStatus', {
     timestamps: true,
     tableName: 'WebhookMessageStatuses'
 });
-
 
 module.exports = WebhookMessageStatus;
