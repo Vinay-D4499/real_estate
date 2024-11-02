@@ -1,0 +1,197 @@
+Message Status Updates
+The WhatsApp Business Platform sends notifications to inform you of the status of the messages between you and users. When a message is sent successfully, you receive a notification when the message is sent, delivered, and read. The order of these notifications in your app may not reflect the actual timing of the message status. View the timestamp to determine the timing, if necessary.
+
+Status: Message Sent
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "<WHATSAPP_BUSINESS_ACCOUNT_ID>",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "<BUSINESS_DISPLAY_PHONE_NUMBER>",
+              "phone_number_id": "<BUSINESS_PHONE_NUMBER_ID>"
+            },
+            "statuses": [
+              {
+                "id": "<WHATSAPP_MESSAGE_ID>",
+                "status": "sent",
+                "timestamp": "<WEBHOOK_SENT_TIMESTAMP>",
+                "recipient_id": "<WHATSAPP_USER_ID>",
+                "conversation": {
+                  "id": "<CONVERSATION_ID>",
+                  "expiration_timestamp": "<CONVERSATION_EXPIRATION_TIMESTAMP>",
+                  "origin": {
+                    "type": "<CONVERSATION_CATEGORY>"
+                  }
+                },
+                "pricing": {
+                  "billable": <IS_BILLABLE?>,
+                  "pricing_model": "CBP",
+                  "category": "<CONVERSATION_CATEGORY>"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+For free entry point conversations, origin.type and pricing.category are both set to referral_conversion, and pricing.billable is set to false.
+
+Status: Message Delivered
+The following notification is received when a business’ message is delivered and that message is part of a user-initiated conversation (if that conversation did not originate in a free entry point):
+
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "<WHATSAPP_BUSINESS_ACCOUNT_ID>",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "<BUSINESS_DISPLAY_PHONE_NUMBER>",
+              "phone_number_id": "<BUSINESS_PHONE_NUMBER_ID>"
+            },
+            "statuses": [
+              {
+                "id": "<WHATSAPP_MESSAGE_ID>",
+                "status": "sent",
+                "timestamp": "<WEBHOOK_SENT_TIMESTAMP>",
+                "recipient_id": "<WHATSAPP_USER_ID>",
+                "conversation": {
+                  "id": "<CONVERSATION_ID>",
+                  "origin": {
+                    "type": "<CONVERSATION_CATEGORY>"
+                  }
+                },
+                "pricing": {
+                  "billable": <IS_BILLABLE?>,
+                  "pricing_model": "CBP",
+                  "category": "<CONVERSATION_CATEGORY>"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+For free entry point conversations, origin.type and pricing.category are both set to referral_conversion, and pricing.billable is set to false.
+
+Status: Message Read
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "<WHATSAPP_BUSINESS_ACCOUNT_ID>",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "<BUSINESS_DISPLAY_PHONE_NUMBER>",
+              "phone_number_id": "<BUSINESS_PHONE_NUMBER_ID>"
+            },
+            "statuses": [
+              {
+                "id": "<WHATSAPP_MESSAGE_ID>",
+                "status": "read",
+                "timestamp": "<WEBHOOK_SENT_TIMESTAMP>",
+                "recipient_id": "<WHATSAPP_USER_ID>"
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+Status: Message Deleted
+Currently, the Cloud API does not support webhook status updates for deleted messages. If a user deletes a message, you will receive a webhook with an error code for an unsupported message type:
+
+{
+  "object": "whatsapp_business_account",
+  "entry": [{
+    "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
+    "changes": [{
+      "value": {
+      "messaging_product": "whatsapp",
+      "metadata": {
+        "display_phone_number": PHONE_NUMBER,
+        "phone_number_id": PHONE_NUMBER
+      },
+      "contacts": [{
+        "profile": {
+          "name": "NAME"
+          },
+        "wa_id": PHONE_NUMBER
+        }],
+    "messages": [{
+      "from": PHONE_NUMBER,
+      "id": "wamid.ID",
+      "timestamp": TIMESTAMP,
+      "errors": [{
+        "code": 131051,
+        "details": "Message type is not currently supported",
+        "title": "Unsupported message type"
+        }],
+      "type": "unsupported"
+      }]
+    },
+    "field": "messages"
+    }]
+  }]
+}
+Note that there are other user behaviors that can trigger this same error message.
+
+Status: Message Failed
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "<WHATSAPP_BUSINESS_ACCOUNT_ID>",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "<BUSINESS_DISPLAY_PHONE_NUMBER>",
+              "phone_number_id": "<BUSINESS_PHONE_NUMBER_ID>"
+            },
+            "statuses": [
+              {
+                "id": "<WHATSAPP_MESSAGE_ID>",
+                "status": "failed",
+                "timestamp": "<WEBHOOK_SENT_TIMESTAMP>",
+                "recipient_id": "<WHATSAPP_USER_ID>",
+                "errors": [
+                  {
+                    "code": <ERROR_CODE>,
+                    "title": "<ERROR_TITLE>",
+                    "message": "<ERROR_MESSAGE>",
+                    "error_data": {
+                      "details": "<ERROR_DETAILS>"
+                    },
+                    "href": "https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes/"
+                  }
+                ]
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}

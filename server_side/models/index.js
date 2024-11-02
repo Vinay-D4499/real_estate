@@ -5,10 +5,15 @@ const Users = require('./userModel');
 const Admin = require('./adminModel');
 const PropertyTypes = require('./propertyTypesModel');
 const UserPropertyInterests = require('./userPropertyInterestsModel');
+const WebhookMessage = require('./webhookMessageModel');
+const WebhookMessageStatus = require('./webhookMessageStatusModel');
 
 //Associations 
 Users.belongsToMany(PropertyTypes, {through : UserPropertyInterests, foreignKey : 'userId'});
 PropertyTypes.belongsToMany(Users, {through : UserPropertyInterests, foreignKey : 'propertyTypeId'});
+
+WebhookMessage.hasMany(WebhookMessageStatus, { foreignKey: 'messageId', sourceKey: 'messageId' });
+WebhookMessageStatus.belongsTo(WebhookMessage, { foreignKey: 'messageId', targetKey: 'messageId' });
 
 const initDatabase = async () => {
   try {

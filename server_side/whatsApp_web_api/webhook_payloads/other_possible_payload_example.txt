@@ -1,0 +1,112 @@
+Unknown Messages 
+
+It's possible to receive an unknown message callback notification. For example, a customer could send you a message that's not supported, such as a disappearing message (in which case we'd notify the customer that the message type is not supported).
+
+The following is an example of a message you received from a customer that is not supported.
+
+{
+  "object": "whatsapp_business_account",
+  "entry": [{
+      "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
+      "changes": [{
+          "value": {
+              "messaging_product": "whatsapp",
+              "metadata": { 
+                "display_phone_number": "PHONE_NUMBER", 
+                "phone_number_id": "PHONE_NUMBER_ID" 
+              },
+              "contacts": [{
+                  "profile": { 
+                    "name": "NAME" 
+                  }, 
+                  "wa_id": "WHATSAPP_ID"
+                }],
+              "messages": [{
+                  "from": "PHONE_NUMBER",
+                  "id": "wamid.ID", 
+                  "timestamp": "TIMESTAMP",
+                  "errors": [ 
+                    { 
+                      "code": 131051, 
+                      "details": "Message type is not currently supported",
+                      "title": "Unsupported message type"
+                    }],
+                   "type": "unknown"
+                   }]
+            }
+            "field": "messages"
+        }],
+    }]
+}
+
+
+
+Contact Messages 
+
+The following is an example of a contact message you received from a customer:
+
+{
+  "object":"whatsapp_business_account",
+  "entry":[{
+    "id":"WHATSAPP_BUSINESS_ACCOUNT_ID",
+    "changes":[{
+      "value":{
+        "messaging_product":"whatsapp",
+        "metadata": {
+          "display_phone_number":"PHONE_NUMBER",
+          "phone_number_id":"PHONE_NUMBER_ID"
+          },
+        "contacts": [{
+          "profile":{
+            "name":"NAME"
+            },
+          "wa_id":"WHATSAPP_ID"
+          }],
+        "messages":[{
+          "from":"PHONE_NUMBER",
+          "id":"wamid.ID",
+          "timestamp":"TIMESTAMP",
+          "contacts":[{
+            "addresses":[{
+              "city":"CONTACT_CITY",
+              "country":"CONTACT_COUNTRY",
+              "country_code":"CONTACT_COUNTRY_CODE",
+              "state":"CONTACT_STATE",
+              "street":"CONTACT_STREET",
+              "type":"HOME or WORK",
+              "zip":"CONTACT_ZIP"
+            }],
+            "birthday":"CONTACT_BIRTHDAY",
+            "emails":[{
+              "email":"CONTACT_EMAIL",
+              "type":"WORK or HOME"
+              }],
+            "name":{
+              "formatted_name":"CONTACT_FORMATTED_NAME",
+              "first_name":"CONTACT_FIRST_NAME",
+              "last_name":"CONTACT_LAST_NAME",
+              "middle_name":"CONTACT_MIDDLE_NAME",
+              "suffix":"CONTACT_SUFFIX",
+              "prefix":"CONTACT_PREFIX"
+              },
+            "org":{
+              "company":"CONTACT_ORG_COMPANY",
+              "department":"CONTACT_ORG_DEPARTMENT",
+              "title":"CONTACT_ORG_TITLE"
+              },
+            "phones":[{
+              "phone":"CONTACT_PHONE",
+              "wa_id":"CONTACT_WA_ID",
+              "type":"HOME or WORK>"
+              }],
+            "urls":[{
+              "url":"CONTACT_URL",
+              "type":"HOME or WORK"
+              }]
+            }]
+          }]
+        },
+      "field":"messages"
+    }]
+  }]
+}

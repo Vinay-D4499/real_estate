@@ -1,0 +1,84 @@
+
+Media Messages
+When a message with media is received, the WhatsApp Business Platform downloads the media. A notification is sent to your Webhook once the media is downloaded.
+
+The Webhook notification contains information that identifies the media object and enables you to find and retrieve the object. Use the media endpoints to retrieve the media.
+
+{
+  "object": "whatsapp_business_account",
+  "entry": [{
+      "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
+      "changes": [{
+          "value": {
+              "messaging_product": "whatsapp",
+              "metadata": {
+                  "display_phone_number": PHONE_NUMBER,
+                  "phone_number_id": PHONE_NUMBER_ID
+              },
+              "contacts": [{
+                  "profile": {
+                    "name": "NAME"
+                  },
+                  "wa_id": "WHATSAPP_ID"
+                }],
+              "messages": [{
+                  "from": PHONE_NUMBER,
+                  "id": "wamid.ID",
+                  "timestamp": TIMESTAMP,
+                  "type": "image",
+                  "image": {
+                    "caption": "CAPTION",
+                    "mime_type": "image/jpeg",
+                    "sha256": "IMAGE_HASH",
+                    "id": "ID"
+                  }
+                }]
+          },
+          "field": "messages"
+        }]
+    }]
+}
+
+When you receive a sticker, you will get the following notification:
+
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "ID",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "PHONE_NUMBER",
+              "phone_number_id": "PHONE_NUMBER_ID"
+            },
+            "contacts": [
+              {
+                "profile": {
+                  "name": "NAME"
+                },
+                "wa_id": "ID"
+              }
+            ],
+            "messages": [
+              {
+                "from": "SENDER_PHONE_NUMBER",
+                "id": "wamid.ID",
+                "timestamp": "TIMESTAMP",
+                "type": "sticker",
+                "sticker": {
+                  "mime_type": "image/webp",
+                  "sha256": "HASH",
+                  "id": "ID"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
