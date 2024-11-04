@@ -83,8 +83,8 @@ webhookRoutes.post('/webhook', async (req, res) => {
                     // Handling message status updates
                     if (value.statuses && value.statuses.length > 0) {
                         for (const status of value.statuses) {
-                            const statusTimestamp = new Date(status.timestamp * 1000);
-
+                            const statusTimestamp = new Date(status.timestamp * 1000); 
+                    
                             const statusData = {
                                 status: status.status,
                                 timestamp: statusTimestamp,
@@ -97,33 +97,28 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                 errorMessage: status.errors ? status.errors[0].message : null,
                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
                             };
-
+                    
                             try {
-                                const timeMargin = 5000;
                                 const message = await WebhookMessage.findOne({
                                     where: {
                                         whatsappUserId: status.recipient_id,
-                                        timestamp: {
-                                            [Op.between]: [
-                                                new Date(statusTimestamp - timeMargin),
-                                                new Date(statusTimestamp + timeMargin)
-                                            ]
-                                        }
+                                        messageId: status.id  
                                     }
                                 });
-
+                    
                                 if (message) {
                                     statusData.messageId = message.messageId;
                                     await WebhookMessageStatus.create(statusData);
                                     console.log("Status saved to WebhookMessageStatus table");
                                 } else {
-                                    console.error("No matching message found for status update with recipient ID:", status.recipient_id, "and timestamp:", statusTimestamp);
+                                    console.error("No matching message found for status update with recipient ID:", status.recipient_id, "and message ID:", status.id);
                                 }
                             } catch (error) {
                                 console.error("Error saving status to WebhookMessageStatus table:", error);
                             }
                         }
                     }
+                    
 
                 }
             }
