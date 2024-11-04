@@ -5,6 +5,8 @@ const path = require('path');
 const WebhookMessage = require('../models/webhookMessageModel');
 const WebhookMessageStatus = require('../models/webhookMessageStatusModel');
 const { Op } = require('sequelize');
+const s3 = require('../config/digitalOceanConfig');
+const { v4: uuidv4 } = require('uuid');
 const webhookRoutes = express.Router();
 
 const token = process.env.WHATSAPP_TOKEN;
@@ -146,9 +148,51 @@ webhookRoutes.post('/webhook', async (req, res) => {
 });
 
 // Function to download media from WhatsApp API
-async function downloadMedia(mediaId, mimeType) {
+// async function downloadMedia(mediaId, mimeType) {
+//     try {
+//         // Step 1: Retrieve the media URL
+//         const mediaUrlResponse = await axios.get(`https://graph.facebook.com/v20.0/${mediaId}`, {
+//             headers: {
+//                 Authorization: `Bearer ${token}`
+//             }
+//         });
+
+//         const mediaUrl = mediaUrlResponse.data.url;
+
+//         // Step 2: Download the media using the obtained URL
+//         const mediaResponse = await axios.get(mediaUrl, {
+//             responseType: 'arraybuffer',
+//             headers: {
+//                 Authorization: `Bearer ${token}`  // Pass token again for media URL
+//             }
+//         });
+
+//         // Determine file extension from mime type
+//         const extension = mimeType.split('/')[1];
+//         const fileName = `media_${mediaId}.${extension}`;
+//         const directoryPath = path.join(__dirname, '../media');
+
+//         // Ensure directory exists
+//         if (!fs.existsSync(directoryPath)) {
+//             fs.mkdirSync(directoryPath, { recursive: true });
+//         }
+
+//         const filePath = path.join(directoryPath, fileName);
+
+//         // Write media file to disk
+//         fs.writeFileSync(filePath, mediaResponse.data);
+//         console.log(`Media downloaded and saved as ${filePath}`);
+
+//         return filePath;  // Return the file path to store in the database
+//     } catch (error) {
+//         console.error("failed to download media :::>>>>", error);
+//         console.error("Error downloading media:", error.message);
+//         return null;
+//     }
+// }
+
+async function downloadMedia(mediaId, mimeType, clientName) {
     try {
-        // Step 1: Retrieve the media URL
         const mediaUrlResponse = await axios.get(`https://graph.facebook.com/v20.0/${mediaId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -157,36 +201,36 @@ async function downloadMedia(mediaId, mimeType) {
 
         const mediaUrl = mediaUrlResponse.data.url;
 
-        // Step 2: Download the media using the obtained URL
         const mediaResponse = await axios.get(mediaUrl, {
             responseType: 'arraybuffer',
             headers: {
-                Authorization: `Bearer ${token}`  // Pass token again for media URL
+                Authorization: `Bearer ${token}`
             }
         });
 
-        // Determine file extension from mime type
         const extension = mimeType.split('/')[1];
-        const fileName = `media_${mediaId}.${extension}`;
-        const directoryPath = path.join(__dirname, '../media');
+        const fileKey = `${clientName}/whatsApp_media/${uuidv4()}.${extension}`;
 
-        // Ensure directory exists
-        if (!fs.existsSync(directoryPath)) {
-            fs.mkdirSync(directoryPath, { recursive: true });
-        }
+        const params = {
+            Bucket: 'real_estate', 
+            Key: fileKey,
+            Body: mediaResponse.data,
+            ACL: 'public-read',
+            ContentType: mimeType,
+        };
 
-        const filePath = path.join(directoryPath, fileName);
+        const uploadResult = await s3.upload(params).promise();
 
-        // Write media file to disk
-        fs.writeFileSync(filePath, mediaResponse.data);
-        console.log(`Media downloaded and saved as ${filePath}`);
+        const mediaUrlInSpace = uploadResult.Location;
+        console.log(`Media uploaded and available at ${mediaUrlInSpace}`);
 
-        return filePath;  // Return the file path to store in the database
+        return mediaUrlInSpace;  
+
     } catch (error) {
-        console.error("failed to download media :::>>>>", error);
-        console.error("Error downloading media:", error.message);
+        console.error("Error downloading or uploading media:", error);
         return null;
     }
 }
 
 module.exports = webhookRoutes;
+
