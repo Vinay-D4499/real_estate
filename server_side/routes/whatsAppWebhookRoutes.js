@@ -41,10 +41,11 @@ webhookRoutes.post('/webhook', async (req, res) => {
                 for (const change of changes) {
                     const value = change.value;
 
+                    // Process incoming messages
                     if (value.messages && value.messages.length > 0) {
                         for (const message of value.messages) {
                             const phoneNumberId = value.metadata.phone_number_id;
-                            const from = message.from; 
+                            const from = message.from;
                             const messageId = message.id;
                             const timestamp = new Date(message.timestamp * 1000);
 
@@ -99,14 +100,18 @@ webhookRoutes.post('/webhook', async (req, res) => {
                         }
                     }
 
-                    // Handling message status updates
+                    // Process message statuses for outgoing messages
                     if (value.statuses && value.statuses.length > 0) {
                         for (const status of value.statuses) {
                             const statusTimestamp = new Date(status.timestamp * 1000);
+                            const recipientId = status.recipient_id;
+                            const isOutgoing = recipientId === process.env.WHATSAPP_BUSINESS_PHONE_NUMBER;
+
                             const statusData = {
+                                messageId: status.id,
+                                recipientId: recipientId,
                                 status: status.status,
                                 timestamp: statusTimestamp,
-                                recipientId: status.recipient_id,
                                 conversationId: status.conversation ? status.conversation.id : null,
                                 conversationCategory: status.conversation ? status.conversation.origin.type : null,
                                 isBillable: status.pricing ? status.pricing.billable : false,
@@ -114,12 +119,13 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                 errorTitle: status.errors ? status.errors[0].title : null,
                                 errorMessage: status.errors ? status.errors[0].message : null,
                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
+                                direction: isOutgoing ? 'outgoing' : 'incoming'
                             };
 
                             try {
                                 const message = await WebhookMessage.findOne({
                                     where: {
-                                        whatsappUserId: status.recipient_id,
+                                        whatsappUserId: recipientId,
                                         messageId: status.id
                                     }
                                 });
@@ -129,7 +135,7 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                     await WebhookMessageStatus.create(statusData);
                                     console.log("Status saved to WebhookMessageStatus table");
                                 } else {
-                                    console.error("No matching message found for status update with recipient ID:", status.recipient_id, "and message ID:", status.id);
+                                    console.error("No matching message found for status update with recipient ID:", recipientId, "and message ID:", status.id);
                                 }
                             } catch (error) {
                                 console.error("Error saving status to WebhookMessageStatus table:", error);
@@ -146,6 +152,127 @@ webhookRoutes.post('/webhook', async (req, res) => {
     console.log("Invalid webhook event received.");
     return res.sendStatus(404);
 });
+
+// webhookRoutes.post('/webhook', async (req, res) => {
+//     const bodyParam = req.body;
+//     console.log("Received webhook payload at:", new Date().toISOString());
+//     console.log("Received webhook payload:", JSON.stringify(bodyParam, null, 2));
+
+//     if (bodyParam.object === 'whatsapp_business_account') {
+//         const entries = bodyParam.entry;
+
+//         for (const entry of entries) {
+//             const changes = entry.changes;
+
+//             if (changes && changes.length > 0) {
+//                 for (const change of changes) {
+//                     const value = change.value;
+
+//                     if (value.messages && value.messages.length > 0) {
+//                         for (const message of value.messages) {
+//                             const phoneNumberId = value.metadata.phone_number_id;
+//                             const from = message.from; 
+//                             const messageId = message.id;
+//                             const timestamp = new Date(message.timestamp * 1000);
+
+//                             const isSentByBusiness = from === process.env.WHATSAPP_BUSINESS_PHONE_NUMBER; // Your WhatsApp number
+
+//                             if (message.type === 'image' || message.type === 'video' || message.type === 'audio' || message.type === 'document') {
+//                                 const mediaId = message[message.type].id;
+//                                 const mimeType = message[message.type].mime_type;
+//                                 const caption = message.caption || null;
+
+//                                 const mediaPath = await downloadMedia(mediaId, mimeType, process.env.CLIENT_NAME);
+
+//                                 const messageData = {
+//                                     whatsappUserId: from,
+//                                     whatsappUserName: message.profile ? message.profile.name : null,
+//                                     phoneNumberId: phoneNumberId,
+//                                     messageId: messageId,
+//                                     messageBody: message.text ? message.text.body : null,
+//                                     timestamp: timestamp,
+//                                     mediaId: mediaId,
+//                                     mediaType: message.type,
+//                                     caption: caption,
+//                                     mimeType: mimeType,
+//                                     mediaPathUrl: mediaPath,
+//                                     direction: isSentByBusiness ? 'outgoing' : 'incoming' 
+//                                 };
+
+//                                 try {
+//                                     await WebhookMessage.create(messageData);
+//                                     console.log("Message with media saved to WebhookMessage table");
+//                                 } catch (error) {
+//                                     console.error("Error saving message with media to WebhookMessage table:", error);
+//                                 }
+//                             } else {
+//                                 const messageData = {
+//                                     whatsappUserId: from,
+//                                     whatsappUserName: message.profile ? message.profile.name : null,
+//                                     phoneNumberId: phoneNumberId,
+//                                     messageId: messageId,
+//                                     messageBody: message.text ? message.text.body : null,
+//                                     timestamp: timestamp,
+//                                     direction: isSentByBusiness ? 'outgoing' : 'incoming' 
+//                                 };
+
+//                                 try {
+//                                     await WebhookMessage.create(messageData);
+//                                     console.log("Message saved to WebhookMessage table");
+//                                 } catch (error) {
+//                                     console.error("Error saving message to WebhookMessage table:", error);
+//                                 }
+//                             }
+//                         }
+//                     }
+
+//                     // Handling message status updates
+//                     if (value.statuses && value.statuses.length > 0) {
+//                         for (const status of value.statuses) {
+//                             const statusTimestamp = new Date(status.timestamp * 1000);
+//                             const statusData = {
+//                                 status: status.status,
+//                                 timestamp: statusTimestamp,
+//                                 recipientId: status.recipient_id,
+//                                 conversationId: status.conversation ? status.conversation.id : null,
+//                                 conversationCategory: status.conversation ? status.conversation.origin.type : null,
+//                                 isBillable: status.pricing ? status.pricing.billable : false,
+//                                 errorCode: status.errors ? status.errors[0].code : null,
+//                                 errorTitle: status.errors ? status.errors[0].title : null,
+//                                 errorMessage: status.errors ? status.errors[0].message : null,
+//                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
+//                             };
+
+//                             try {
+//                                 const message = await WebhookMessage.findOne({
+//                                     where: {
+//                                         whatsappUserId: status.recipient_id,
+//                                         messageId: status.id
+//                                     }
+//                                 });
+
+//                                 if (message) {
+//                                     statusData.messageId = message.messageId;
+//                                     await WebhookMessageStatus.create(statusData);
+//                                     console.log("Status saved to WebhookMessageStatus table");
+//                                 } else {
+//                                     console.error("No matching message found for status update with recipient ID:", status.recipient_id, "and message ID:", status.id);
+//                                 }
+//                             } catch (error) {
+//                                 console.error("Error saving status to WebhookMessageStatus table:", error);
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+
+//         return res.sendStatus(200);
+//     }
+
+//     console.log("Invalid webhook event received.");
+//     return res.sendStatus(404);
+// });
 
 
 // Function to download media from WhatsApp API
