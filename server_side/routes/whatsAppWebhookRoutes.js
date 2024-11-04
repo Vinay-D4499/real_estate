@@ -69,7 +69,7 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                     mediaType: message.type,
                                     caption: caption,
                                     mimeType: mimeType,
-                                    mediaPath: mediaPath 
+                                    mediaPathUrl: mediaPath 
                                 };
 
                                 try {
@@ -191,7 +191,7 @@ webhookRoutes.post('/webhook', async (req, res) => {
 //     }
 // }
 
-async function downloadMedia(mediaId, mimeType, clientName) {
+const downloadMedia = async (mediaId, mimeType, clientName) => {
     try {
         const mediaUrlResponse = await axios.get(`https://graph.facebook.com/v20.0/${mediaId}`, {
             headers: {
@@ -209,11 +209,12 @@ async function downloadMedia(mediaId, mimeType, clientName) {
         });
 
         const extension = mimeType.split('/')[1];
+
         const fileKey = `${clientName}/whatsApp_media/${uuidv4()}.${extension}`;
 
         const params = {
             Bucket: 'real_estate', 
-            Key: fileKey,
+            Key: fileKey,  
             Body: mediaResponse.data,
             ACL: 'public-read',
             ContentType: mimeType,
@@ -230,7 +231,8 @@ async function downloadMedia(mediaId, mimeType, clientName) {
         console.error("Error downloading or uploading media:", error);
         return null;
     }
-}
+};
+
 
 module.exports = webhookRoutes;
 
