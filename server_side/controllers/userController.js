@@ -8,6 +8,7 @@ const { baseURL } = require('../config/baseURL');
 const { default: axios } = require('axios');
 const s3 = require('../config/digitalOceanConfig');
 const { v4: uuidv4 } = require('uuid');
+const WebhookMessage = require('../models/webhookMessageModel');
 
 // const createUser = async (req, res, next) => {
 //     // const errors = validationResult(req);
@@ -109,6 +110,9 @@ const createUser = async (req, res, next) => {
 
 async function sendTextMessage(to, phone, email, password) {
     try {
+        const messageBody = `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`;
+        
+        // Send the message via WhatsApp API
         const response = await axios({
             url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
             method: "POST",
@@ -120,14 +124,26 @@ async function sendTextMessage(to, phone, email, password) {
                 messaging_product: "whatsapp",
                 to: `91${to}`,
                 type: "text",
-                text: {
-                    body: `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`
-                }
+                text: { body: messageBody }
             }
         });
-        console.log("response received ", response)
-        console.log("Message sent successfully:", response.data);
+
+        // Store the outgoing message in WebhookMessage
+        const messageData = {
+            whatsappUserId: to,
+            whatsappUserName: null, // If user name is unknown at this point
+            phoneNumberId: process.env.PHONE_NUMBER_ID,
+            messageId: response.data.messages[0].id, // WhatsApp's message ID
+            messageBody: messageBody,
+            timestamp: new Date(),
+            direction: 'outgoing'
+        };
+
+        await WebhookMessage.create(messageData);
+        console.log("Outgoing message saved to WebhookMessage table");
+        
         return response.data;
+
     } catch (error) {
         console.error("Error sending message:", error.response ? error.response.data : error.message);
         return { error: "Failed to send message" };
