@@ -148,6 +148,7 @@ webhookRoutes.post('/webhook', async (req, res) => {
 // Function to download media from WhatsApp API
 async function downloadMedia(mediaId, mimeType) {
     try {
+        // Step 1: Retrieve the media URL
         const mediaUrlResponse = await axios.get(`https://graph.facebook.com/v20.0/${mediaId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -155,12 +156,26 @@ async function downloadMedia(mediaId, mimeType) {
         });
 
         const mediaUrl = mediaUrlResponse.data.url;
-        const mediaResponse = await axios.get(mediaUrl, { responseType: 'arraybuffer' });
+
+        // Step 2: Download the media using the obtained URL
+        const mediaResponse = await axios.get(mediaUrl, {
+            responseType: 'arraybuffer',
+            headers: {
+                Authorization: `Bearer ${token}`  // Pass token again for media URL
+            }
+        });
 
         // Determine file extension from mime type
         const extension = mimeType.split('/')[1];
         const fileName = `media_${mediaId}.${extension}`;
-        const filePath = path.join(__dirname, '../media', fileName);
+        const directoryPath = path.join(__dirname, '../media');
+
+        // Ensure directory exists
+        if (!fs.existsSync(directoryPath)) {
+            fs.mkdirSync(directoryPath, { recursive: true });
+        }
+
+        const filePath = path.join(directoryPath, fileName);
 
         // Write media file to disk
         fs.writeFileSync(filePath, mediaResponse.data);
@@ -168,7 +183,7 @@ async function downloadMedia(mediaId, mimeType) {
 
         return filePath;  // Return the file path to store in the database
     } catch (error) {
-        console.error(error)
+        console.error("failed to download media :::>>>>", error);
         console.error("Error downloading media:", error.message);
         return null;
     }
