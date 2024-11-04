@@ -168,6 +168,7 @@ async function downloadMedia(mediaId, mimeType) {
 
         return filePath;  // Return the file path to store in the database
     } catch (error) {
+        console.error(error)
         console.error("Error downloading media:", error.message);
         return null;
     }
