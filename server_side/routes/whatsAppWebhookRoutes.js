@@ -22,7 +22,7 @@ webhookRoutes.get('/webhook', (req, res)=>{
      }
 })
 
-app.post('/webhook', async (req, res) => {
+webhookRoutes.post('/webhook', async (req, res) => {
     const bodyParam = req.body;
     console.log("Received webhook payload at:", new Date().toISOString());
     console.log("Received webhook payload:", JSON.stringify(bodyParam, null, 2));
