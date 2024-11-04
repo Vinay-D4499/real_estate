@@ -1,29 +1,28 @@
 const express = require('express');
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 const WebhookMessage = require('../models/webhookMessageModel');
 const WebhookMessageStatus = require('../models/webhookMessageStatusModel');
 const { Op } = require('sequelize');
 const webhookRoutes = express.Router();
-
 
 const token = process.env.WHATSAPP_TOKEN;
 const mytoken = process.env.CHECK_TOKEN;
 
 webhookRoutes.get('/webhook', (req, res) => {
     let mode = req.query["hub.mode"];
-    let challange = req.query["hub.challenge"];
+    let challenge = req.query["hub.challenge"];
     let token = req.query["hub.verify_token"];
 
-
     if (mode && token) {
-
         if (mode === "subscribe" && token === mytoken) {
-            res.status(200).send(challange);
+            res.status(200).send(challenge);
         } else {
             res.status(403);
         }
-
     }
-})
+});
 
 webhookRoutes.post('/webhook', async (req, res) => {
     const bodyParam = req.body;
@@ -48,33 +47,52 @@ webhookRoutes.post('/webhook', async (req, res) => {
                             const messageId = message.id;
                             const timestamp = new Date(message.timestamp * 1000);
 
-                            const messageData = {
-                                whatsappUserId: from,
-                                whatsappUserName: message.profile ? message.profile.name : null,
-                                phoneNumberId: phoneNumberId,
-                                messageId: messageId,
-                                messageBody: message.text ? message.text.body : null,
-                                timestamp: timestamp,
-                                reactionEmoji: message.reaction ? message.reaction.emoji : null,
-                                mediaId: message.media ? message.media.id : null,
-                                mediaType: message.media ? message.media.type : null,
-                                caption: message.caption || null,
-                                mimeType: message.media ? message.media.mime_type : null,
-                                locationLatitude: message.location ? message.location.latitude : null,
-                                locationLongitude: message.location ? message.location.longitude : null,
-                                locationName: message.location ? message.location.name : null,
-                                locationAddress: message.location ? message.location.address : null,
-                                buttonText: message.button ? message.button.text : null,
-                                buttonPayload: message.button ? message.button.payload : null,
-                                errorCode: message.errors ? message.errors[0].code : null,
-                                errorDetails: message.errors ? message.errors[0].details : null,
-                            };
+                            // Check if the message contains media
+                            if (message.type === 'image' || message.type === 'video' || message.type === 'audio' || message.type === 'document') {
+                                const mediaId = message[message.type].id;
+                                const mimeType = message[message.type].mime_type;
+                                const caption = message.caption || null;
 
-                            try {
-                                await WebhookMessage.create(messageData);
-                                console.log("Message saved to WebhookMessage table");
-                            } catch (error) {
-                                console.error("Error saving message to WebhookMessage table:", error);
+                                // Attempt to download and save the media
+                                const mediaPath = await downloadMedia(mediaId, mimeType);
+
+                                const messageData = {
+                                    whatsappUserId: from,
+                                    whatsappUserName: message.profile ? message.profile.name : null,
+                                    phoneNumberId: phoneNumberId,
+                                    messageId: messageId,
+                                    messageBody: message.text ? message.text.body : null,
+                                    timestamp: timestamp,
+                                    mediaId: mediaId,
+                                    mediaType: message.type,
+                                    caption: caption,
+                                    mimeType: mimeType,
+                                    mediaPath: mediaPath 
+                                };
+
+                                try {
+                                    await WebhookMessage.create(messageData);
+                                    console.log("Message with media saved to WebhookMessage table");
+                                } catch (error) {
+                                    console.error("Error saving message with media to WebhookMessage table:", error);
+                                }
+                            } else {
+                                // Handle messages without media as usual
+                                const messageData = {
+                                    whatsappUserId: from,
+                                    whatsappUserName: message.profile ? message.profile.name : null,
+                                    phoneNumberId: phoneNumberId,
+                                    messageId: messageId,
+                                    messageBody: message.text ? message.text.body : null,
+                                    timestamp: timestamp
+                                };
+
+                                try {
+                                    await WebhookMessage.create(messageData);
+                                    console.log("Message saved to WebhookMessage table");
+                                } catch (error) {
+                                    console.error("Error saving message to WebhookMessage table:", error);
+                                }
                             }
                         }
                     }
@@ -82,8 +100,7 @@ webhookRoutes.post('/webhook', async (req, res) => {
                     // Handling message status updates
                     if (value.statuses && value.statuses.length > 0) {
                         for (const status of value.statuses) {
-                            const statusTimestamp = new Date(status.timestamp * 1000); 
-                    
+                            const statusTimestamp = new Date(status.timestamp * 1000);
                             const statusData = {
                                 status: status.status,
                                 timestamp: statusTimestamp,
@@ -96,25 +113,19 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                 errorMessage: status.errors ? status.errors[0].message : null,
                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
                             };
-                    
-                            console.log("Status Data to be saved:", statusData);
-                    
+
                             try {
                                 const message = await WebhookMessage.findOne({
                                     where: {
                                         whatsappUserId: status.recipient_id,
-                                        messageId: status.id  
+                                        messageId: status.id
                                     }
                                 });
-                    
+
                                 if (message) {
                                     statusData.messageId = message.messageId;
-                                    
-                                    // Additional logging before attempting to save
-                                    console.log("Saving to WebhookMessageStatus with statusData:", statusData);
-                                    
                                     await WebhookMessageStatus.create(statusData);
-                                    console.log("Status successfully saved to WebhookMessageStatus table");
+                                    console.log("Status saved to WebhookMessageStatus table");
                                 } else {
                                     console.error("No matching message found for status update with recipient ID:", status.recipient_id, "and message ID:", status.id);
                                 }
@@ -123,7 +134,6 @@ webhookRoutes.post('/webhook', async (req, res) => {
                             }
                         }
                     }
-                    
                 }
             }
         }
@@ -134,5 +144,33 @@ webhookRoutes.post('/webhook', async (req, res) => {
     console.log("Invalid webhook event received.");
     return res.sendStatus(404);
 });
+
+// Function to download media from WhatsApp API
+async function downloadMedia(mediaId, mimeType) {
+    try {
+        const mediaUrlResponse = await axios.get(`https://graph.facebook.com/v20.0/${mediaId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        const mediaUrl = mediaUrlResponse.data.url;
+        const mediaResponse = await axios.get(mediaUrl, { responseType: 'arraybuffer' });
+
+        // Determine file extension from mime type
+        const extension = mimeType.split('/')[1];
+        const fileName = `media_${mediaId}.${extension}`;
+        const filePath = path.join(__dirname, '../media', fileName);
+
+        // Write media file to disk
+        fs.writeFileSync(filePath, mediaResponse.data);
+        console.log(`Media downloaded and saved as ${filePath}`);
+
+        return filePath;  // Return the file path to store in the database
+    } catch (error) {
+        console.error("Error downloading media:", error.message);
+        return null;
+    }
+}
 
 module.exports = webhookRoutes;
