@@ -209,6 +209,7 @@ const downloadMedia = async (mediaId, mimeType, clientName) => {
         });
 
         const extension = mimeType.split('/')[1];
+        const clientName = process.env.CLIENT_NAME || 'default_client';
 
         const fileKey = `${clientName}/whatsApp_media/${uuidv4()}.${extension}`;
 
