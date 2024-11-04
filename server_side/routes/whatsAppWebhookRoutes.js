@@ -80,7 +80,6 @@ webhookRoutes.post('/webhook', async (req, res) => {
                     }
 
                     // Handling message status updates
-                    // Handling message status updates
                     if (value.statuses && value.statuses.length > 0) {
                         for (const status of value.statuses) {
                             const statusTimestamp = new Date(status.timestamp * 1000); 
@@ -98,7 +97,8 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
                             };
                     
-                            console.log("Status Data :",statusData)
+                            console.log("Status Data to be saved:", statusData);
+                    
                             try {
                                 const message = await WebhookMessage.findOne({
                                     where: {
@@ -109,8 +109,12 @@ webhookRoutes.post('/webhook', async (req, res) => {
                     
                                 if (message) {
                                     statusData.messageId = message.messageId;
+                                    
+                                    // Additional logging before attempting to save
+                                    console.log("Saving to WebhookMessageStatus with statusData:", statusData);
+                                    
                                     await WebhookMessageStatus.create(statusData);
-                                    console.log("Status saved to WebhookMessageStatus table");
+                                    console.log("Status successfully saved to WebhookMessageStatus table");
                                 } else {
                                     console.error("No matching message found for status update with recipient ID:", status.recipient_id, "and message ID:", status.id);
                                 }
@@ -120,7 +124,6 @@ webhookRoutes.post('/webhook', async (req, res) => {
                         }
                     }
                     
-
                 }
             }
         }
