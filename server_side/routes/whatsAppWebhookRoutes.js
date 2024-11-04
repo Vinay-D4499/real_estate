@@ -5,24 +5,24 @@ const { Op } = require('sequelize');
 const webhookRoutes = express.Router();
 
 
-const token=process.env.WHATSAPP_TOKEN;
-const mytoken=process.env.CHECK_TOKEN;
+const token = process.env.WHATSAPP_TOKEN;
+const mytoken = process.env.CHECK_TOKEN;
 
-webhookRoutes.get('/webhook', (req, res)=>{
-    let mode=req.query["hub.mode"];
-    let challange=req.query["hub.challenge"];
-    let token=req.query["hub.verify_token"];
- 
- 
-     if(mode && token){
- 
-         if(mode==="subscribe" && token===mytoken){
-             res.status(200).send(challange);
-         }else{
-             res.status(403);
-         }
- 
-     }
+webhookRoutes.get('/webhook', (req, res) => {
+    let mode = req.query["hub.mode"];
+    let challange = req.query["hub.challenge"];
+    let token = req.query["hub.verify_token"];
+
+
+    if (mode && token) {
+
+        if (mode === "subscribe" && token === mytoken) {
+            res.status(200).send(challange);
+        } else {
+            res.status(403);
+        }
+
+    }
 })
 
 webhookRoutes.post('/webhook', async (req, res) => {
@@ -46,7 +46,7 @@ webhookRoutes.post('/webhook', async (req, res) => {
                             const phoneNumberId = value.metadata.phone_number_id;
                             const from = message.from;
                             const messageId = message.id;
-                            const timestamp = new Date(message.timestamp * 1000); 
+                            const timestamp = new Date(message.timestamp * 1000);
 
                             const messageData = {
                                 whatsappUserId: from,
@@ -80,9 +80,10 @@ webhookRoutes.post('/webhook', async (req, res) => {
                     }
 
                     // Handling message status updates
+                    // Handling message status updates
                     if (value.statuses && value.statuses.length > 0) {
                         for (const status of value.statuses) {
-                            const statusTimestamp = new Date(status.timestamp * 1000); 
+                            const statusTimestamp = new Date(status.timestamp * 1000);
 
                             const statusData = {
                                 status: status.status,
@@ -99,7 +100,6 @@ webhookRoutes.post('/webhook', async (req, res) => {
 
                             try {
                                 const timeMargin = 5000;
-
                                 const message = await WebhookMessage.findOne({
                                     where: {
                                         whatsappUserId: status.recipient_id,
@@ -113,17 +113,18 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                 });
 
                                 if (message) {
-                                    statusData.messageId = message.messageId; 
+                                    statusData.messageId = message.messageId;
                                     await WebhookMessageStatus.create(statusData);
                                     console.log("Status saved to WebhookMessageStatus table");
                                 } else {
-                                    console.error("No matching message found for status update.");
+                                    console.error("No matching message found for status update with recipient ID:", status.recipient_id, "and timestamp:", statusTimestamp);
                                 }
                             } catch (error) {
                                 console.error("Error saving status to WebhookMessageStatus table:", error);
                             }
                         }
                     }
+
                 }
             }
         }
