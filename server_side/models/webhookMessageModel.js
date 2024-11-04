@@ -14,6 +14,7 @@ const WebhookMessage = sequelize.define('WebhookMessage', {
     caption: { type: DataTypes.TEXT },
     mimeType: { type: DataTypes.STRING },
     mediaPathUrl: { type: DataTypes.STRING },
+    direction: { type: DataTypes.STRING },
     locationLatitude: { type: DataTypes.FLOAT },
     locationLongitude: { type: DataTypes.FLOAT },
     locationName: { type: DataTypes.STRING },

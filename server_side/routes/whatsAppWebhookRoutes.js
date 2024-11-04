@@ -41,22 +41,21 @@ webhookRoutes.post('/webhook', async (req, res) => {
                 for (const change of changes) {
                     const value = change.value;
 
-                    // Handling incoming messages
                     if (value.messages && value.messages.length > 0) {
                         for (const message of value.messages) {
                             const phoneNumberId = value.metadata.phone_number_id;
-                            const from = message.from;
+                            const from = message.from; 
                             const messageId = message.id;
                             const timestamp = new Date(message.timestamp * 1000);
 
-                            // Check if the message contains media
+                            const isSentByBusiness = from === process.env.WHATSAPP_BUSINESS_PHONE_NUMBER; // Your WhatsApp number
+
                             if (message.type === 'image' || message.type === 'video' || message.type === 'audio' || message.type === 'document') {
                                 const mediaId = message[message.type].id;
                                 const mimeType = message[message.type].mime_type;
                                 const caption = message.caption || null;
 
-                                // Attempt to download and save the media
-                                const mediaPath = await downloadMedia(mediaId, mimeType);
+                                const mediaPath = await downloadMedia(mediaId, mimeType, process.env.CLIENT_NAME);
 
                                 const messageData = {
                                     whatsappUserId: from,
@@ -69,7 +68,8 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                     mediaType: message.type,
                                     caption: caption,
                                     mimeType: mimeType,
-                                    mediaPathUrl: mediaPath 
+                                    mediaPathUrl: mediaPath,
+                                    direction: isSentByBusiness ? 'outgoing' : 'incoming' 
                                 };
 
                                 try {
@@ -79,14 +79,14 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                     console.error("Error saving message with media to WebhookMessage table:", error);
                                 }
                             } else {
-                                // Handle messages without media as usual
                                 const messageData = {
                                     whatsappUserId: from,
                                     whatsappUserName: message.profile ? message.profile.name : null,
                                     phoneNumberId: phoneNumberId,
                                     messageId: messageId,
                                     messageBody: message.text ? message.text.body : null,
-                                    timestamp: timestamp
+                                    timestamp: timestamp,
+                                    direction: isSentByBusiness ? 'outgoing' : 'incoming' 
                                 };
 
                                 try {
@@ -146,6 +146,7 @@ webhookRoutes.post('/webhook', async (req, res) => {
     console.log("Invalid webhook event received.");
     return res.sendStatus(404);
 });
+
 
 // Function to download media from WhatsApp API
 // async function downloadMedia(mediaId, mimeType) {
