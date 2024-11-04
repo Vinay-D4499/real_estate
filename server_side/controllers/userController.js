@@ -138,7 +138,7 @@ async function sendTextMessage(to, phone, email, password) {
             timestamp: new Date(),
             direction: 'outgoing'
         };
-
+        console.log('message data ::::>>> ', messageData)
         await WebhookMessage.create(messageData);
         console.log("Outgoing message saved to WebhookMessage table");
         
