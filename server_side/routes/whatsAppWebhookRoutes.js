@@ -98,6 +98,7 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                 errorDetails: status.errors ? status.errors[0].error_data.details : null,
                             };
                     
+                            console.log("Status Data :",statusData)
                             try {
                                 const message = await WebhookMessage.findOne({
                                     where: {
