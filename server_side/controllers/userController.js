@@ -73,6 +73,7 @@ const createUser = async (req, res, next) => {
         // Commit the transaction
         await transaction.commit();
 
+        // Send WhatsApp message and get the recipient_id
         const messageResponse = await sendTextMessage(phone, phone, email, password, newUser.id);
         console.log("Message sent and user updated with whatsappUserId");
 
@@ -87,7 +88,7 @@ const createUser = async (req, res, next) => {
 async function sendTextMessage(to, phone, email, password, userId) {
     try {
         const messageBody = `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`;
-        
+
         // Send the message via WhatsApp API
         const response = await axios({
             url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
@@ -106,7 +107,7 @@ async function sendTextMessage(to, phone, email, password, userId) {
 
         // Store the outgoing message in WebhookMessage
         const messageData = {
-            whatsappUserId: `91${to}`, // Prefix '91' to the phone number to get whatsappUserId 
+            whatsappUserId: response.data.messages[0].recipient_id, // Use recipient_id from response to get the whatsappUserId for future referecnce 
             whatsappUserName: null, // If user name is unknown at this point
             phoneNumberId: process.env.PHONE_NUMBER_ID,
             messageId: response.data.messages[0].id, // WhatsApp's message ID
@@ -114,13 +115,13 @@ async function sendTextMessage(to, phone, email, password, userId) {
             timestamp: new Date(),
             direction: 'outgoing'
         };
-        
+
         await WebhookMessage.create(messageData);
         console.log("Outgoing message saved to WebhookMessage table");
 
-        // Update the user's whatsappUserId with the prefixed phone number
+        // Update the user's whatsappUserId with the recipient_id
         await Users.update(
-            { whatsappUserId: `91${to}` },  // Update whatsappUserId column
+            { whatsappUserId: messageData.whatsappUserId },  
             { where: { id: userId } }
         );
         console.log("User updated with whatsappUserId");
@@ -132,6 +133,7 @@ async function sendTextMessage(to, phone, email, password, userId) {
         return { error: "Failed to send message" };
     }
 }
+
 
 
 // async function sendTextMessage(to, phone, email, password) {
