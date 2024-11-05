@@ -8,6 +8,7 @@ const { Op } = require('sequelize');
 const s3 = require('../config/digitalOceanConfig');
 const { v4: uuidv4 } = require('uuid');
 const webhookRoutes = express.Router();
+const whatsAppWebhookController = require('../controllers/whatsAppWebhookController');
 
 const token = process.env.WHATSAPP_TOKEN;
 const mytoken = process.env.CHECK_TOKEN;
@@ -361,6 +362,8 @@ const downloadMedia = async (mediaId, mimeType, clientName) => {
         return null;
     }
 };
+
+webhookRoutes.get('/conversation/:whatsappUserId', whatsAppWebhookController.fetchConversation);
 
 
 module.exports = webhookRoutes;

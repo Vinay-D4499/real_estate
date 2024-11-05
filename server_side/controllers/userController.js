@@ -63,17 +63,19 @@ const createUser = async (req, res, next) => {
         const password = 'User@12345';
         const role = req.body.role || 'CUSTOMER';
 
+        // Create the user
         const newUser = await userService.createUser(id, { name, email, phone, password, role, budget_min, budget_max }, { transaction });
 
         if (propertyTypeIds && Array.isArray(propertyTypeIds)) {
             await propertyServices.assignPropertyTypesToUser(newUser.id, propertyTypeIds, { transaction });
         }
 
+        // Commit the transaction
         await transaction.commit();
 
-        // Send WhatsApp message
-        await sendTextMessage(phone, phone, email, password);
-        console.log("executed send Text Message");
+        const messageResponse = await sendTextMessage(phone, phone, email, password, newUser.id);
+        console.log("Message sent and user updated with whatsappUserId");
+
         return res.status(201).json({ message: 'Customer added successfully', user: newUser });
     } catch (error) {
         await transaction.rollback();
@@ -81,6 +83,56 @@ const createUser = async (req, res, next) => {
         next(error);
     }
 };
+
+async function sendTextMessage(to, phone, email, password, userId) {
+    try {
+        const messageBody = `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`;
+        
+        // Send the message via WhatsApp API
+        const response = await axios({
+            url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${process.env.WHATSAPP_TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            data: {
+                messaging_product: "whatsapp",
+                to: `91${to}`,
+                type: "text",
+                text: { body: messageBody }
+            }
+        });
+
+        // Store the outgoing message in WebhookMessage
+        const messageData = {
+            whatsappUserId: `91${to}`, // Prefix '91' to the phone number to get whatsappUserId 
+            whatsappUserName: null, // If user name is unknown at this point
+            phoneNumberId: process.env.PHONE_NUMBER_ID,
+            messageId: response.data.messages[0].id, // WhatsApp's message ID
+            messageBody: messageBody,
+            timestamp: new Date(),
+            direction: 'outgoing'
+        };
+        
+        await WebhookMessage.create(messageData);
+        console.log("Outgoing message saved to WebhookMessage table");
+
+        // Update the user's whatsappUserId with the prefixed phone number
+        await Users.update(
+            { whatsappUserId: `91${to}` },  // Update whatsappUserId column
+            { where: { id: userId } }
+        );
+        console.log("User updated with whatsappUserId");
+
+        return response.data;
+
+    } catch (error) {
+        console.error("Error sending message:", error.response ? error.response.data : error.message);
+        return { error: "Failed to send message" };
+    }
+}
+
 
 // async function sendTextMessage(to, phone, email, password) {
 //     try {
@@ -108,47 +160,47 @@ const createUser = async (req, res, next) => {
 //     }
 // }
 
-async function sendTextMessage(to, phone, email, password) {
-    try {
-        const messageBody = `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`;
+// async function sendTextMessage(to, phone, email, password) {
+//     try {
+//         const messageBody = `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`;
         
-        // Send the message via WhatsApp API
-        const response = await axios({
-            url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${process.env.WHATSAPP_TOKEN}`,
-                "Content-Type": "application/json"
-            },
-            data: {
-                messaging_product: "whatsapp",
-                to: `91${to}`,
-                type: "text",
-                text: { body: messageBody }
-            }
-        });
+//         // Send the message via WhatsApp API
+//         const response = await axios({
+//             url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
+//             method: "POST",
+//             headers: {
+//                 "Authorization": `Bearer ${process.env.WHATSAPP_TOKEN}`,
+//                 "Content-Type": "application/json"
+//             },
+//             data: {
+//                 messaging_product: "whatsapp",
+//                 to: `91${to}`,
+//                 type: "text",
+//                 text: { body: messageBody }
+//             }
+//         });
 
-        // Store the outgoing message in WebhookMessage with '91' prefix added to whatsappUserId
-        const messageData = {
-            whatsappUserId: `91${to}`, // Prefix '91' to the phone number
-            whatsappUserName: null, // If user name is unknown at this point
-            phoneNumberId: process.env.PHONE_NUMBER_ID,
-            messageId: response.data.messages[0].id, // WhatsApp's message ID
-            messageBody: messageBody,
-            timestamp: new Date(),
-            direction: 'outgoing'
-        };
+//         // Store the outgoing message in WebhookMessage with '91' prefix added to whatsappUserId
+//         const messageData = {
+//             whatsappUserId: `91${to}`, // Prefix '91' to the phone number
+//             whatsappUserName: null, // If user name is unknown at this point
+//             phoneNumberId: process.env.PHONE_NUMBER_ID,
+//             messageId: response.data.messages[0].id, // WhatsApp's message ID
+//             messageBody: messageBody,
+//             timestamp: new Date(),
+//             direction: 'outgoing'
+//         };
         
-        await WebhookMessage.create(messageData);
-        console.log("Outgoing message saved to WebhookMessage table");
+//         await WebhookMessage.create(messageData);
+//         console.log("Outgoing message saved to WebhookMessage table");
         
-        return response.data;
+//         return response.data;
 
-    } catch (error) {
-        console.error("Error sending message:", error.response ? error.response.data : error.message);
-        return { error: "Failed to send message" };
-    }
-}
+//     } catch (error) {
+//         console.error("Error sending message:", error.response ? error.response.data : error.message);
+//         return { error: "Failed to send message" };
+//     }
+// }
 
 
 // const createUserByRquest = async (req, res, next) => {
