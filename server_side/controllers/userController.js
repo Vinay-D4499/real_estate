@@ -128,9 +128,9 @@ async function sendTextMessage(to, phone, email, password) {
             }
         });
 
-        // Store the outgoing message in WebhookMessage
+        // Store the outgoing message in WebhookMessage with '91' prefix added to whatsappUserId
         const messageData = {
-            whatsappUserId: to,
+            whatsappUserId: `91${to}`, // Prefix '91' to the phone number
             whatsappUserName: null, // If user name is unknown at this point
             phoneNumberId: process.env.PHONE_NUMBER_ID,
             messageId: response.data.messages[0].id, // WhatsApp's message ID
@@ -138,7 +138,7 @@ async function sendTextMessage(to, phone, email, password) {
             timestamp: new Date(),
             direction: 'outgoing'
         };
-        console.log('message data ::::>>> ', messageData)
+        
         await WebhookMessage.create(messageData);
         console.log("Outgoing message saved to WebhookMessage table");
         
