@@ -9,8 +9,14 @@ const WebhookMessage = require('./webhookMessageModel');
 const WebhookMessageStatus = require('./webhookMessageStatusModel');
 
 //Associations 
-Users.belongsToMany(PropertyTypes, { through: UserPropertyInterests, foreignKey: 'userId' });
-PropertyTypes.belongsToMany(Users, { through: UserPropertyInterests, foreignKey: 'propertyTypeId' });
+Users.belongsToMany(PropertyTypes, {
+  through: UserPropertyInterests,
+  foreignKey: 'userId'
+});
+PropertyTypes.belongsToMany(Users, {
+  through: UserPropertyInterests,
+  foreignKey: 'propertyTypeId'
+});
 
 // WebhookMessage.hasMany(WebhookMessageStatus, { foreignKey: 'messageId', sourceKey: 'messageId' });
 // WebhookMessageStatus.belongsTo(WebhookMessage, { foreignKey: 'messageId', targetKey: 'messageId' });
@@ -27,8 +33,19 @@ WebhookMessageStatus.belongsTo(WebhookMessage, {
   as: 'message'
 });
 
-Users.hasMany(WebhookMessage, { foreignKey: 'whatsappUserId', sourceKey: 'whatsappUserId' });
-WebhookMessage.belongsTo(Users, { foreignKey: 'whatsappUserId', targetKey: 'whatsappUserId' });
+WebhookMessage.belongsTo(Users, {
+  foreignKey: 'whatsappUserId',
+  targetKey: 'whatsappUserId',
+  as: 'user'
+});
+
+Users.hasMany(WebhookMessage, {
+  foreignKey: 'whatsappUserId', 
+  sourceKey: 'whatsappUserId',  
+  as: 'messages' 
+});
+
+
 
 const initDatabase = async () => {
   try {
