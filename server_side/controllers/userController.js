@@ -75,7 +75,7 @@ const createUser = async (req, res, next) => {
 
         // Send WhatsApp message and get the recipient_id
         const messageResponse = await sendTextMessage(phone, phone, email, password, newUser.id);
-        console.log("Message sent and user updated with whatsappUserId");
+        console.log("Message sent and user update attempted for whatsappUserId");
 
         return res.status(201).json({ message: 'Customer added successfully', user: newUser });
     } catch (error) {
@@ -107,10 +107,10 @@ async function sendTextMessage(to, phone, email, password, userId) {
 
         // Store the outgoing message in WebhookMessage
         const messageData = {
-            whatsappUserId: response.data.messages[0].recipient_id, // Use recipient_id from response to get the whatsappUserId for future referecnce 
-            whatsappUserName: null, // If user name is unknown at this point
+            whatsappUserId: response.data.messages[0].recipient_id, // Use recipient_id from response for future reference 
+            whatsappUserName: null,
             phoneNumberId: process.env.PHONE_NUMBER_ID,
-            messageId: response.data.messages[0].id, // WhatsApp's message ID
+            messageId: response.data.messages[0].id,
             messageBody: messageBody,
             timestamp: new Date(),
             direction: 'outgoing'
@@ -119,12 +119,16 @@ async function sendTextMessage(to, phone, email, password, userId) {
         await WebhookMessage.create(messageData);
         console.log("Outgoing message saved to WebhookMessage table");
 
-        // // Update the user's whatsappUserId with the recipient_id
-        // await Users.update(
-        //     { whatsappUserId: messageData.whatsappUserId },  
-        //     { where: { id: userId } }
-        // );
-        // console.log("User updated with whatsappUserId");
+        // Attempt to update the user's whatsappUserId, but do not block the flow if it fails
+        try {
+            await Users.update(
+                { whatsappUserId: messageData.whatsappUserId },
+                { where: { id: userId } }
+            );
+            console.log("User updated with whatsappUserId");
+        } catch (updateError) {
+            console.warn("Failed to update whatsappUserId for user:", updateError.message);
+        }
 
         return response.data;
 
@@ -133,6 +137,7 @@ async function sendTextMessage(to, phone, email, password, userId) {
         return { error: "Failed to send message" };
     }
 }
+
 
 
 
