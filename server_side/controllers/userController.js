@@ -119,16 +119,16 @@ async function sendTextMessage(to, phone, email, password, userId) {
         await WebhookMessage.create(messageData);
         console.log("Outgoing message saved to WebhookMessage table");
 
-        // Update the user's whatsappUserId with the recipient_id
-        try {
-            await Users.update(
-                { whatsappUserId: messageData.whatsappUserId },  
-                { where: { id: userId } }
-            );
-            console.log("User updated with whatsappUserId");
-        } catch (error) {
-            console.log("Error while updating whatsAppUserId in Users ::::>>>",error);
-        }
+        // // Update the user's whatsappUserId with the recipient_id
+        // try {
+        //     await Users.update(
+        //         { whatsappUserId: messageData.whatsappUserId },  
+        //         { where: { id: userId } }
+        //     );
+        //     console.log("User updated with whatsappUserId");
+        // } catch (error) {
+        //     console.log("Error while updating whatsAppUserId in Users ::::>>>",error);
+        // }
 
         return response.data;
 
