@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const userService = require('../services/userService');
 const propertyServices = require('../services/propertyService');
-const { sequelize, Users } = require('../models');
+const { sequelize } = require('../models');
 const { baseURL } = require('../config/baseURL');
 const { default: axios } = require('axios');
 const s3 = require('../config/digitalOceanConfig');
@@ -58,8 +58,6 @@ const WebhookMessage = require('../models/webhookMessageModel');
 const createUser = async (req, res, next) => {
     const transaction = await sequelize.transaction();
     try {
-        console.log("Starting user creation transaction...");
-
         const id = req.user;
         const { name, email, phone, propertyTypeIds, budget_min, budget_max } = req.body;
         const password = 'User@12345';
@@ -67,40 +65,28 @@ const createUser = async (req, res, next) => {
 
         // Create the user
         const newUser = await userService.createUser(id, { name, email, phone, password, role, budget_min, budget_max }, { transaction });
-        console.log("User created successfully with ID:", newUser.id);
 
-        // Assign properties if any are provided
         if (propertyTypeIds && Array.isArray(propertyTypeIds)) {
             await propertyServices.assignPropertyTypesToUser(newUser.id, propertyTypeIds, { transaction });
-            console.log("Property types assigned to user:", propertyTypeIds);
         }
 
         // Commit the transaction
         await transaction.commit();
-        console.log("Transaction committed successfully.");
 
-        // Send WhatsApp message and attempt to update the user's WhatsApp ID
+        // Send WhatsApp message and get the recipient_id
         const messageResponse = await sendTextMessage(phone, phone, email, password, newUser.id);
-        
-        // Check if message sending failed
-        if (messageResponse.error) {
-            console.warn("WhatsApp message sending failed.");
-        } else {
-            console.log("WhatsApp message sent successfully and user update attempted for whatsappUserId.");
-        }
+        console.log("Message sent and user updated with whatsappUserId");
 
         return res.status(201).json({ message: 'Customer added successfully', user: newUser });
     } catch (error) {
         await transaction.rollback();
-        console.error("Error during user creation transaction:", error);
+        console.error("Error creating user:", error);
         next(error);
     }
 };
 
 async function sendTextMessage(to, phone, email, password, userId) {
     try {
-        console.log("Preparing to send WhatsApp message...");
-        
         const messageBody = `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`;
 
         // Send the message via WhatsApp API
@@ -119,46 +105,31 @@ async function sendTextMessage(to, phone, email, password, userId) {
             }
         });
 
-        console.log("WhatsApp message sent, received response:", response.data);
-
-        // Extract recipient_id from response
-        const recipientId = response.data.messages[0].recipient_id;
-        const messageId = response.data.messages[0].id;
-
         // Store the outgoing message in WebhookMessage
         const messageData = {
-            whatsappUserId: recipientId,
-            whatsappUserName: null,
+            whatsappUserId: response.data.messages[0].recipient_id, // Use recipient_id from response to get the whatsappUserId for future referecnce 
+            whatsappUserName: null, // If user name is unknown at this point
             phoneNumberId: process.env.PHONE_NUMBER_ID,
-            messageId: messageId,
+            messageId: response.data.messages[0].id, // WhatsApp's message ID
             messageBody: messageBody,
             timestamp: new Date(),
             direction: 'outgoing'
         };
 
         await WebhookMessage.create(messageData);
-        console.log("Outgoing message saved to WebhookMessage table with messageId:", messageId);
+        console.log("Outgoing message saved to WebhookMessage table");
 
-        // Attempt to update the user's whatsappUserId in Users table
-        try {
-            const updateResult = await Users.update(
-                { whatsappUserId: recipientId },
-                { where: { id: userId } }
-            );
-
-            if (updateResult[0] === 0) {
-                console.warn("User ID not found or whatsappUserId already set; update may not have applied.");
-            } else {
-                console.log("User's whatsappUserId updated successfully with recipient_id:", recipientId);
-            }
-        } catch (updateError) {
-            console.warn("Failed to update whatsappUserId for user:", updateError.message);
-        }
+        // Update the user's whatsappUserId with the recipient_id
+        // await Users.update(
+        //     { whatsappUserId: messageData.whatsappUserId },  
+        //     { where: { id: userId } }
+        // );
+        // console.log("User updated with whatsappUserId");
 
         return response.data;
 
     } catch (error) {
-        console.error("Error sending WhatsApp message:", error.response ? error.response.data : error.message);
+        console.error("Error sending message:", error.response ? error.response.data : error.message);
         return { error: "Failed to send message" };
     }
 }
