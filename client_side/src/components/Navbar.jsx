@@ -42,6 +42,7 @@ const Navbar = () => {
     const adminLinks = (
         <>
             <Link to="/add-customer" className="hover:text-indigo-400">Add Customer</Link>
+            <Link to="/chats" className="hover:text-indigo-400">Chats</Link>
             <Link to="/view-customers" className="hover:text-indigo-400">Customers</Link>
             <Link to="/inactive-customers" className="hover:text-indigo-400">Inactive Customers</Link>
             <Link to="/update-password" className="hover:text-indigo-400">Update Password</Link>

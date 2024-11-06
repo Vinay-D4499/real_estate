@@ -50,7 +50,7 @@ const DisplayProfilePicture = ({ id, height = 'w-10', width = 'h-10', isEditable
                 )}
 
                 {/* Floating image on hover */}
-                {profilePictureUrl && (
+                {/* {profilePictureUrl && (
                     <div className="absolute top-0 left-0 w-48 h-48 lg:w-56 lg:h-56 rounded-full border border-gray-300 shadow-lg overflow-hidden hidden group-hover:flex justify-center items-center bg-white z-50">
                         <img
                             src={profilePictureUrl}
@@ -58,7 +58,7 @@ const DisplayProfilePicture = ({ id, height = 'w-10', width = 'h-10', isEditable
                             className="w-full h-full object-cover"
                         />
                     </div>
-                )}
+                )} */}
             </div>
 
             {isEditable && (

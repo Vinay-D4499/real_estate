@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import Breadcrumb from './components/Breadcrumb';
 import ProtectedRoute from './routes/ProtectedRoute';
 import LoadingAnimation from './common/LoadingAnimation';
+import ChatContainer from './whatsApp/ChatContainer';
 
 const SignIn = lazy(() => import('./features/auth/SignIn/SignIn'));
 const PasswordResetEmail = lazy(() => import('./features/auth/PasswordResetEmail/PasswordResetEmail'));
@@ -44,6 +45,7 @@ function MainContent() {
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/reset-password" element={<PasswordResetEmail />} />
+          <Route path="/chats" element={<ChatContainer />} />
           <Route
             path="/admin-profile"
             element={
