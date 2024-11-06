@@ -105,6 +105,9 @@ async function sendTextMessage(to, phone, email, password, userId) {
             }
         });
 
+        // Check if the message was sent by the business account or a user
+        const messageDirection = `91${to}` === response.data.messages[0].recipient_id ? 'outgoing' : 'incoming';
+
         // Store the outgoing message in WebhookMessage
         const messageData = {
             whatsappUserId: `91${to}`, 
@@ -113,22 +116,11 @@ async function sendTextMessage(to, phone, email, password, userId) {
             messageId: response.data.messages[0].id, // WhatsApp's message ID
             messageBody: messageBody,
             timestamp: new Date(),
-            direction: 'outgoing'
+            direction: messageDirection // Determine direction
         };
 
         await WebhookMessage.create(messageData);
-        console.log("Outgoing message saved to WebhookMessage table");
-
-        // // Update the user's whatsappUserId with the recipient_id
-        // try {
-        //     await Users.update(
-        //         { whatsappUserId: messageData.whatsappUserId },  
-        //         { where: { id: userId } }
-        //     );
-        //     console.log("User updated with whatsappUserId");
-        // } catch (error) {
-        //     console.log("Error while updating whatsAppUserId in Users ::::>>>",error);
-        // }
+        console.log("Message saved to WebhookMessage table with direction:", messageDirection);
 
         return response.data;
 

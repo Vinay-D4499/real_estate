@@ -33,17 +33,6 @@ WebhookMessageStatus.belongsTo(WebhookMessage, {
   as: 'message'
 });
 
-// WebhookMessage.belongsTo(Users, {
-//   foreignKey: 'whatsappUserId',
-//   targetKey: 'whatsappUserId',
-//   as: 'user'
-// });
-
-// Users.hasMany(WebhookMessage, {
-//   foreignKey: 'whatsappUserId', 
-//   sourceKey: 'whatsappUserId',  
-//   as: 'messages' 
-// });
 
 
 
