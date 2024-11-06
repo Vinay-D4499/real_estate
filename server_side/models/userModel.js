@@ -1,4 +1,3 @@
-// src/models/Users.js
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/dbConfig");
 
@@ -10,7 +9,7 @@ const Users = sequelize.define('Users', {
     phone: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique:true
     },
     location: {
         type: DataTypes.STRING,
@@ -48,23 +47,21 @@ const Users = sequelize.define('Users', {
     role: {
         type: DataTypes.ENUM('CUSTOMER'),
         allowNull: false,
-        defaultValue: 'CUSTOMER'
+        defaultValue: 'CUSTOMER' // CUSTOMER will be the default role
     },
     isActive: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: true,
+        defaultValue: true, // Set default to true
     },
-    // whatsappUserId: { 
-    //     type: DataTypes.STRING,
-    //     allowNull: true,
-    //     unique: true
-    // }
+    // whatsappUserId: {
+    //      type: DataTypes.STRING,
+    //       allowNull: true, 
+    //       unique: true 
+    //     },
 }, {
     timestamps: true,
     tableName: 'Users'
 });
-
-
 
 module.exports = Users;
