@@ -70,6 +70,7 @@ const createAdminByRequest = async (adminData) => {
         const newAdmin = await Admins.create(adminData);
         return { message: 'Admin created successfully', admin: newAdmin };
     } catch (error) {
+        console.error(error)
         if (error.name === 'SequelizeUniqueConstraintError') {
             throw new BadRequestError('Email is already registered.');
         }
