@@ -34,6 +34,4 @@ const Admins = sequelize.define('Admins', {
     tableName: 'Admins'
 });
 
-var a = 123;
 module.exports = Admins;
-module.exports = a;

@@ -2,13 +2,13 @@ const bcrypt = require('bcrypt');
 const Users = require('../models/userModel');
 const { BadRequestError, NotFoundError, InternalServerError, ForbiddenError } = require('../errors/httpErrors'); 
 const Admins = require('../models/adminModel');
-const { Admin } = require('../models');
+// const { Admin } = require('../models');
 
 const saltRounds = 10;
 
 const createUser = async (id,userData) => {
     try {
-        const requester = await Admin.findByPk(id);
+        const requester = await Admins.findByPk(id);
 
         if (!requester) {
             throw new ForbiddenError('Access Forbidden');
