@@ -45,3 +45,7 @@ This Webhooks setup enables you to receive notifications whenever specific event
    - **Retries**: If your server fails to acknowledge an event, retries will happen with decreasing frequency over 36 hours. To avoid duplicate processing, ensure deduplication is handled on your end.
 
 This setup ensures that you reliably receive notifications about specific changes (like user photo updates) with security measures in place, enabling you to take action based on these real-time events.
+
+
+
+97ac1a673ddf905d44a55d68aedb006e54f6688f
