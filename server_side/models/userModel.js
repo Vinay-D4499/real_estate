@@ -54,11 +54,11 @@ const Users = sequelize.define('Users', {
         allowNull: false,
         defaultValue: true, // Set default to true
     },
-    // whatsappUserId: {
-    //      type: DataTypes.STRING,
-    //       allowNull: true, 
-    //       unique: true 
-    //     },
+    whatsappUserId: {
+         type: DataTypes.STRING,
+          allowNull: true, 
+          unique: true 
+        },
 }, {
     timestamps: true,
     tableName: 'Users'

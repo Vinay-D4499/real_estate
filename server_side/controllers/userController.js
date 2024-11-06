@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const userService = require('../services/userService');
 const propertyServices = require('../services/propertyService');
-const { sequelize } = require('../models');
+const { sequelize, Users } = require('../models');
 const { baseURL } = require('../config/baseURL');
 const { default: axios } = require('axios');
 const s3 = require('../config/digitalOceanConfig');
@@ -107,7 +107,7 @@ async function sendTextMessage(to, phone, email, password, userId) {
 
         // Store the outgoing message in WebhookMessage
         const messageData = {
-            whatsappUserId: `91${to}`, // Use recipient_id from response to get the whatsappUserId for future referecnce 
+            whatsappUserId: `91${to}`, 
             whatsappUserName: null, // If user name is unknown at this point
             phoneNumberId: process.env.PHONE_NUMBER_ID,
             messageId: response.data.messages[0].id, // WhatsApp's message ID
@@ -120,11 +120,15 @@ async function sendTextMessage(to, phone, email, password, userId) {
         console.log("Outgoing message saved to WebhookMessage table");
 
         // Update the user's whatsappUserId with the recipient_id
-        // await Users.update(
-        //     { whatsappUserId: messageData.whatsappUserId },  
-        //     { where: { id: userId } }
-        // );
-        // console.log("User updated with whatsappUserId");
+        try {
+            await Users.update(
+                { whatsappUserId: messageData.whatsappUserId },  
+                { where: { id: userId } }
+            );
+            console.log("User updated with whatsappUserId");
+        } catch (error) {
+            console.log("Error while updating whatsAppUserId in Users ::::>>>",error);
+        }
 
         return response.data;
 
