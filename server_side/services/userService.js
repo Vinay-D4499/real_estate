@@ -1,14 +1,14 @@
 const bcrypt = require('bcrypt');
 const Users = require('../models/userModel');
 const { BadRequestError, NotFoundError, InternalServerError, ForbiddenError } = require('../errors/httpErrors'); 
-const Admins = require('../models/adminModel');
-// const { Admin } = require('../models');
+// const Admin = require('../models/adminModel');
+const { Admin } = require('../models');
 
 const saltRounds = 10;
 
 const createUser = async (id,userData) => {
     try {
-        const requester = await Admins.findByPk(id);
+        const requester = await Admin.findByPk(id);
 
         if (!requester) {
             throw new ForbiddenError('Access Forbidden');
@@ -57,7 +57,7 @@ const createUser = async (id,userData) => {
 const createAdminByRequest = async (adminData) => {
     try {
         // Check if the admin already exists
-        const existingAdmin = await Admins.findOne({ where: { email: adminData.email } });
+        const existingAdmin = await Admin.findOne({ where: { email: adminData.email } });
         if (existingAdmin) {
             // If admin exists, return
             return { message: 'Admin already exists', admin: existingAdmin };
@@ -67,7 +67,7 @@ const createAdminByRequest = async (adminData) => {
         const hashedPassword = await bcrypt.hash(adminData.password, saltRounds);
         adminData.password = hashedPassword;
 
-        const newAdmin = await Admins.create(adminData);
+        const newAdmin = await Admin.create(adminData);
         return { message: 'Admin created successfully', admin: newAdmin };
     } catch (error) {
         console.error(error)
