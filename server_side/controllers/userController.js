@@ -107,7 +107,7 @@ async function sendTextMessage(to, phone, email, password, userId) {
 
         // Store the outgoing message in WebhookMessage
         const messageData = {
-            whatsappUserId: response.data.messages[0].recipient_id, // Use recipient_id from response to get the whatsappUserId for future referecnce 
+            whatsappUserId: to, // Use recipient_id from response to get the whatsappUserId for future referecnce 
             whatsappUserName: null, // If user name is unknown at this point
             phoneNumberId: process.env.PHONE_NUMBER_ID,
             messageId: response.data.messages[0].id, // WhatsApp's message ID
