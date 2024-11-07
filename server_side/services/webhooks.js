@@ -31,7 +31,7 @@ app.get("/webhook",(req,res)=>{
 
 });
 
-app.post("/webhook",(req,res)=>{ //i want some 
+app.post("/webhook",(req,res)=>{ 
 
     let body_param=req.body;
 
@@ -59,7 +59,7 @@ app.post("/webhook",(req,res)=>{ //i want some
                        messaging_product:"whatsapp",
                        to:from,
                        text:{
-                           body:"Hi.. I'm Prasath, your message is "+msg_body
+                           body:"Hi.. I'm Vinay, your message is "+msg_body
                        }
                    },
                    headers:{

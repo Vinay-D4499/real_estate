@@ -9,6 +9,9 @@ const s3 = require('../config/digitalOceanConfig');
 const { v4: uuidv4 } = require('uuid');
 const webhookRoutes = express.Router();
 const whatsAppWebhookController = require('../controllers/whatsAppWebhookController');
+const multer = require('multer');
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage });
 
 const token = process.env.WHATSAPP_TOKEN;
 const mytoken = process.env.CHECK_TOKEN;
@@ -365,6 +368,10 @@ const downloadMedia = async (mediaId, mimeType, clientName) => {
 };
 
 webhookRoutes.get('/conversation/:whatsappUserId', whatsAppWebhookController.fetchConversation);
+
+webhookRoutes.post('/sendText', whatsAppWebhookController.sendTextMessage);
+
+webhookRoutes.post('/sendMedia', upload.single('media'), whatsAppWebhookController.sendMediaMessage);
 
 
 module.exports = webhookRoutes;
