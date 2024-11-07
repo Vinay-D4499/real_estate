@@ -28,12 +28,12 @@ const ChatContainer = () => {
       }
     };
 
-    if (whatsappUserId) {
-      loadConversation(); // Initial load
-      intervalId = setInterval(loadConversation, 5000); // send request for every 5 seconds
-    }
-
-    return () => clearInterval(intervalId); // Clear interval on unmount or when whatsappUserId changes
+    // if (whatsappUserId) {
+    //   loadConversation(); // Initial load
+    //   intervalId = setInterval(loadConversation, 5000); // send request for every 5 seconds
+    // }
+    loadConversation(); 
+    // return () => clearInterval(intervalId); // Clear interval on unmount or when whatsappUserId changes
   }, [whatsappUserId]);
 
   // Scroll to the latest message
