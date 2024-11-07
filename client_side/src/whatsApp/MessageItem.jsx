@@ -3,7 +3,7 @@ import MessageStatusList from './MessageStatusList';
 
 const MessageItem = ({ message }) => {
   const isSent = message.direction === 'outgoing';
-  const { messageBody, mediaType, mediaPathUrl, mimeType, timestamp, statuses } = message;
+  const { messageBody, mediaType, mediaPathUrl, mimeType, timestamp, statuses, locationName, locationAddress, locationLatitude, locationLongitude } = message;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -13,8 +13,7 @@ const MessageItem = ({ message }) => {
   return (
     <div className={`flex ${isSent ? 'justify-end' : 'justify-start'} mb-2`}>
       <div
-        className={`max-w-xs p-2 rounded-lg ${isSent ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'
-          }`}
+        className={`max-w-xs p-2 rounded-lg ${isSent ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
       >
         {messageBody && (
           <p className="text-sm whitespace-pre-wrap break-words font-sans mb-2">
@@ -22,6 +21,7 @@ const MessageItem = ({ message }) => {
           </p>
         )}
 
+        {/* Display Media */}
         {mediaType === 'image' && (
           <img
             src={mediaPathUrl}
@@ -42,6 +42,23 @@ const MessageItem = ({ message }) => {
           <audio controls src={mediaPathUrl} className="w-full mb-2" />
         )}
 
+        {/* Display Location */}
+        {locationLatitude && locationLongitude && (
+          <div className="bg-gray-100 p-2 rounded-lg mb-2">
+            <p className="text-sm font-semibold">Location:</p>
+            <p className="text-xs">{locationName || 'Unknown Location'}</p>
+            <p className="text-xs text-gray-700">{locationAddress}</p>
+            <a
+              href={`https://www.google.com/maps?q=${locationLatitude},${locationLongitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 text-xs mt-1 block"
+            >
+              View on Google Maps
+            </a>
+          </div>
+        )}
+
         {/* Timestamp */}
         <span className="text-xs text-gray-600 mt-1 block text-right">
           {new Date(timestamp).toLocaleTimeString()}
@@ -50,6 +67,7 @@ const MessageItem = ({ message }) => {
         {/* Message Statuses */}
         {statuses && <MessageStatusList statuses={statuses} />}
 
+        {/* Full-Screen Image Modal */}
         {isModalOpen && mediaType === 'image' && (
           <div
             className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50"
@@ -73,7 +91,6 @@ const MessageItem = ({ message }) => {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

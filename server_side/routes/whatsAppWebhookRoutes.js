@@ -49,57 +49,58 @@ webhookRoutes.post('/webhook', async (req, res) => {
                             const from = message.from;
                             const messageId = message.id;
                             const timestamp = new Date(message.timestamp * 1000);
-
+                    
                             const isSentByBusiness = from === process.env.WHATSAPP_BUSINESS_PHONE_NUMBER; // Your WhatsApp number
-
+                    
+                            let messageData = {
+                                whatsappUserId: from,
+                                whatsappUserName: message.profile ? message.profile.name : null,
+                                phoneNumberId: phoneNumberId,
+                                messageId: messageId,
+                                messageBody: message.text ? message.text.body : null,
+                                timestamp: timestamp,
+                                direction: isSentByBusiness ? 'outgoing' : 'incoming'
+                            };
+                    
+                            // Handle media messages
                             if (message.type === 'image' || message.type === 'video' || message.type === 'audio' || message.type === 'document') {
                                 const mediaId = message[message.type].id;
                                 const mimeType = message[message.type].mime_type;
                                 const caption = message.caption || null;
-
+                    
                                 const mediaPath = await downloadMedia(mediaId, mimeType, process.env.CLIENT_NAME);
-
-                                const messageData = {
-                                    whatsappUserId: from,
-                                    whatsappUserName: message.profile ? message.profile.name : null,
-                                    phoneNumberId: phoneNumberId,
-                                    messageId: messageId,
-                                    messageBody: message.text ? message.text.body : null,
-                                    timestamp: timestamp,
+                    
+                                messageData = {
+                                    ...messageData,
                                     mediaId: mediaId,
                                     mediaType: message.type,
                                     caption: caption,
                                     mimeType: mimeType,
-                                    mediaPathUrl: mediaPath,
-                                    direction: isSentByBusiness ? 'outgoing' : 'incoming' 
+                                    mediaPathUrl: mediaPath
                                 };
-
-                                try {
-                                    await WebhookMessage.create(messageData);
-                                    console.log("Message with media saved to WebhookMessage table");
-                                } catch (error) {
-                                    console.error("Error saving message with media to WebhookMessage table:", error);
-                                }
-                            } else {
-                                const messageData = {
-                                    whatsappUserId: from,
-                                    whatsappUserName: message.profile ? message.profile.name : null,
-                                    phoneNumberId: phoneNumberId,
-                                    messageId: messageId,
-                                    messageBody: message.text ? message.text.body : null,
-                                    timestamp: timestamp,
-                                    direction: isSentByBusiness ? 'outgoing' : 'incoming' 
+                            }
+                    
+                            // Handle location messages
+                            if (message.location) {
+                                messageData = {
+                                    ...messageData,
+                                    locationLatitude: message.location.latitude,
+                                    locationLongitude: message.location.longitude,
+                                    locationName: message.location.name,
+                                    locationAddress: message.location.address
                                 };
-
-                                try {
-                                    await WebhookMessage.create(messageData);
-                                    console.log("Message saved to WebhookMessage table");
-                                } catch (error) {
-                                    console.error("Error saving message to WebhookMessage table:", error);
-                                }
+                            }
+                    
+                            // Save message to database
+                            try {
+                                await WebhookMessage.create(messageData);
+                                console.log("Message saved to WebhookMessage table");
+                            } catch (error) {
+                                console.error("Error saving message to WebhookMessage table:", error);
                             }
                         }
                     }
+                    
 
                     // Process message statuses for outgoing messages
                     if (value.statuses && value.statuses.length > 0) {
