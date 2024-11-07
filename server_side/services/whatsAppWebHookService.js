@@ -143,6 +143,9 @@ async function uploadMediaToWhatsApp(mediaFile) {
 // Helper function: Send the media message to WhatsApp using the media ID
 async function sendMediaMessageToWhatsApp(to, mediaId, mimeType, caption) {
     try {
+        // Determine the media type based on mimeType
+        const mediaType = mimeType.startsWith('video/') ? 'video' : 'image';
+
         const response = await axios({
             url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
             method: 'post',
@@ -153,8 +156,8 @@ async function sendMediaMessageToWhatsApp(to, mediaId, mimeType, caption) {
             data: {
                 messaging_product: 'whatsapp',
                 to,
-                type: 'image',
-                image: {
+                type: mediaType,  // Sets media type dynamically
+                [mediaType]: {
                     id: mediaId,
                     caption: caption || '',
                 },
@@ -167,6 +170,7 @@ async function sendMediaMessageToWhatsApp(to, mediaId, mimeType, caption) {
         throw new Error('Failed to send media message');
     }
 }
+
 
 // Helper function: Upload the media to DigitalOcean Spaces for future access
 async function uploadMediaToSpaces(mediaId, mimeType) {
