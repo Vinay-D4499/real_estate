@@ -8,6 +8,7 @@ import Breadcrumb from './components/Breadcrumb';
 import ProtectedRoute from './routes/ProtectedRoute';
 import LoadingAnimation from './common/LoadingAnimation';
 
+
 const SignIn = lazy(() => import('./features/auth/SignIn/SignIn'));
 const PasswordResetEmail = lazy(() => import('./features/auth/PasswordResetEmail/PasswordResetEmail'));
 const UserProfile = lazy(() => import('./features/user/components/UserProfile'));
@@ -17,6 +18,7 @@ const AllCustomerDetails = lazy(() => import('./features/user/components/AllCust
 const InactiveCustomers = lazy(() => import('./features/user/components/InactiveCustomers'));
 const UserUpdateForm = lazy(() => import('./features/user/components/UserUpdateForm'));
 const AddCustomerForm = lazy(() => import('./features/user/components/AddCustomerForm'));
+const AddProperty = lazy(() => import('./features/admin/AddProperty'));
 
 function App() {
   return (
@@ -97,6 +99,14 @@ function MainContent() {
             element={
               <ProtectedRoute>
                 <UserProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/property-type"
+            element={
+              <ProtectedRoute>
+                <AddProperty />
               </ProtectedRoute>
             }
           />
