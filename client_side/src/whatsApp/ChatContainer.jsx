@@ -7,17 +7,15 @@ import ChatList from './ChatList';
 const ChatContainer = () => {
   const [whatsappUserId, setWhatsappUserId] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isChatListVisible, setIsChatListVisible] = useState(true); // Toggle visibility for small screens
   const chatEndRef = useRef(null);
-  // let countRequest = 0;
-  useEffect(() => {
-    let intervalId;
 
+  useEffect(() => {
     const loadConversation = async () => {
-      // console.log("Fetched conversation : ",countRequest++)
+      if (!whatsappUserId) return;
       try {
         const data = await getWhatsAppConversation(whatsappUserId);
         setMessages((prevMessages) => {
-          // Assuming each message has a unique ID or timestamp
           const newMessages = data.filter(
             (msg) => !prevMessages.some((existingMsg) => existingMsg.id === msg.id)
           );
@@ -28,24 +26,44 @@ const ChatContainer = () => {
       }
     };
 
-    // if (whatsappUserId) {
-    //   loadConversation(); // Initial load
-    //   intervalId = setInterval(loadConversation, 5000); // send request for every 5 seconds
-    // }
-    loadConversation(); 
-    // return () => clearInterval(intervalId); // Clear interval on unmount or when whatsappUserId changes
+    loadConversation();
   }, [whatsappUserId]);
 
-  // Scroll to the latest message
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const handleChatSelect = (userId) => {
+    setWhatsappUserId(userId);
+    setIsChatListVisible(false); // Hide chat list on small screens
+  };
+
+  const handleBackToChatList = () => {
+    setIsChatListVisible(true); // Show chat list on small screens
+    setWhatsappUserId(null); // Optional: Deselect user if desired
+  };
+
   return (
     <div className="flex h-screen">
-      <ChatList setWhatsappUserId={setWhatsappUserId} />
+      {/* Chat List Sidebar */}
+      <div
+        className={`lg:block ${isChatListVisible ? 'block' : 'hidden'} w-full lg:w-1/4 h-full border-r overflow-y-auto`}
+      >
+        <ChatList setWhatsappUserId={handleChatSelect} />
+      </div>
 
-      <div className="flex flex-col w-full border rounded-lg shadow-lg bg-white">
+      {/* Conversation View */}
+      <div className={`flex flex-col w-full lg:w-3/4 ${isChatListVisible && 'hidden lg:flex'} h-full bg-white`}>
+        {/* Back Button for Small Screens */}
+        <div className="lg:hidden p-2">
+          <button
+            onClick={handleBackToChatList}
+            className="text-blue-500 font-semibold mb-2"
+          >
+            &larr; Back to Chats
+          </button>
+        </div>
+
         {whatsappUserId ? (
           <>
             <div className="flex-grow overflow-y-auto p-4">
@@ -55,7 +73,7 @@ const ChatContainer = () => {
             <MessageInput />
           </>
         ) : (
-          <div className="flex justify-center items-center text-xl text-gray-500 h-full">
+          <div className="flex justify-center items-center text-lg text-gray-500 h-full p-4">
             Select a user to start chatting
           </div>
         )}

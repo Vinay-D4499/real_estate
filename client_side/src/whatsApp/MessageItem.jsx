@@ -17,10 +17,10 @@ const MessageItem = ({ message }) => {
   return (
     <div className={`flex ${isSent ? 'justify-end' : 'justify-start'} mb-2`}>
       <div
-        className={`max-w-xs p-2 rounded-lg ${isSent ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+        className={`max-w-xs md:max-w-sm lg:max-w-md p-2 rounded-lg ${isSent ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
       >
         {messageBody && (
-          <p className="text-sm whitespace-pre-wrap break-words font-sans mb-2">
+          <p className="text-sm md:text-base whitespace-pre-wrap break-words font-sans mb-2">
             {messageBody}
           </p>
         )}
@@ -30,7 +30,7 @@ const MessageItem = ({ message }) => {
           <img
             src={mediaPathUrl}
             alt="Sent media"
-            className="w-full max-h-64 rounded-md mb-2 cursor-pointer"
+            className="w-full max-h-48 md:max-h-64 rounded-md mb-2 cursor-pointer"
             onClick={openModal}
           />
         )}
@@ -38,7 +38,7 @@ const MessageItem = ({ message }) => {
           <video
             controls
             src={mediaPathUrl}
-            className="w-full max-h-64 rounded-md mb-2"
+            className="w-full max-h-48 md:max-h-64 rounded-md mb-2"
             type={mimeType}
           />
         )}
