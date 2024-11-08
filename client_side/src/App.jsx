@@ -20,28 +20,29 @@ const UserUpdateForm = lazy(() => import('./features/user/components/UserUpdateF
 const AddCustomerForm = lazy(() => import('./features/user/components/AddCustomerForm'));
 
 function App() {
+  const location = useLocation();
+  const hideFooterRoutes = ['/chats',]; // Paths where the footer should be hidden
+
   return (
-    <Router>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <MainContent />
-        <Footer />
-        <Toaster />
-      </div>
-    </Router>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <MainContent />
+      {!hideFooterRoutes.includes(location.pathname) && <Footer />} {/* Conditionally render Footer */}
+      <Toaster />
+    </div>
   );
 }
 
 function MainContent() {
   const location = useLocation();
-  const noBreadcrumbRoutes = ['/', '/reset-password'];
+  const noBreadcrumbRoutes = ['/', '/reset-password','/chats'];
 
   return (
     <main className="flex-grow">
       <div className="mx-auto max-w-md flex items-center justify-center">
         {!noBreadcrumbRoutes.includes(location.pathname) && <Breadcrumb />}
       </div>
-      <Suspense fallback={<><LoadingAnimation /> </>}>
+      <Suspense fallback={<LoadingAnimation />}>
         <Routes>
           <Route path="/" element={<SignIn />} />
           <Route path="/reset-password" element={<PasswordResetEmail />} />
@@ -108,4 +109,12 @@ function MainContent() {
   );
 }
 
-export default App;
+function Root() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+
+export default Root;

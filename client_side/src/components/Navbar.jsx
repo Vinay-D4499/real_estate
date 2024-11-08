@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { fetchUserData, fetchAdminData } from '../features/user/components/userAPI';
+import { FaBars } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import logo from '../assets/logo/tot.png';
 import DisplayProfilePicture from '../features/user/components/DisplayProfilePicture';
 import AdminProfilePicture from '../features/user/components/AdminProfilePicture';
+import MobileSidebar from './MobileSidebar'; // Import the new sidebar component
+import { fetchUserData, fetchAdminData } from '../features/user/components/userAPI';
 
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -41,55 +42,49 @@ const Navbar = () => {
 
     const adminLinks = (
         <>
-            <Link to="/add-customer" className="hover:text-indigo-400">Add Customer</Link>
-            <Link to="/chats" className="hover:text-indigo-400">Chats</Link>
-            <Link to="/view-customers" className="hover:text-indigo-400">Customers</Link>
-            <Link to="/inactive-customers" className="hover:text-indigo-400">Inactive Customers</Link>
-            <Link to="/update-password" className="hover:text-indigo-400">Update Password</Link>
+            <Link to="/add-customer" className="hover:text-indigo-400 text-sm">Add Customer</Link>
+            <Link to="/chats" className="hover:text-indigo-400 text-sm">Chats</Link>
+            <Link to="/view-customers" className="hover:text-indigo-400 text-sm">Customers</Link>
+            <Link to="/inactive-customers" className="hover:text-indigo-400 text-sm">Inactive Customers</Link>
+            <Link to="/update-password" className="hover:text-indigo-400 text-sm">Update Password</Link>
         </>
     );
 
     const customerLinks = (
         <>
-            <Link to="/user" className="hover:text-indigo-400">Dashboard</Link>
-            <Link to="/explore" className="hover:text-indigo-400">Explore</Link>
-            <Link to="/about" className="hover:text-indigo-400">About</Link>
-            <Link to="/update-password" className="hover:text-indigo-400">Update Password</Link>
-        </>
-    );
-
-    const commonLinks = (
-        <>
+            <Link to="/user" className="hover:text-indigo-400 text-sm">Dashboard</Link>
+            <Link to="/explore" className="hover:text-indigo-400 text-sm">Explore</Link>
+            <Link to="/about" className="hover:text-indigo-400 text-sm">About</Link>
+            <Link to="/update-password" className="hover:text-indigo-400 text-sm">Update Password</Link>
         </>
     );
 
     return (
         <nav className="bg-gray-800 text-white shadow-md">
             <div className="container mx-auto flex justify-between items-center p-4">
-                <Link to="/" className="text-2xl font-semibold">
-                    <img src={logo} alt="TOT FD" style={{ width: '40px', height: '40px' }} />
+                {/* Logo */}
+                <Link to="/" className="text-2xl font-semibold flex-shrink-0">
+                    <img src={logo} alt="TOT FD" className="w-10 h-10" />
                 </Link>
 
+                {/* Hamburger Menu Button */}
                 <button onClick={toggleMenu} className="md:hidden text-white focus:outline-none">
-                    {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                    <FaBars size={24} />
                 </button>
 
+                {/* Desktop Menu */}
                 <ul className="hidden md:flex md:flex-row md:space-x-6 md:items-center">
-                    {commonLinks}
                     {role === 'ADMIN' ? adminLinks : customerLinks}
                 </ul>
 
+                {/* Desktop Auth Buttons */}
                 <div className="hidden md:flex items-center space-x-4">
                     {isLoggedIn ? (
                         <>
                             {role === 'ADMIN' ? (
-                                <>
-                                    <AdminProfilePicture id={user.id} height="h-8" width="w-8" />
-                                </>
+                                <AdminProfilePicture id={user.id} height="h-8" width="w-8" />
                             ) : (
-                                <>
-                                    <DisplayProfilePicture id={user.id} height="h-8" width="w-8" />
-                                </>
+                                <DisplayProfilePicture id={user.id} height="h-8" width="w-8" />
                             )}
                             <span className="text-sm">{user.email || "User"}</span>
                             <button
@@ -107,24 +102,18 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {menuOpen && (
-                <div className="md:hidden bg-gray-800 text-white py-2 px-4 space-y-2">
-                    {commonLinks}
-                    {role === 'ADMIN' ? adminLinks : customerLinks}
-                    {isLoggedIn ? (
-                        <button
-                            onClick={() => { handleLogout(); toggleMenu(); }}
-                            className="block w-full text-left text-red-500 hover:text-red-600 mt-4"
-                        >
-                            Logout
-                        </button>
-                    ) : (
-                        <Link to="/login" onClick={toggleMenu} className="block hover:text-blue-400 mt-4">
-                            Login
-                        </Link>
-                    )}
-                </div>
-            )}
+            {/* Mobile Sidebar */}
+            <MobileSidebar
+                isOpen={menuOpen}
+                toggleMenu={toggleMenu}
+                role={role}
+                isLoggedIn={isLoggedIn}
+                handleLogout={handleLogout}
+                adminLinks={adminLinks}
+                customerLinks={customerLinks}
+                user={user}  
+            />
+
         </nav>
     );
 };
