@@ -3,12 +3,16 @@ import MessageStatusList from './MessageStatusList';
 
 const MessageItem = ({ message }) => {
   const isSent = message.direction === 'outgoing';
-  const { messageBody, mediaType, mediaPathUrl, mimeType, timestamp, statuses, locationName, locationAddress, locationLatitude, locationLongitude } = message;
+  const { messageBody, mimeType, mediaPathUrl, timestamp, statuses, locationName, locationAddress, locationLatitude, locationLongitude } = message;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const isImage = mimeType && mimeType.startsWith('image');
+  const isVideo = mimeType && mimeType.startsWith('video');
+  const isAudio = mimeType && mimeType.startsWith('audio');
 
   return (
     <div className={`flex ${isSent ? 'justify-end' : 'justify-start'} mb-2`}>
@@ -22,7 +26,7 @@ const MessageItem = ({ message }) => {
         )}
 
         {/* Display Media */}
-        {mediaType === 'image' && (
+        {isImage && (
           <img
             src={mediaPathUrl}
             alt="Sent media"
@@ -30,7 +34,7 @@ const MessageItem = ({ message }) => {
             onClick={openModal}
           />
         )}
-        {mediaType === 'video' && (
+        {isVideo && (
           <video
             controls
             src={mediaPathUrl}
@@ -38,7 +42,7 @@ const MessageItem = ({ message }) => {
             type={mimeType}
           />
         )}
-        {mediaType === 'audio' && (
+        {isAudio && (
           <audio controls src={mediaPathUrl} className="w-full mb-2" />
         )}
 
@@ -68,7 +72,7 @@ const MessageItem = ({ message }) => {
         {statuses && <MessageStatusList statuses={statuses} />}
 
         {/* Full-Screen Image Modal */}
-        {isModalOpen && mediaType === 'image' && (
+        {isModalOpen && isImage && (
           <div
             className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50"
             onClick={closeModal} 
