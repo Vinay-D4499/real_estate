@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MessageStatusList from './MessageStatusList';
+import { format } from 'date-fns';
 
 const MessageItem = ({ message }) => {
   const isSent = message.direction === 'outgoing';
@@ -65,7 +66,7 @@ const MessageItem = ({ message }) => {
 
         {/* Timestamp */}
         <span className="text-xs text-gray-600 mt-1 block text-right">
-          {new Date(timestamp).toLocaleTimeString()}
+          {format(new Date(timestamp), 'MMMM d, yyyy h:mm a')}
         </span>
 
         {/* Message Statuses */}
