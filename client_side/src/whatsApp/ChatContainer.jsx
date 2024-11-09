@@ -3,13 +3,15 @@ import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import { getWhatsAppConversation } from './WhatsAppMessageAPI';
 import ChatList from './ChatList';
+import { fetchUserDataByPhone } from '../features/user/components/userAPI';
 
 const ChatContainer = () => {
   const [whatsappUserId, setWhatsappUserId] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [isChatListVisible, setIsChatListVisible] = useState(true); // Toggle visibility for small screens
-  const [loadingMessages, setLoadingMessages] = useState(false); // For handling message loading
+  const [isChatListVisible, setIsChatListVisible] = useState(true);
+  const [loadingMessages, setLoadingMessages] = useState(false);
   const chatEndRef = useRef(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -17,11 +19,7 @@ const ChatContainer = () => {
       setLoadingMessages(true);
       try {
         const data = await getWhatsAppConversation(whatsappUserId);
-        if (data.length === 0) {
-          setMessages([]);
-        } else {
-          setMessages(data);
-        }
+        setMessages(data || []);
       } catch (error) {
         console.error("Failed to load conversation:", error);
       } finally {
@@ -33,36 +31,54 @@ const ChatContainer = () => {
   }, [whatsappUserId]);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      if (!whatsappUserId) return;
+      setLoadingMessages(true);
+      try {
+        // console.log("user id :::>>>>", whatsappUserId)
+        // Remove the '91' prefix if it exists
+        const phoneWithoutPrefix = whatsappUserId.startsWith('91') ? whatsappUserId.slice(2) : whatsappUserId;
+        const data = await fetchUserDataByPhone(phoneWithoutPrefix);
+        // console.log("selected User data :::>>>", data)
+        
+          setUser(data);
+        
+      } catch (error) {
+        console.error("Failed to fetch User Data:", error);
+      } finally {
+        setLoadingMessages(false);
+      }
+    };
+  
+    fetchUserData();
+  }, [whatsappUserId]);
+  
+
+  useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleChatSelect = (userId) => {
     setWhatsappUserId(userId);
-    setIsChatListVisible(false); // Hide chat list on small screens
+    setIsChatListVisible(false);
   };
 
   const handleBackToChatList = () => {
-    setIsChatListVisible(true); // Show chat list on small screens
-    setWhatsappUserId(null); // Optional: Deselect user if desired
+    setIsChatListVisible(true);
+    setWhatsappUserId(null);
   };
 
   return (
     <div className="flex h-screen">
-      {/* Chat List Sidebar */}
       <div
         className={`lg:block ${isChatListVisible ? 'block' : 'hidden'} w-full lg:w-1/4 h-full border-r overflow-y-auto`}
       >
         <ChatList setWhatsappUserId={handleChatSelect} />
       </div>
 
-      {/* Conversation View */}
       <div className={`flex flex-col w-full lg:w-3/4 ${isChatListVisible && 'hidden lg:flex'} h-full bg-white`}>
-        {/* Back Button for Small Screens */}
         <div className="lg:hidden p-2">
-          <button
-            onClick={handleBackToChatList}
-            className="text-blue-500 font-semibold mb-2"
-          >
+          <button onClick={handleBackToChatList} className="text-blue-500 font-semibold mb-2">
             &larr; Back to Chats
           </button>
         </div>
@@ -76,12 +92,12 @@ const ChatContainer = () => {
                 </div>
               ) : (
                 <>
-                  <MessageList messages={messages} />
+                  <MessageList messages={messages} user={user} />
                   <div ref={chatEndRef} />
                 </>
               )}
             </div>
-            <MessageInput />
+            <MessageInput phoneNumber={whatsappUserId} />
           </>
         ) : (
           <div className="flex justify-center items-center text-lg text-gray-500 h-full p-4">

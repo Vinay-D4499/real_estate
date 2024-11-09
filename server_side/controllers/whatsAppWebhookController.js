@@ -44,7 +44,7 @@ async function sendMediaMessage(req, res) {
     if (!to || !mediaFile) {
         return res.status(400).json({ error: 'Phone number and media file are required' });
     }
-
+    
     try {
         // Upload and send media through WhatsApp
         const result = await webhookService.sendMediaMessage(to, mediaFile, caption);

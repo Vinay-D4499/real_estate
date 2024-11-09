@@ -3,17 +3,17 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { baseURL } from '../config/baseURL';
 
-const MessageInput = () => {
+const MessageInput = ({phoneNumber}) => {
   const [inputValue, setInputValue] = useState("");
   const [mediaFile, setMediaFile] = useState(null);
   const [isSending, setIsSending] = useState(false);
-
+  // console.log("phone number : ", phoneNumber);
   // Handler to send text message
   const sendTextMessage = async () => {
     setIsSending(true);
     try {
       const response = await axios.post(`${baseURL}/api/whatsAppWebhook/sendText`, {
-        to: '919845964499',
+        to: `${phoneNumber}`,
         body: inputValue,
       });
       console.log("Text message sent:", response.data);
@@ -31,7 +31,7 @@ const MessageInput = () => {
 
     setIsSending(true);
     const formData = new FormData();
-    formData.append("to", "919845964499");
+    formData.append("to", `${phoneNumber}`);
     formData.append("media", mediaFile);
     formData.append("caption", inputValue);
 

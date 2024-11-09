@@ -255,6 +255,17 @@ const findUserById = async (req, res, next) => {
         next(error);
     }
 };
+const findUserByPhoneNumber = async (req, res, next) => {
+    // const { id } = req.params;
+    const {phone} = req.body;
+    console.log("received phone number ::::>>>>>", phone)
+    try {
+        const user = await userService.findUserByPhoneNumber(phone);
+        return res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+};
 
 const getAdminDetails = async (req, res, next) => {
     // const { id } = req.params;
@@ -562,6 +573,7 @@ const activateUserById = async (req, res, next) => {
 module.exports = {
     createUser,
     findUserById,
+    findUserByPhoneNumber,
     getAdminDetails,
     getUserById,
     updateUserById,

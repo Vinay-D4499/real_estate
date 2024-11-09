@@ -96,6 +96,22 @@ const findUserById = async (userId) => {
         throw error;
     }
 };
+const findUserByPhoneNumber = async (phone) => {
+    try {
+        const user = await Users.findOne({where : {phone: phone}});
+        console.log("received phone number in service method of phone number :::", phone)
+        if (!user) {
+            throw new NotFoundError('User not found');
+        }
+        console.log("user by phone number ", user)
+        return user;
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        throw error;
+    }
+};
 
 const getAdminDetails = async (userId) => {
     try {
@@ -279,6 +295,7 @@ const activateUserById = async (userId) => {
 module.exports = {
     createUser,
     findUserById,
+    findUserByPhoneNumber,
     getAdminDetails,
     findUserByEmail,
     updateUserById,

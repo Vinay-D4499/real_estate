@@ -15,6 +15,8 @@ router.post('/createUserByRequest',  userController.createUserByRequest);
 
 router.get('/findUserById',verifyToken, userController.findUserById);
 
+router.post('/findUserByPhoneNumber', userController.findUserByPhoneNumber);
+
 router.get('/getAdminDetails',verifyToken, userController.getAdminDetails);
  
 router.get('/getUserById/:id',verifyToken, userController.getUserById); 

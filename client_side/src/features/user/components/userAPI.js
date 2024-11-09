@@ -19,6 +19,26 @@ export const fetchUserData = async () => {
     }
 };
 
+export const fetchUserDataByPhone = async (phone) => {
+    try {
+        // console.log('Phone Number in api   : ',phone)
+        const token = localStorage.getItem('token');
+        // Config for sending the JWT token to the server
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        const response = await axios.post(`${baseURL}/api/user/findUserByPhoneNumber`,{phone}, config);
+        // console.log("user responose :::>>>>>>>>>>>>", response)
+        return response.data;
+    } catch (error) {
+        console.error(error)
+        throw new Error(error.response?.data?.message || "An error occurred!");
+    }
+};
+
 export const fetchAdminData = async () => {
     try {
         const token = localStorage.getItem('token');

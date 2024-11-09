@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
 import { format } from 'date-fns';
 import { FiSearch, FiArrowDown } from 'react-icons/fi';
+import DisplayProfilePicture from '../features/user/components/DisplayProfilePicture';
 
-const MessageList = ({ messages }) => {
+const MessageList = ({ messages, user }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   const bottomRef = useRef(null);
   const chatContainerRef = useRef(null);
+  // console.log(user)
 
   // Scroll to the bottom when messages change
   useEffect(() => {
@@ -48,18 +50,20 @@ const MessageList = ({ messages }) => {
   }, {});
 
   return (
-    <div
-      ref={chatContainerRef}
-      onScroll={handleScroll}
-      className="relative h-full overflow-y-auto custom-scrollbar"
-    >
-      {/* Search Icon and Tooltip */}
-      <div className="fixed top-4 right-6 z-10">
-        <div
-          className="relative cursor-pointer"
-          onClick={() => setIsSearchOpen((prev) => !prev)}
-          title="Search messages"
-        >
+    <div ref={chatContainerRef} onScroll={handleScroll} className="relative h-full overflow-y-auto custom-scrollbar">
+      {/* User Info Header */}
+      <div className="flex items-center p-2 bg-white shadow-md sticky top-0 z-20">
+        <img
+          src={user?.profile_picture_url || 'https://lara.blr1.cdn.digitaloceanspaces.com/real_estate/profile_pictures/default.png'}
+          alt={`${user?.name}'s profile`}
+          className="w-12 h-12 rounded-full object-cover mr-3"
+        />
+        {/* <DisplayProfilePicture id={user?.id} isEditable={false} /> */}
+        <div className="flex flex-col">
+          <span className="text-lg font-semibold">{user?.name || 'User'}</span>
+          <span className="text-gray-500 text-sm">{user?.phone}</span>
+        </div>
+        <div className="ml-auto cursor-pointer" onClick={() => setIsSearchOpen((prev) => !prev)} title="Search messages">
           <FiSearch className="text-gray-600 text-2xl hover:text-blue-500 transition-colors duration-300" />
         </div>
       </div>
@@ -93,7 +97,9 @@ const MessageList = ({ messages }) => {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500 mt-4">No messages found.</p>
+          <div className="flex justify-center items-center text-lg text-gray-500 h-full p-4">
+            No conversation available.
+          </div>
         )}
 
         {/* Reference to scroll to */}
@@ -104,7 +110,7 @@ const MessageList = ({ messages }) => {
       {showScrollToBottom && (
         <button
           onClick={scrollToBottom}
-          className="fixed bottom-4 right-4 p-2 rounded-full bg-blue-500 text-white shadow-lg hover:bg-blue-600 focus:outline-none transition-all duration-300 z-20"
+          className="fixed bottom-16 right-6 p-2 rounded-full bg-blue-500 text-white shadow-lg hover:bg-blue-600 focus:outline-none transition-all duration-300 z-20"
           title="Go to bottom"
         >
           <FiArrowDown className="text-xl" />
