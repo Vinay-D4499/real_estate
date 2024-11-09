@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
 import { format } from 'date-fns';
 import { FiSearch } from 'react-icons/fi';
@@ -6,6 +6,12 @@ import { FiSearch } from 'react-icons/fi';
 const MessageList = ({ messages }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const bottomRef = useRef(null);
+
+  // Scroll to the bottom when messages change
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   // Group messages by date
   const groupedMessages = messages.reduce((groups, message) => {
@@ -70,6 +76,9 @@ const MessageList = ({ messages }) => {
         ) : (
           <p className="text-center text-gray-500 mt-4">No messages found.</p>
         )}
+
+        {/* Reference to scroll to */}
+        <div ref={bottomRef} />
       </div>
     </div>
   );
