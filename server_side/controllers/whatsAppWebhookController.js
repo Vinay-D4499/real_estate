@@ -1,30 +1,12 @@
 const webhookService = require('../services/whatsAppWebHookService');
 
-// async function fetchConversation(req, res) {
-//     const { whatsappUserId } = req.params;
-
-//     try {
-//         const conversation = await webhookService.getConversationByWhatsappUserId(whatsappUserId);
-        
-//         if (!conversation) {
-//             return res.status(404).json({ message: 'No conversation found for this WhatsApp User ID' });
-//         }
-
-//         return res.status(200).json(conversation);
-//     } catch (error) {
-//         console.error("Error in fetchConversation controller:", error);
-//         return res.status(500).json({ message: 'Failed to fetch conversation', error: error.message });
-//     }
-// }
-
 async function fetchConversation(req, res) {
     const { whatsappUserId } = req.params;
-    const { limit = 10, offset = 0 } = req.query; // Default limit of 10, default offset of 0
 
     try {
-        const conversation = await webhookService.getConversationByWhatsappUserId(whatsappUserId, Number(limit), Number(offset));
-
-        if (!conversation || conversation.length === 0) {
+        const conversation = await webhookService.getConversationByWhatsappUserId(whatsappUserId);
+        
+        if (!conversation) {
             return res.status(404).json({ message: 'No conversation found for this WhatsApp User ID' });
         }
 
@@ -34,7 +16,6 @@ async function fetchConversation(req, res) {
         return res.status(500).json({ message: 'Failed to fetch conversation', error: error.message });
     }
 }
-
 
 /**
  * Controller to send a text message and save it to the database.

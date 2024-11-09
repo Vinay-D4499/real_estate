@@ -6,28 +6,7 @@ const WebhookMessageStatus = require('../models/webhookMessageStatusModel');
 
 const phone_number_id = process.env.PHONE_NUMBER_ID;
 
-// async function getConversationByWhatsappUserId(whatsappUserId) {
-//     try {
-//         const messages = await WebhookMessage.findAll({
-//             where: { whatsappUserId },
-//             include: [
-//                 {
-//                     model: WebhookMessageStatus,
-//                     as: 'statuses',
-//                     required: false,
-//                 },
-//             ],
-//             order: [['timestamp', 'ASC']],
-//         });
-
-//         return messages;
-//     } catch (error) {
-//         console.error("Error fetching conversation:", error);
-//         throw error;
-//     }
-// }
-
-async function getConversationByWhatsappUserId(whatsappUserId, limit = 10, offset = 0) {
+async function getConversationByWhatsappUserId(whatsappUserId) {
     try {
         const messages = await WebhookMessage.findAll({
             where: { whatsappUserId },
@@ -38,9 +17,7 @@ async function getConversationByWhatsappUserId(whatsappUserId, limit = 10, offse
                     required: false,
                 },
             ],
-            order: [['timestamp', 'ASC']], // Ensure messages are ordered by timestamp
-            limit, // Limit the number of messages returned
-            offset, // Offset for pagination (starting point)
+            order: [['timestamp', 'ASC']],
         });
 
         return messages;
@@ -49,7 +26,6 @@ async function getConversationByWhatsappUserId(whatsappUserId, limit = 10, offse
         throw error;
     }
 }
-
 
 /**
  * Sends a text message via WhatsApp API and saves it to the database.

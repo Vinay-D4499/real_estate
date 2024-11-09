@@ -8,21 +8,24 @@ const ChatContainer = () => {
   const [whatsappUserId, setWhatsappUserId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [isChatListVisible, setIsChatListVisible] = useState(true); // Toggle visibility for small screens
+  const [loadingMessages, setLoadingMessages] = useState(false); // For handling message loading
   const chatEndRef = useRef(null);
 
   useEffect(() => {
     const loadConversation = async () => {
       if (!whatsappUserId) return;
+      setLoadingMessages(true);
       try {
         const data = await getWhatsAppConversation(whatsappUserId);
-        setMessages((prevMessages) => {
-          const newMessages = data.filter(
-            (msg) => !prevMessages.some((existingMsg) => existingMsg.id === msg.id)
-          );
-          return [...prevMessages, ...newMessages];
-        });
+        if (data.length === 0) {
+          setMessages([]);
+        } else {
+          setMessages(data);
+        }
       } catch (error) {
         console.error("Failed to load conversation:", error);
+      } finally {
+        setLoadingMessages(false);
       }
     };
 
@@ -67,8 +70,16 @@ const ChatContainer = () => {
         {whatsappUserId ? (
           <>
             <div className="flex-grow overflow-y-auto p-4">
-              <MessageList messages={messages} />
-              <div ref={chatEndRef} />
+              {messages.length === 0 && !loadingMessages ? (
+                <div className="flex justify-center items-center text-lg text-gray-500 h-full p-4">
+                  No conversation available.
+                </div>
+              ) : (
+                <>
+                  <MessageList messages={messages} />
+                  <div ref={chatEndRef} />
+                </>
+              )}
             </div>
             <MessageInput />
           </>
