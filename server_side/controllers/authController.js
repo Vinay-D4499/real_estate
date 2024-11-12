@@ -27,6 +27,7 @@ const { baseURL } = require("../config/baseURL");
 //     }
 // }
 
+
 const signIn = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -34,13 +35,13 @@ const signIn = async (req, res, next) => {
     }
 
     try {
-        const { email, password } = req.body;
-        const { token, user } = await authService.signIn(email, password);
+        const { email, password,phone } = req.body;
+        const { token, user } = await authService.signIn(email, password,phone);
 
         return res.status(200).json({
             message: "Sign in Success",
             token,
-            user: { id: user.id, name: user.name, email: user.email, role: user.role }
+            user: { id: user.id, name: user.name, email: user.email, role: user.role ,phone : user.phone}
         });
     } catch (error) {
         next(error);

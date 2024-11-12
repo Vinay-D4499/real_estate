@@ -46,6 +46,8 @@ const Navbar = () => {
             <Link to="/inactive-customers" className="hover:text-indigo-400">Inactive Customers</Link>
             <Link to="/update-password" className="hover:text-indigo-400">Update Password</Link>
             <Link to="/property-type" className="hover:text-indigo-400">Add-Property</Link>
+            <Link to="/customer-reviews" className="hover:text-indigo-400">Customer-Reviews</Link>
+          
         </>
     );
 
@@ -55,11 +57,16 @@ const Navbar = () => {
             <Link to="/explore" className="hover:text-indigo-400">Explore</Link>
             <Link to="/about" className="hover:text-indigo-400">About</Link>
             <Link to="/update-password" className="hover:text-indigo-400">Update Password</Link>
+            <Link to="/review" className="hover:text-indigo-400">Reviews</Link>
+            <Link to="/customer-reviews" className="hover:text-indigo-400">Customer-Reviews</Link>
+          
         </>
     );
 
     const commonLinks = (
         <>
+        
+         
         </>
     );
 

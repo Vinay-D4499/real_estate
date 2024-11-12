@@ -35,8 +35,9 @@ const jwt_token = process.env.JWT_SECRET;
 //     }
 // }
 
-const signIn = async (email, password) => {
+const signIn = async (email, password,phone) => {
     try {
+
         // First, try to find the user in the Admins table 
         let user = await Admins.findOne({ where: { email } });
         let role = 'ADMIN';
@@ -60,11 +61,11 @@ const signIn = async (email, password) => {
 
         // Generate JWT token with the user's role and ID
         const token = jwt.sign(
-            { id: user.id, email: user.email, role },
+            { id: user.id, email: user.email, phone : user.phone,role },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
-
+         console.log(token);
         // Return the token and user details
         return { token, user: { ...user.toJSON(), role } };
 

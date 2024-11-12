@@ -9,6 +9,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import LoadingAnimation from './common/LoadingAnimation';
 
 
+
 const SignIn = lazy(() => import('./features/auth/SignIn/SignIn'));
 const PasswordResetEmail = lazy(() => import('./features/auth/PasswordResetEmail/PasswordResetEmail'));
 const UserProfile = lazy(() => import('./features/user/components/UserProfile'));
@@ -19,6 +20,8 @@ const InactiveCustomers = lazy(() => import('./features/user/components/Inactive
 const UserUpdateForm = lazy(() => import('./features/user/components/UserUpdateForm'));
 const AddCustomerForm = lazy(() => import('./features/user/components/AddCustomerForm'));
 const AddProperty = lazy(() => import('./features/admin/AddProperty'));
+const  ReviewsCard  = lazy(() => import('./features/reviews/ReviewsCard'));
+const CustomerReviews = lazy(() => import('./features/reviews/CustomerReviews'));
 
 function App() {
   return (
@@ -38,6 +41,8 @@ function MainContent() {
   const noBreadcrumbRoutes = ['/', '/reset-password'];
 
   return (
+    <>
+   
     <main className="flex-grow">
       <div className="mx-auto max-w-md flex items-center justify-center">
         {!noBreadcrumbRoutes.includes(location.pathname) && <Breadcrumb />}
@@ -110,10 +115,28 @@ function MainContent() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/review"
+            element={
+              <ProtectedRoute>
+                 <ReviewsCard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/customer-reviews"
+            element={
+              <ProtectedRoute>
+                 <CustomerReviews />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Suspense>
     </main>
+    </>
   );
+  
 }
 
 export default App;
