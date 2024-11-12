@@ -10,6 +10,8 @@ import LoadingAnimation from './common/LoadingAnimation';
 import ChatContainer from './whatsApp/ChatContainer';
 import HomeNavbar from './homeUI/HomeNavbar';
 
+
+
 const SignIn = lazy(() => import('./features/auth/SignIn/SignIn'));
 const PasswordResetEmail = lazy(() => import('./features/auth/PasswordResetEmail/PasswordResetEmail'));
 const UserProfile = lazy(() => import('./features/user/components/UserProfile'));
@@ -20,6 +22,9 @@ const InactiveCustomers = lazy(() => import('./features/user/components/Inactive
 const UserUpdateForm = lazy(() => import('./features/user/components/UserUpdateForm'));
 const AddCustomerForm = lazy(() => import('./features/user/components/AddCustomerForm'));
 const Home1 = lazy(() => import('./homeUI/Home1'));
+const AddProperty = lazy(() => import('./features/admin/AddProperty'));
+const  ReviewsCard  = lazy(() => import('./features/reviews/ReviewsCard'));
+const CustomerReviews = lazy(() => import('./features/reviews/CustomerReviews'));
 
 function App() {
   const location = useLocation();
@@ -40,6 +45,8 @@ function MainContent() {
   const noBreadcrumbRoutes = ['/', '/reset-password','/chats'];
 
   return (
+    <>
+   
     <main className="flex-grow">
       <div className="mx-auto max-w-md flex items-center justify-center">
         {!noBreadcrumbRoutes.includes(location.pathname) && <Breadcrumb />}
@@ -107,10 +114,36 @@ function MainContent() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/property-type"
+            element={
+              <ProtectedRoute>
+                <AddProperty />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/review"
+            element={
+              <ProtectedRoute>
+                 <ReviewsCard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/customer-reviews"
+            element={
+              <ProtectedRoute>
+                 <CustomerReviews />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Suspense>
     </main>
+    </>
   );
+  
 }
 
 function Root() {

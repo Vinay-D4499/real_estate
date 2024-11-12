@@ -7,6 +7,8 @@ const PropertyTypes = require('./propertyTypesModel');
 const UserPropertyInterests = require('./userPropertyInterestsModel');
 const WebhookMessage = require('./webhookMessageModel');
 const WebhookMessageStatus = require('./webhookMessageStatusModel');
+const Reviews = require('./reviewsModel');
+
 
 //Associations 
 Users.belongsToMany(PropertyTypes, {
@@ -36,6 +38,11 @@ WebhookMessageStatus.belongsTo(WebhookMessage, {
 
 
 
+
+// Users and Reviews association with cascading delete and update
+Users.hasMany(Reviews, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Reviews.belongsTo(Users, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+
 const initDatabase = async () => {
   try {
     // Creates the database if it doesn't exist
@@ -58,4 +65,5 @@ module.exports = {
   Admin,
   PropertyTypes,
   UserPropertyInterests,
+  Reviews,
 };

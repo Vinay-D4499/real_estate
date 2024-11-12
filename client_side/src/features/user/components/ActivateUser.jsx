@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { activateUserById } from './userAPI';
 import { CheckCircleIcon, } from '@heroicons/react/24/solid';
+import CustomerReviews from '../../reviews/CustomerReviews';
 
 const ActivateUser = ({ id, refreshCustomerData }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,6 +57,7 @@ const ActivateUser = ({ id, refreshCustomerData }) => {
                     </div>
                 </div>
             )}
+            <CustomerReviews />
         </div>
     );
 };

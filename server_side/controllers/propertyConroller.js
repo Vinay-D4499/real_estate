@@ -5,7 +5,7 @@ const addPropertyType = async (req,res, next)=>{
     try {
         const id = req.user;
         const {propertyType} = req.body;
-        const property = await propertyServices.addPropertyType(id,{propertyType});
+        const property = await propertyServices.addPropertyType(id,propertyType);
 
         return res.status(201).json({ message: 'Proerty added successfully', property: property });
 
@@ -35,8 +35,28 @@ const assignPropertyTypesToUser = async (req, res, next) => {
     }
 };
 
+
+const deleteProperty = async (req, res, next) => {
+    try {
+       
+        const { propertyId } = req.params; // Property ID from URL params
+          console.log(propertyId , "===================>");
+        // Call the service method to delete the property by ID and user ID
+        const result = await propertyServices.deleteProperty(propertyId);
+
+        if (result) {
+            return res.status(200).json({ message: 'Property deleted successfully' });
+        } else {
+            return res.status(404).json({ message: 'Property not found' });
+        }
+    } catch (error) {
+        next(error); // Pass the error to error handling middleware
+    }
+};
+
 module.exports = {
     addPropertyType,
     getAllPropertyTypes,
     assignPropertyTypesToUser,
+    deleteProperty,
 }

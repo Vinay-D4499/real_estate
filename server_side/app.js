@@ -15,6 +15,10 @@ const whatsAppWebhookRoutes = require('./routes/whatsAppWebhookRoutes')
 const { baseURL } = require('./config/baseURL');
 // const WebhookMessage = require('./models/webhookMessageModel');
 // const WebhookMessageStatus = require('./models/webhookMessageStatusModel');
+
+const reviewRoutes = require('./routes/reviewRoutes');
+
+
 const { Op } = require('sequelize');
 
 const app = express();
@@ -22,8 +26,8 @@ const PORT = process.env.PORT;
 
 // Middleware setup
 app.use(cors({
-    origin: `https://estate.laragrooming.com`, // Client side URL
-    // origin: `http://localhost:5173`, // Client side URL 
+    // origin: `https://estate.laragrooming.com`, // Client side URL
+    origin: `http://localhost:5173`, // Client side URL 
 }));
 app.use(express.json()); // Middleware to parse JSON request body
 
@@ -33,12 +37,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/whatsAppWebhook', whatsAppWebhookRoutes);
 app.use(errorHandler); // Error handler should be placed after all routes
+app.use('/api/review',reviewRoutes);
 
 // Method to create ADMIN automatically when the server starts
 const createAdminUserOnStart = async () => {
     try {
-        // const response = await axios.post(`http://localhost:3000/api/user/createUserByRequest`); 
-        const response = await axios.post(`https://api.estate.laragrooming.com/api/user/createUserByRequest`); 
+        const response = await axios.post(`http://localhost:3000/api/user/createUserByRequest`); 
+        // const response = await axios.post(`https://api.estate.laragrooming.com/api/user/createUserByRequest`); 
         console.log(response.data.message);
     } catch (error) {
         console.log(error)

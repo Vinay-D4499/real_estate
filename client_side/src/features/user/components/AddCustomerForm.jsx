@@ -51,7 +51,7 @@ const AddCustomerForm = () => {
         setUserData({ ...userData, budgetRange: { min: range.min, max: range.max } });
     };
 
-    const handleCheckboxChange = (e) => {
+    const handleCheckboxChange = (e) => { 
         const { value } = e.target;
         if (selectedPropertyTypes.includes(value)) {
             setSelectedPropertyTypes(selectedPropertyTypes.filter(id => id !== value));

@@ -5,6 +5,7 @@ import CustomerTable from './CustomerTable';
 import CustomerFilters from './CustomerFilters';
 import Pagination from './Pagination';
 import InactiveCustomers from './InactiveCustomers';
+import CustomerReviews from '../../reviews/CustomerReviews';
 
 const AllCustomerDetails = () => {
     const [customers, setCustomers] = useState([]);
@@ -113,8 +114,10 @@ const AllCustomerDetails = () => {
                 setCurrentPage={setCurrentPage}
             />
             {/* <InactiveCustomers /> */}
+            <CustomerReviews />
         </div>
     );
+
 };
 
 export default AllCustomerDetails;
