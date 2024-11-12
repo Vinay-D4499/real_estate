@@ -3,9 +3,10 @@ import { createUser } from './userAPI';
 import { getAllPropertyTypes } from './propertyAPI';
 import toast from 'react-hot-toast';
 import AllCustomerDetails from './AllCustomerDetails';
-import Conversation from '../../../whatsApp/Conversation';
-import ConversationLayout from '../../../whatsApp/ConversationLayout';
-import ChatContainer from '../../../whatsApp/ChatContainer';
+import Form from './Form';
+// import Conversation from '../../../whatsApp/Conversation';
+// import ConversationLayout from '../../../whatsApp/ConversationLayout';
+// import ChatContainer from '../../../whatsApp/ChatContainer';
 
 const AddCustomerForm = () => {
     const [userData, setUserData] = useState({
@@ -160,6 +161,7 @@ const AddCustomerForm = () => {
             <AllCustomerDetails />
             {/* <ConversationLayout /> */}
             {/* <ChatContainer whatsappUserId={919845964499}/> */}
+            <Form />
         </>
     );
 };

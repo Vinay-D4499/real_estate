@@ -66,6 +66,8 @@ const Navbar = () => {
                 <Link to="/" className="text-2xl font-semibold flex-shrink-0">
                     <img src={logo} alt="TOT FD" className="w-10 h-10" />
                 </Link>
+                <Link to="/home-ui-navbar" className="hover:text-indigo-400 text-sm">Home </Link>
+
 
                 {/* Hamburger Menu Button */}
                 <button onClick={toggleMenu} className="md:hidden text-white focus:outline-none">
@@ -111,7 +113,7 @@ const Navbar = () => {
                 handleLogout={handleLogout}
                 adminLinks={adminLinks}
                 customerLinks={customerLinks}
-                user={user}  
+                user={user}
             />
 
         </nav>

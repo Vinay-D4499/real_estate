@@ -8,6 +8,7 @@ import Breadcrumb from './components/Breadcrumb';
 import ProtectedRoute from './routes/ProtectedRoute';
 import LoadingAnimation from './common/LoadingAnimation';
 import ChatContainer from './whatsApp/ChatContainer';
+import HomeNavbar from './homeUI/HomeNavbar';
 
 const SignIn = lazy(() => import('./features/auth/SignIn/SignIn'));
 const PasswordResetEmail = lazy(() => import('./features/auth/PasswordResetEmail/PasswordResetEmail'));
@@ -18,6 +19,7 @@ const AllCustomerDetails = lazy(() => import('./features/user/components/AllCust
 const InactiveCustomers = lazy(() => import('./features/user/components/InactiveCustomers'));
 const UserUpdateForm = lazy(() => import('./features/user/components/UserUpdateForm'));
 const AddCustomerForm = lazy(() => import('./features/user/components/AddCustomerForm'));
+const Home1 = lazy(() => import('./homeUI/Home1'));
 
 function App() {
   const location = useLocation();
@@ -47,6 +49,8 @@ function MainContent() {
           <Route path="/" element={<SignIn />} />
           <Route path="/reset-password" element={<PasswordResetEmail />} />
           <Route path="/chats" element={<ChatContainer />} />
+          <Route path="/home-ui-navbar" element={<HomeNavbar />} />
+          <Route path="/home1" element={<Home1 />} />
           <Route
             path="/admin-profile"
             element={
