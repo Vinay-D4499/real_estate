@@ -9,6 +9,8 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import LoadingAnimation from './common/LoadingAnimation';
 import ChatContainer from './whatsApp/ChatContainer';
 import HomeNavbar from './homeUI/HomeNavbar';
+import Home2 from './homeUI/home2/Home2';
+import Home3 from './homeUI/home3/Home3';
 
 
 
@@ -22,6 +24,9 @@ const InactiveCustomers = lazy(() => import('./features/user/components/Inactive
 const UserUpdateForm = lazy(() => import('./features/user/components/UserUpdateForm'));
 const AddCustomerForm = lazy(() => import('./features/user/components/AddCustomerForm'));
 const Home1 = lazy(() => import('./homeUI/Home1'));
+// const Home2 = lazy(() => import('./homeUI/home2/Home2'));
+// const Home2 = React.lazy(() => import('./homeUI/home2/Home2'));
+
 const AddProperty = lazy(() => import('./features/admin/AddProperty'));
 const  ReviewsCard  = lazy(() => import('./features/reviews/ReviewsCard'));
 const CustomerReviews = lazy(() => import('./features/reviews/CustomerReviews'));
@@ -42,7 +47,7 @@ function App() {
 
 function MainContent() {
   const location = useLocation();
-  const noBreadcrumbRoutes = ['/', '/reset-password','/chats'];
+  const noBreadcrumbRoutes = ['/', '/reset-password','/chats','/home1', '/home2', '/home3'];
 
   return (
     <>
@@ -58,6 +63,8 @@ function MainContent() {
           <Route path="/chats" element={<ChatContainer />} />
           <Route path="/home-ui-navbar" element={<HomeNavbar />} />
           <Route path="/home1" element={<Home1 />} />
+          <Route path="/home2" element={<Home2 />} />
+          <Route path="/home3" element={<Home3 />} />
           <Route
             path="/admin-profile"
             element={

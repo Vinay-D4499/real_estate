@@ -5,7 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend:{
+      fontFamily: {
+        condensed: ['"Roboto Condensed"', 'sans-serif'], // Add condensed font
+      },
+    },
   },
   plugins: [],
 }

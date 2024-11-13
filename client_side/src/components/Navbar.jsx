@@ -47,10 +47,6 @@ const Navbar = () => {
             <Link to="/view-customers" className="hover:text-indigo-400 text-sm">Customers</Link>
             <Link to="/inactive-customers" className="hover:text-indigo-400 text-sm">Inactive Customers</Link>
             <Link to="/update-password" className="hover:text-indigo-400 text-sm">Update Password</Link>
-            <Link to="/add-customer" className="hover:text-indigo-400">Add Customer</Link>
-            <Link to="/view-customers" className="hover:text-indigo-400">Customers</Link>
-            <Link to="/inactive-customers" className="hover:text-indigo-400">Inactive Customers</Link>
-            <Link to="/update-password" className="hover:text-indigo-400">Update Password</Link>
             <Link to="/property-type" className="hover:text-indigo-400">Add-Property</Link>
             <Link to="/customer-reviews" className="hover:text-indigo-400">Customer-Reviews</Link>
           
@@ -63,10 +59,6 @@ const Navbar = () => {
             <Link to="/explore" className="hover:text-indigo-400 text-sm">Explore</Link>
             <Link to="/about" className="hover:text-indigo-400 text-sm">About</Link>
             <Link to="/update-password" className="hover:text-indigo-400 text-sm">Update Password</Link>
-            <Link to="/user" className="hover:text-indigo-400">Dashboard</Link>
-            <Link to="/explore" className="hover:text-indigo-400">Explore</Link>
-            <Link to="/about" className="hover:text-indigo-400">About</Link>
-            <Link to="/update-password" className="hover:text-indigo-400">Update Password</Link>
             <Link to="/review" className="hover:text-indigo-400">Reviews</Link>
             <Link to="/customer-reviews" className="hover:text-indigo-400">Customer-Reviews</Link>
           
@@ -87,7 +79,7 @@ const Navbar = () => {
                 <Link to="/" className="text-2xl font-semibold flex-shrink-0">
                     <img src={logo} alt="TOT FD" className="w-10 h-10" />
                 </Link>
-                <Link to="/home-ui-navbar" className="hover:text-indigo-400 text-sm">Home </Link>
+                <Link to="/home-ui-navbar" className="hover:text-indigo-400  mx-3 text-sm">Home </Link>
 
 
                 {/* Hamburger Menu Button */}
