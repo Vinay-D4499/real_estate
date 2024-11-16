@@ -26,8 +26,8 @@ const PORT = process.env.PORT;
 
 // Middleware setup
 app.use(cors({
-    origin: `https://estate.laragrooming.com`, // Client side URL
-    // origin: `http://localhost:5173`, // Client side URL 
+    // origin: `https://estate.laragrooming.com`, // Client side URL
+    origin: `http://localhost:5173`, // Client side URL 
 }));
 app.use(express.json()); // Middleware to parse JSON request body
 
@@ -42,8 +42,8 @@ app.use('/api/review',reviewRoutes);
 // Method to create ADMIN automatically when the server starts
 const createAdminUserOnStart = async () => {
     try {
-        // const response = await axios.post(`http://localhost:3000/api/user/createUserByRequest`); 
-        const response = await axios.post(`https://api.estate.laragrooming.com/api/user/createUserByRequest`); 
+        const response = await axios.post(`http://localhost:3000/api/user/createUserByRequest`); 
+        // const response = await axios.post(`https://api.estate.laragrooming.com/api/user/createUserByRequest`); 
         console.log(response.data.message);
     } catch (error) {
         console.log(error)

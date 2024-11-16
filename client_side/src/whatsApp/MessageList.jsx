@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import MessageItem from './MessageItem';
 import { format } from 'date-fns';
 import { FiSearch, FiArrowDown } from 'react-icons/fi';
-import DisplayProfilePicture from '../features/user/components/DisplayProfilePicture';
 
 const MessageList = ({ messages, user }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,14 +9,15 @@ const MessageList = ({ messages, user }) => {
   const [showScrollToBottom, setShowScrollToBottom] = useState(false);
   const bottomRef = useRef(null);
   const chatContainerRef = useRef(null);
-  // console.log(user)
+
+  // Log the original messages to confirm `mediaPathUrl` exists initially
+  console.log("Original messages:", messages);
 
   // Scroll to the bottom when messages change
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Show "scroll to bottom" button only when user scrolls up
   const handleScroll = () => {
     if (chatContainerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
@@ -25,7 +25,6 @@ const MessageList = ({ messages, user }) => {
     }
   };
 
-  // Scroll to the bottom on button click
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -38,27 +37,29 @@ const MessageList = ({ messages, user }) => {
     return groups;
   }, {});
 
-  // Filter messages based on search term
-  const filteredMessages = Object.keys(groupedMessages).reduce((filtered, date) => {
-    const matchingMessages = groupedMessages[date].filter((message) =>
-      message.messageBody?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    if (matchingMessages.length) {
-      filtered[date] = matchingMessages;
-    }
-    return filtered;
-  }, {});
+ // Modify the filtering condition in MessageList
+const filteredMessages = Object.keys(groupedMessages).reduce((filtered, date) => {
+  const matchingMessages = groupedMessages[date].filter((message) => 
+    (message.messageBody?.toLowerCase().includes(searchTerm.toLowerCase()) || message.mediaPathUrl)
+  );
+  if (matchingMessages.length) {
+    filtered[date] = matchingMessages;
+  }
+  return filtered;
+}, {});
+
+
+  // Log filtered messages to verify `mediaPathUrl` is retained after filtering
+  console.log("Filtered messages:", filteredMessages);
 
   return (
     <div ref={chatContainerRef} onScroll={handleScroll} className="relative h-full overflow-y-auto custom-scrollbar">
-      {/* User Info Header */}
       <div className="flex items-center p-2 bg-white shadow-md sticky top-0 z-20">
         <img
           src={user?.profile_picture_url || 'https://lara.blr1.cdn.digitaloceanspaces.com/real_estate/profile_pictures/default.png'}
           alt={`${user?.name}'s profile`}
           className="w-12 h-12 rounded-full object-cover mr-3"
         />
-        {/* <DisplayProfilePicture id={user?.id} isEditable={false} /> */}
         <div className="flex flex-col">
           <span className="text-lg font-semibold">{user?.name || 'User'}</span>
           <span className="text-gray-500 text-sm">{user?.phone}</span>
@@ -68,7 +69,6 @@ const MessageList = ({ messages, user }) => {
         </div>
       </div>
 
-      {/* Search Bar */}
       {isSearchOpen && (
         <div className="fixed top-14 right-4 w-72 p-2 bg-white rounded-lg shadow-lg border border-gray-300 z-20 transition-transform duration-300 ease-in-out">
           <input
@@ -81,19 +81,18 @@ const MessageList = ({ messages, user }) => {
         </div>
       )}
 
-      {/* Spacer for Fixed Search Bar */}
       <div className="pt-16">
-        {/* Display Messages Date-wise */}
         {Object.keys(filteredMessages).length ? (
           Object.keys(filteredMessages).map((date) => (
             <div key={date}>
-              {/* Date header */}
               <div className="text-center text-gray-500 my-4 text-sm">
                 {format(new Date(date), 'EEEE, MMMM d, yyyy')}
               </div>
-              {filteredMessages[date].map((message, index) => (
-                <MessageItem key={index} message={message} />
-              ))}
+              {filteredMessages[date].map((message, index) => {
+                // Log each message to check `mediaPathUrl` before passing to MessageItem
+                console.log("Rendering MessageItem with message:", message);
+                return <MessageItem key={index} message={message} />;
+              })}
             </div>
           ))
         ) : (
@@ -101,12 +100,9 @@ const MessageList = ({ messages, user }) => {
             No conversation available.
           </div>
         )}
-
-        {/* Reference to scroll to */}
         <div ref={bottomRef} />
       </div>
 
-      {/* Scroll to Bottom Button */}
       {showScrollToBottom && (
         <button
           onClick={scrollToBottom}

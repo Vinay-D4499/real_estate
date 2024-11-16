@@ -36,9 +36,6 @@ WebhookMessageStatus.belongsTo(WebhookMessage, {
 });
 
 
-
-
-
 // Users and Reviews association with cascading delete and update
 Users.hasMany(Reviews, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 Reviews.belongsTo(Users, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });

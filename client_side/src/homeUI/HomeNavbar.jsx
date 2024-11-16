@@ -28,6 +28,12 @@ const HomeNavbar = () => {
           <Link to="/home3" className="text-white px-4 py-2 block hover:bg-blue-700">
             Home 3
           </Link>
+          <Link to="/home4" className="text-white px-4 py-2 block hover:bg-blue-700">
+            Home 4
+          </Link>
+          <Link to="/home5" className="text-white px-4 py-2 block hover:bg-blue-700">
+            Home 5
+          </Link>
         </div>
       </div>
     </nav>

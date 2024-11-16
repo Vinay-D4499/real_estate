@@ -11,6 +11,8 @@ import ChatContainer from './whatsApp/ChatContainer';
 import HomeNavbar from './homeUI/HomeNavbar';
 import Home2 from './homeUI/home2/Home2';
 import Home3 from './homeUI/home3/Home3';
+import Home4 from './homeUI/home4/Home4';
+import Home5 from './homeUI/home5/Home5';
 
 
 
@@ -47,7 +49,7 @@ function App() {
 
 function MainContent() {
   const location = useLocation();
-  const noBreadcrumbRoutes = ['/', '/reset-password','/chats','/home1', '/home2', '/home3'];
+  const noBreadcrumbRoutes = ['/', '/reset-password','/chats','/home1', '/home2', '/home3', '/home4','/home5'];
 
   return (
     <>
@@ -65,6 +67,8 @@ function MainContent() {
           <Route path="/home1" element={<Home1 />} />
           <Route path="/home2" element={<Home2 />} />
           <Route path="/home3" element={<Home3 />} />
+          <Route path="/home4" element={<Home4 />} />
+          <Route path="/home5" element={<Home5 />} />
           <Route
             path="/admin-profile"
             element={

@@ -38,7 +38,7 @@ const PropertyList = () => {
       className="py-16 bg-gradient-to-r from-[#A1C4FD] via-[#C2E9FB] to-[#E8F9FD] relative overflow-hidden"
     >
       <h2
-        className="text-4xl font-extrabold text-center mb-12 text-gray-800"
+        className="text-4xl font-extrabold text-center mt-10 text-gray-800 z-50"
         data-aos="fade-down"
       >
         Featured Properties
@@ -46,7 +46,7 @@ const PropertyList = () => {
 
       {/* Decorative Shapes */}
       <div
-        className="absolute top-10 left-10 w-16 h-16 bg-[#FFA45B] rounded-full opacity-75 transform rotate-45"
+        className="absolute top-10 left-10 w-16 h-16 bg-[#FFA45B] rounded-full opacity-75 transform rotate-45 z-10"
         data-aos="fade-in"
         data-aos-delay="100"
       ></div>

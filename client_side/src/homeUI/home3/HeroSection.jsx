@@ -1,38 +1,142 @@
+// import React from 'react';
+// import { Swiper, SwiperSlide } from 'swiper/react';
+// import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+// import 'swiper/swiper-bundle.css'; // Import Swiper styles
+// import { FaHome, FaCity, FaTree } from 'react-icons/fa';
+
+// import houseImage from '../../assets/image/houseImage.png';
+// import house3D from '../../assets/image/house3D.png';
+// import farmLand from '../../assets/image/farmLand.jpg';
+// import apartments from '../../assets/image/apartments.jpg';
+// import villa from '../../assets/image/villa.jpg';
+
+// const HeroSection = () => {
+//   return (
+//     <section className="flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-blue-200 via-green-200 to-yellow-200 text-gray-800 py-12 px-6 md:px-12 lg:px-24">
+//       {/* Left side: Text content */}
+//       <div className="md:w-1/2 space-y-6">
+//         <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+//           Discover Your Dream Property
+//         </h1>
+//         <p className="text-lg md:text-xl text-gray-700">
+//           Explore a wide variety of properties including cozy houses, modern apartments, spacious gated communities, fertile farmlands, and luxurious villas. Find the ideal space that suits your lifestyle.
+//         </p>
+//         <div className="flex space-x-4 text-blue-600 text-2xl">
+//           <FaHome title="House" />
+//           <FaCity title="Apartment" />
+//           <FaTree title="Farmland" />
+//         </div>
+//         <a
+//           href="#properties"
+//           className="inline-block bg-blue-600 text-white text-lg font-medium py-3 px-6 rounded-lg transition duration-200 hover:bg-blue-700 mt-4"
+//         >
+//           Browse Properties
+//         </a>
+//       </div>
+
+//       {/* Right side: Swiper Carousel */}
+//       <div className="mt-8 md:mt-0 md:w-1/2 flex justify-center">
+//         <Swiper
+//           modules={[Navigation, Pagination, Autoplay]}
+//           spaceBetween={10}
+//           slidesPerView={1}
+//           navigation
+//           pagination={{ clickable: true }}
+//           autoplay={{ delay: 3000, disableOnInteraction: false }}
+//           className="w-full max-w-md rounded-lg shadow-lg"
+//         >
+//           <SwiperSlide>
+//             <img src={houseImage} alt="Cozy House" className="w-full h-64 object-cover" />
+//           </SwiperSlide>
+//           <SwiperSlide>
+//             <img src={house3D} alt="3D House Model" className="w-full h-64 object-cover" />
+//           </SwiperSlide>
+//           <SwiperSlide>
+//             <img src={farmLand} alt="Farmland" className="w-full h-64 object-cover" />
+//           </SwiperSlide>
+//           <SwiperSlide>
+//             <img src={apartments} alt="Apartments" className="w-full h-64 object-cover" />
+//           </SwiperSlide>
+//           <SwiperSlide>
+//             <img src={villa} alt="Villa" className="w-full h-64 object-cover" />
+//           </SwiperSlide>
+//         </Swiper>
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default HeroSection;
+
+
 import React from 'react';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { FaHome, FaCity, FaTree } from 'react-icons/fa';
+import houseImage from '../../assets/image/houseImage.png';
+import house3D from '../../assets/image/house3D.png';
+import farmLand from '../../assets/image/farmLand.jpg';
+import apartments from '../../assets/image/apartments.jpg';
+import villa from '../../assets/image/villa.jpg';
 
 const HeroSection = () => {
   return (
-    <section className="relative bg-white text-gray-900 py-12 sm:py-32 lg:py-24">
-      {/* Background geometric shapes */}
-      <div className="absolute inset-0 z-0 flex justify-center items-center pointer-events-none">
-        {/* Circles */}
-        <div className="absolute w-64 h-64 bg-blue-300 rounded-full opacity-20 transform translate-x-20 translate-y-20"></div>
-        <div className="absolute w-96 h-96 bg-green-300 rounded-full opacity-15 transform translate-x-72 translate-y-64"></div>
-        <div className="absolute w-64 h-64 bg-blue-300 rounded-full opacity-20 transform translate-x-40 translate-y-10"></div>
-        <div className="absolute w-96 h-96 bg-green-300 rounded-full opacity-15 transform translate-x-72 translate-y-96"></div>
+    <section className="flex flex-col md:flex-row items-center justify-between  py-12 px-6 md:px-12 lg:px-24">
+      {/* Right side: Image Carousel */}
+      <div className="order-1 md:order-2 mt-8 md:mt-0 md:w-1/2 flex justify-center">
+        <Carousel
+          autoPlay
+          infiniteLoop
+          showThumbs={false}
+          showStatus={false}
+          className="w-full max-w-lg rounded-lg shadow-xl"
+        >
+          <div className="relative">
+            <img src={houseImage} alt="Cozy House" className="w-full h-96 object-contain rounded-lg shadow-lg border-4 border-purple-500" />
+            <p className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-md text-sm">House</p>
+          </div>
+          <div className="relative">
+            <img src={house3D} alt="3D House Model" className="w-full h-96 object-contain rounded-lg shadow-lg border-4 border-pink-500" />
+            <p className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-pink-600 text-white px-3 py-1 rounded-md text-sm">House </p>
+          </div>
+          <div className="relative">
+            <img src={farmLand} alt="Farmland" className="w-full h-96 object-contain rounded-lg shadow-lg border-4 border-orange-500" />
+            <p className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white px-3 py-1 rounded-md text-sm">Farmland</p>
+          </div>
+          <div className="relative">
+            <img src={apartments} alt="Apartments" className="w-full h-96 object-contain rounded-lg shadow-lg border-4 border-yellow-500" />
+            <p className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-yellow-600 text-white px-3 py-1 rounded-md text-sm">Apartments</p>
+          </div>
+          <div className="relative">
+            <img src={villa} alt="Villa" className="w-full h-96 object-contain rounded-lg shadow-lg border-4 border-green-500" />
+            <p className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-3 py-1 rounded-md text-sm">Villa</p>
+          </div>
+        </Carousel>
       </div>
 
-      {/* Main Hero Content */}
-      <div className="relative z-10 text-center px-6 sm:px-12 lg:px-24">
-        <h1 className="text-6xl sm:text-7xl font-extrabold text-gray-900 tracking-tight leading-tight max-w-3xl mx-auto">
-          Find Your Ideal Property — House, Apartment, Gated Community, or Farm Land
+      {/* Left side: Text content */}
+      <div className="order-2 md:order-1 md:w-1/2 space-y-6">
+        <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+          Discover Your Dream Property
         </h1>
-        <p className="mt-6 text-xl sm:text-2xl text-gray-600 max-w-xl mx-auto">
-          Explore a curated selection of properties designed to fit your lifestyle. Whether you’re looking for a luxurious home, a cozy apartment, or a spacious plot of land, we have something for you.
+        <p className="text-lg md:text-xl text-gray-700">
+          Explore a wide variety of properties including cozy houses, modern apartments, spacious gated communities, fertile farmlands, and luxurious villas. Find the ideal space that suits your lifestyle.
         </p>
-
-        {/* Call to Action Button */}
-        <div className="mt-10">
-          <a
-            href="#properties-gallery"
-            className="inline-block bg-black text-white text-lg font-semibold py-4 px-10 rounded-full transition transform duration-300 hover:scale-105 hover:bg-gray-800 focus:outline-none"
-          >
-            Browse Our Properties
-          </a>
+        <div className="flex space-x-4 text-purple-800 text-2xl">
+          <FaHome title="House" />
+          <FaCity title="Apartment" />
+          <FaTree title="Farmland" />
         </div>
+        <a
+          href="#properties"
+          className="inline-block bg-purple-600 text-white text-lg font-medium py-3 px-6 rounded-lg transition duration-200 hover:bg-purple-700 mt-4"
+        >
+          Browse Properties
+        </a>
       </div>
     </section>
   );
 };
 
 export default HeroSection;
+
