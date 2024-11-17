@@ -9,12 +9,13 @@ const token = localStorage.getItem('token');
             },
         };
 
-export const signInUser = async (email, password) => {
+export const signInUser = async (email, password,phone) => {
     try {
-        const response = await axios.post(`${baseURL}/api/auth/signin`, { email, password });
+        const response = await axios.post(`${baseURL}/api/auth/signin`, { email, password,phone });
+        console.log(response.data);
         return response.data;
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         throw new Error(error.response?.data?.message || "An error occurred!");
     }
 };

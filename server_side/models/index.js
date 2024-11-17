@@ -8,6 +8,9 @@ const UserPropertyInterests = require('./userPropertyInterestsModel');
 const WebhookMessage = require('./webhookMessageModel');
 const WebhookMessageStatus = require('./webhookMessageStatusModel');
 const Reviews = require('./reviewsModel');
+const PropertyDetails = require('./propertyDetailsModel');
+const PropertyMedia = require('./propertyMedia');
+const UserPropertyDetails = require('./userPropertyDetails')
 
 
 //Associations 
@@ -43,6 +46,28 @@ WebhookMessageStatus.belongsTo(WebhookMessage, {
 Users.hasMany(Reviews, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 Reviews.belongsTo(Users, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
+
+// Define associations
+PropertyDetails.belongsTo(PropertyTypes, { foreignKey: 'property_type_id', as: 'propertyType' });
+PropertyTypes.hasMany(PropertyDetails, { foreignKey: 'property_type_id', as: 'propertyDetails' });
+
+// Associations
+PropertyDetails.hasMany(PropertyMedia, {
+  foreignKey: 'propertyDetails_id', // Ensure 'property_id' exists in PropertyMedia
+  as: 'media',               // Alias should be consistent in both association and query
+  onDelete: 'CASCADE'
+});
+
+PropertyMedia.belongsTo(PropertyDetails, {
+  foreignKey: 'propertyDetails_id',
+  as: 'property'
+});
+
+UserPropertyDetails.belongsTo(PropertyDetails, { foreignKey: 'property_id', targetKey: 'id' });
+PropertyDetails.hasMany(UserPropertyDetails, { foreignKey: 'property_id', sourceKey: 'id' });
+
+
+
 const initDatabase = async () => {
   try {
     // Creates the database if it doesn't exist
@@ -66,4 +91,5 @@ module.exports = {
   PropertyTypes,
   UserPropertyInterests,
   Reviews,
+  PropertyDetails,
 };

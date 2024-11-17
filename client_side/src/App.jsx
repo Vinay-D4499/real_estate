@@ -12,6 +12,7 @@ import HomeNavbar from './homeUI/HomeNavbar';
 
 
 
+
 const SignIn = lazy(() => import('./features/auth/SignIn/SignIn'));
 const PasswordResetEmail = lazy(() => import('./features/auth/PasswordResetEmail/PasswordResetEmail'));
 const UserProfile = lazy(() => import('./features/user/components/UserProfile'));
@@ -25,6 +26,9 @@ const Home1 = lazy(() => import('./homeUI/Home1'));
 const AddProperty = lazy(() => import('./features/admin/AddProperty'));
 const  ReviewsCard  = lazy(() => import('./features/reviews/ReviewsCard'));
 const CustomerReviews = lazy(() => import('./features/reviews/CustomerReviews'));
+const InactiveProperties = lazy(() => import ('./features/propertydetails/Inactiveproperties'));
+const AssignedProperties = lazy(() => import('./features/propertydetails/AssinedProperties'));
+const UserDetailsById = lazy(() => import ('./features/propertydetails/UserDetailsbyid'));
 
 function App() {
   const location = useLocation();
@@ -138,6 +142,33 @@ function MainContent() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/property-details"
+            element={
+              <ProtectedRoute>
+                 <InactiveProperties />
+              </ProtectedRoute>
+            }
+          />
+
+           <Route
+            path="/assign-properties/:id"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AssignedProperties />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/userbyid"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <UserDetailsById />
+              </ProtectedRoute>
+            }
+          />
+       
+
         </Routes>
       </Suspense>
     </main>

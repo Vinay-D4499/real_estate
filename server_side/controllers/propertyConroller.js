@@ -1,5 +1,5 @@
 const propertyServices = require('../services/propertyService');
-
+const { NotFoundError, BadRequestError } = require('../errors/httpErrors');
 
 const addPropertyType = async (req,res, next)=>{
     try {
@@ -13,6 +13,21 @@ const addPropertyType = async (req,res, next)=>{
         next();
     }
 }
+
+const addPropertyTypetouser = async (req,res, next)=>{
+    try {
+       
+        const {propertyTypeId, userId} = req.body;
+        const property = await propertyServices.addPropertyTypetouser(propertyTypeId, userId);
+
+        return res.status(201).json({ message: 'Proerty added successfully', property: property });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 
 const getAllPropertyTypes = async (req, res, next)=>{
     const properties = await propertyServices.getAllPropertyTypes();
@@ -54,9 +69,27 @@ const deleteProperty = async (req, res, next) => {
     }
 };
 
+const assignedPropertiesbyuser = async (req, res, next) => {
+    const { userId } = req.params;
+    console.log(userId,"useridcon")
+    try {
+        const result = await propertyServices.assignedPropertyTypes(userId);
+        if (!result || result.length === 0) {
+            return res.status(404).json({ message: 'No property types found for the user' });
+        }
+        res.status(200).json({ propertyTypes: result });
+    } catch (error) {
+        console.error(error);
+        next(error); // Pass the error to middleware for centralized handling
+    }
+};
+
+
 module.exports = {
     addPropertyType,
     getAllPropertyTypes,
     assignPropertyTypesToUser,
     deleteProperty,
+    assignedPropertiesbyuser,
+    addPropertyTypetouser,
 }

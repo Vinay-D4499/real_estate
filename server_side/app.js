@@ -15,9 +15,11 @@ const whatsAppWebhookRoutes = require('./routes/whatsAppWebhookRoutes')
 const { baseURL } = require('./config/baseURL');
 // const WebhookMessage = require('./models/webhookMessageModel');
 // const WebhookMessageStatus = require('./models/webhookMessageStatusModel');
+const propertyDetailsRoutes = require('./routes/propertyDetailsRoutes');
 
 const reviewRoutes = require('./routes/reviewRoutes');
-
+const propertMediaRoutes = require('./routes/propertyMediaRoutes');
+const userPropertyRoutes = require('./routes/userPropertyDetailsRoutes');
 
 const { Op } = require('sequelize');
 
@@ -38,6 +40,9 @@ app.use('/api/properties', propertyRoutes);
 app.use('/api/whatsAppWebhook', whatsAppWebhookRoutes);
 app.use(errorHandler); // Error handler should be placed after all routes
 app.use('/api/review',reviewRoutes);
+app.use('/api/propertyDetails',propertyDetailsRoutes);
+app.use('/api/propertyMedia',propertMediaRoutes);
+app.use('/api/userproperty',userPropertyRoutes);
 
 // Method to create ADMIN automatically when the server starts
 const createAdminUserOnStart = async () => {

@@ -38,14 +38,31 @@ const jwt_token = process.env.JWT_SECRET;
 const signIn = async (email, password,phone) => {
     try {
 
-        // First, try to find the user in the Admins table 
-        let user = await Admins.findOne({ where: { email } });
+        let user;
         let role = 'ADMIN';
 
-        // If not found in Admins, check in Users
-        if (!user) {
-            user = await Users.findOne({ where: { email } });
-            role = 'CUSTOMER';
+        // First, check if the email is provided, and try to find the user in the Admins table
+        if (email) {
+            user = await Admins.findOne({ where: { email } });
+
+            // If not found in Admins, check in Users
+            if (!user) {
+                user = await Users.findOne({ where: { email } });
+                role = 'CUSTOMER';
+            }
+        }
+
+        // If email is not found, check phone number
+        if (!user && phone) {
+            // Check phone number in Admins table
+            user = await Admins.findOne({ where: { phone } });
+            role = 'ADMIN';
+
+            // If not found in Admins, check in Users
+            if (!user) {
+                user = await Users.findOne({ where: { phone } });
+                role = 'CUSTOMER';
+            }
         }
 
         // If user is still not found, throw an unauthorized error
