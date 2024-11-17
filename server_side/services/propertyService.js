@@ -3,7 +3,7 @@ const { NotFoundError, ForbiddenError } = require('../errors/httpErrors');
 const PropertyTypes = require('../models/propertyTypesModel');
 const UserPropertyInterests = require('../models/userPropertyInterestsModel');
 const Admins = require('../models/adminModel');
-
+const Users = require('../models/userModel');
 
 const addPropertyType = async (id, propertyType) => {
     try {
@@ -24,6 +24,35 @@ const addPropertyType = async (id, propertyType) => {
         }
 
         const newPropertyType = await PropertyTypes.create({ name: propertyType });
+        return newPropertyType;
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        throw error;
+    }
+}
+
+const addPropertyTypetouser = async (propertyTypeId,userId) => {
+    try {
+        console.log(userId,"id====>");
+        console.log(propertyTypeId , "=====>p");
+      
+
+         // Ensure propertyType is a valid string
+         if (!userId ) {
+            throw new Error('PropertyType must be a string.');
+        }
+         if (!propertyTypeId ) {
+            throw new Error('PropertyType must be a string.');
+        }
+
+
+        const newPropertyType = await UserPropertyInterests.create({
+           
+                  userId : userId,
+                  propertyTypeId: propertyTypeId
+             });
         return newPropertyType;
     } catch (error) {
         if (!error.statusCode) {
@@ -91,10 +120,38 @@ const deleteProperty = async (propertyId) => {
     return true; // Indicate successful deletion
 };
 
+const assignedPropertyTypes = async (userId) => {
+    if (!userId) {
+        throw new Error('User ID is required');
+    }
+    try {
+        const result = await PropertyTypes.findAll({
+            
+            include: [
+                {
+                    model: Users,
+                    where: { id: userId },
+                    attributes: ['id', 'name', 'phone', 'location', 'profile_picture_url', 'budget_min', 'budget_max', 'email', 'address', 'referred_by', 'password', 'role', 'isActive', 'createdAt', 'updatedAt'], // Exclude user details if not needed
+                    through: { attributes: [] }, // Exclude intermediate table details
+                },
+            ],
+            attributes: ['id', 'name'], // Fetch only required property type details
+        });
+        return result;
+    } catch (error) {
+        console.error('Error fetching property types:', error);
+        throw error;
+    }
+};
+
+
+
 
 module.exports = {
     addPropertyType,
     getAllPropertyTypes,
     assignPropertyTypesToUser,
     deleteProperty,
+    assignedPropertyTypes,
+    addPropertyTypetouser,
 }

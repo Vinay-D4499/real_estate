@@ -6,6 +6,7 @@ import CustomerFilters from './CustomerFilters';
 import Pagination from './Pagination';
 import InactiveCustomers from './InactiveCustomers';
 import CustomerReviews from '../../reviews/CustomerReviews';
+import AssinedProperties from '../../propertydetails/AssinedProperties';
 
 const AllCustomerDetails = () => {
     const [customers, setCustomers] = useState([]);

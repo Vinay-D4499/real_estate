@@ -49,6 +49,7 @@ const Navbar = () => {
             <Link to="/update-password" className="hover:text-indigo-400 text-sm">Update Password</Link>
             <Link to="/property-type" className="hover:text-indigo-400">Add-Property</Link>
             <Link to="/customer-reviews" className="hover:text-indigo-400">Customer-Reviews</Link>
+            <Link to="/property-details" className="hover:text-indigo-400">Property-details</Link>
           
         </>
     );
@@ -61,6 +62,7 @@ const Navbar = () => {
             <Link to="/update-password" className="hover:text-indigo-400 text-sm">Update Password</Link>
             <Link to="/review" className="hover:text-indigo-400">Reviews</Link>
             <Link to="/customer-reviews" className="hover:text-indigo-400">Customer-Reviews</Link>
+            <Link to="/userbyid" className="hover:text-indigo-400">Customer-Details</Link>
           
         </>
     );

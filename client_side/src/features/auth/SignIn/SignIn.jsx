@@ -8,41 +8,38 @@ import { Link, useNavigate } from 'react-router-dom';
 const SignIn = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const handleSignIn = async (email, password) => {
+    const handleSignIn = async ({ email, password, phone }) => {
         setLoading(true);
-        try {
-            const response = await signInUser(email, password);
+        console.log(email,"----------email");
+        console.log(password,"----------password");
+        console.log(phone,"----------phone");
 
+        try {
+            const response = await signInUser(email, password, phone);
+    
             // Save token and role in localStorage for future queries
             localStorage.setItem("token", response.token);
             localStorage.setItem("role", response.user.role);
-
+    
             toast.success(response.message || "Sign in successful!");
-            const role = response.user.role
-            if(role === 'ADMIN'){
+            const role = response.user.role;
+            if (role === 'ADMIN' || role === 'CUSTOMER') {
                 setTimeout(() => {
-                    // navigate('/user')
-                    window.location.href = '/user'
+                    window.location.href = '/user'; // or navigate('/user')
                 }, 2000);
-            }else if(role === 'CUSTOMER'){
+            } else {
                 setTimeout(() => {
-                    // navigate('/user')
-                    window.location.href = '/user'
-                }, 2000);
-            }else{
-                setTimeout(() => {
-                    // navigate('/user')
-                    window.location.href = '/'
+                    window.location.href = '/';
                 }, 2000);
             }
-           
         } catch (error) {
-            console.log(error)
+            console.log(error);
             toast.error(error.message || "An error occurred!");
         } finally {
             setLoading(false);
         }
     };
+    
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">

@@ -29,10 +29,10 @@ const { baseURL } = require("../config/baseURL");
 
 
 const signIn = async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return next(new BadRequestError('Invalid Email'));
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     return next(new BadRequestError('Invalid Email'));
+    // }
 
     try {
         const { email, password,phone } = req.body;

@@ -19,6 +19,7 @@ const CustomerTable = ({ customers, refreshCustomerData, isCustomersActive }) =>
                         <th className="p-2 text-sm font-semibold text-left">Email</th>
                         <th className="p-2 text-sm font-semibold text-left">Address</th>
                         <th className="p-2 text-sm font-semibold text-left">Referred By</th>
+                        <th className="p-2 text-sm font-semibold text-left">Assigning Properties</th>
                         <th className="p-2 text-sm font-semibold text-left">Update Details</th>
                         <th className="p-2 text-sm font-semibold text-left">Status</th>
                     </tr>
@@ -42,6 +43,10 @@ const CustomerTable = ({ customers, refreshCustomerData, isCustomersActive }) =>
                             <td className="p-2 text-sm">{customer.email || 'N/A'}</td>
                             <td className="p-2 text-sm">{customer.address || 'N/A'}</td>
                             <td className="p-2 text-sm">{customer.referred_by || 'N/A'}</td>
+                            <td className="p-2 text-sm"><Link to={`/assign-properties/${customer.id}`} className="hover:text-indigo-400">
+                                    Assigning propertytypes
+                                </Link></td>
+
                             <td className="p-2 text-sm">
                                 <Link to={`/update-user/${customer.id}`} className="hover:text-indigo-400">
                                     Update Details
