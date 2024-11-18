@@ -96,7 +96,7 @@ const UserUpdateForm = () => {
         { label: '₹10-20 Lakhs', min: 1000000, max: 2000000 },
         { label: '₹20-50 Lakhs', min: 2000000, max: 5000000 },
         { label: '₹50 Lakhs - ₹1 Crore', min: 5000000, max: 10000000 },
-        { label: '₹5 Crore > ₹1 Crore', min: 10000000, max: 50000000 }
+        { label: '₹1 Crore > ₹5 Crore', min: 10000000, max: 50000000 }
     ];
 
     const handleCheckboxChange = (e) => {

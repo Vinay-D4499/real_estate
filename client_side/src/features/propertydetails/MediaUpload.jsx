@@ -59,46 +59,47 @@ const MediaUpload = ({ propertyId, onUploadComplete }) => {
 
   return (
     <div className="media-uploader">
-      <h2 className="text-lg font-semibold mb-4">Upload Media</h2>
+  {/* File Input */}
+  <input
+    type="file"
+    accept="image/*,video/*"
+    onChange={handleFileChange}
+    className="mb-4"
+  />
 
-      {/* File Input */}
-      <input
-        type="file"
-        accept="image/*,video/*"
-        onChange={handleFileChange}
-        className="mb-4"
-      />
-
-      {/* Preview */}
-      {preview && (
-        <div className="preview mb-4">
-          {selectedFile.type.startsWith('image') ? (
-            <img
-              src={preview}
-              alt="Preview"
-              className=" rounded-md"
-            />
-          ) : (
-            <video controls className="rounded-md">
-              <source src={preview} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          )}
-        </div>
+  {/* Preview */}
+  {preview && (
+    <div className="preview mb-4">
+      {selectedFile.type.startsWith("image") ? (
+        <img
+          src={preview}
+          alt="Preview"
+          className="w-52 max-w-md h-52 rounded-md "
+        />
+      ) : (
+        <video
+          controls
+          className="w-full max-w-md h-auto rounded-md mx-auto"
+        >
+          <source src={preview} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       )}
-
-      {/* Upload Button */}
-      <button
-        onClick={handleUpload}
-        disabled={uploading}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-      >
-        {uploading ? 'Uploading...' : 'Upload'}
-      </button>
-
-      {/* Error Message */}
-      {error && <p className="text-red-500 mt-2">{error}</p>}
     </div>
+  )}
+
+  {/* Upload Button */}
+  <button
+    onClick={handleUpload}
+    disabled={uploading}
+    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+  >
+    {uploading ? "Uploading..." : "Upload"}
+  </button>
+
+  {/* Error Message */}
+  {error && <p className="text-red-500 mt-2">{error}</p>}
+</div>
   );
 };
 

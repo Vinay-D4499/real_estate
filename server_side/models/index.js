@@ -11,7 +11,8 @@ const Reviews = require('./reviewsModel');
 const PropertyDetails = require('./propertyDetailsModel');
 const PropertyMedia = require('./propertyMedia');
 const UserPropertyDetails = require('./userPropertyDetails')
-
+const Groups = require('./groupModel');
+const GroupUser = require('./groupUserModel');
 
 //Associations 
 Users.belongsToMany(PropertyTypes, {
@@ -63,7 +64,14 @@ PropertyMedia.belongsTo(PropertyDetails, {
 UserPropertyDetails.belongsTo(PropertyDetails, { foreignKey: 'property_id', targetKey: 'id' });
 PropertyDetails.hasMany(UserPropertyDetails, { foreignKey: 'property_id', sourceKey: 'id' });
 
-
+Users.belongsToMany(Groups, {
+  through: GroupUser,
+  foreignKey: 'userId'
+});
+Groups.belongsToMany(Users, {
+  through: GroupUser,
+  foreignKey: 'groupId'
+});
 
 const initDatabase = async () => {
   try {

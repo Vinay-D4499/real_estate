@@ -30,7 +30,7 @@ const Home1 = lazy(() => import('./homeUI/Home1'));
 // const Home2 = lazy(() => import('./homeUI/home2/Home2'));
 // const Home2 = React.lazy(() => import('./homeUI/home2/Home2'));
 
-const AddProperty = lazy(() => import('./features/admin/AddProperty'));
+const AddProperty = lazy(() => import('./features/propertydetails/propertyTypes/AddProperty'));
 const  ReviewsCard  = lazy(() => import('./features/reviews/ReviewsCard'));
 const CustomerReviews = lazy(() => import('./features/reviews/CustomerReviews'));
 const InactiveProperties = lazy(() => import ('./features/propertydetails/Inactiveproperties'));

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import PropertySelector from './PropertySelector'; // Import PropertySelector
+import { baseURL } from '../../config/baseURL';
 
 const UserDetailsById = () => {
     const { id } = useParams(); // Get the user ID from the URL params
@@ -17,7 +18,7 @@ const UserDetailsById = () => {
                 setLoading(true);
                 
                 // Fetch user details first
-                const response = await axios.get('http://localhost:3000/api/user/findUserById', {
+                const response = await axios.get(`${baseURL}/api/user/findUserById`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
@@ -26,7 +27,7 @@ const UserDetailsById = () => {
                 setUserDetails(response.data);
                 
                 // Now fetch assigned properties once user details are fetched
-                const propertyResponse = await axios.get(`http://localhost:3000/api/properties/assignedPropertyTypesbyuserid/${response.data.id}`);
+                const propertyResponse = await axios.get(`${baseURL}/api/properties/assignedPropertyTypesbyuserid/${response.data.id}`);
                 setAssignedProperties(propertyResponse.data);
             } catch (error) {
                 console.error("Error fetching user details:", error);
