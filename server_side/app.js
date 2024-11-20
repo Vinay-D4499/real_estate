@@ -53,7 +53,7 @@ const createAdminUserOnStart = async () => {
         const response = await axios.post(`https://api.estate.laragrooming.com/api/user/createUserByRequest`); 
         console.log(response.data.message);
     } catch (error) {
-        console.log(error)
+        console.log("Create user ====",error)
         console.error('Error creating admin user:', error.response ? error.response.data : error.message);
     }
 };
