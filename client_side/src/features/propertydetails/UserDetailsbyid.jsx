@@ -95,7 +95,6 @@ const UserDetailsById = () => {
                     />
                 </div>
 
-                {/* Budget Range */}
                 <div className="mb-4">
                     <label htmlFor="userBudget" className="block text-gray-700 text-sm font-medium mb-2">Budget Range</label>
                     <div className="flex space-x-2">
