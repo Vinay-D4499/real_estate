@@ -39,18 +39,19 @@ app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/whatsAppWebhook', whatsAppWebhookRoutes);
-app.use(errorHandler); // Error handler should be placed after all routes
 app.use('/api/review',reviewRoutes);
 app.use('/api/propertyDetails',propertyDetailsRoutes);
 app.use('/api/propertyMedia',propertMediaRoutes);
 app.use('/api/userproperty',userPropertyRoutes);
 app.use('/api/groups', groupRoutes);
+app.use(errorHandler); // Error handler should be placed after all routes
 
 // Method to create ADMIN automatically when the server starts
 const createAdminUserOnStart = async () => {
     try {
-        // const response = await axios.post(`http://localhost:3000/api/user/createUserByRequest`); 
-        const response = await axios.post(`https://api.estate.laragrooming.com/api/user/createUserByRequest`); 
+        console.log("INSIDE createAdminUserOnStart ===>>");
+        const response = await axios.post(`http://localhost:${PORT}/api/user/createUserByRequest`); 
+        // const response = await axios.post(`https://api.estate.laragrooming.com/api/user/createUserByRequest`); 
         console.log(response.data.message);
     } catch (error) {
         console.log("Create user ====",error)
