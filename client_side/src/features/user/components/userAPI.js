@@ -236,6 +236,7 @@ export const userSpecificProperties = async (id) => {
         };
         // console.log(token)
         const response = await axios.get(`${baseURL}/api/userproperty/getUserPropertyDetailByTokenId`, config);
+        console.log(response.data,"------------------------------------->")
         return response.data; 
     } catch (error) {
         console.error('Error fetching user specific details :', error);

@@ -17,6 +17,7 @@ const PropertyDetails = ({ typeId }) => {
       setError(null); // Reset error state
       try {
         const response = await axios.get(`${baseURL}/api/propertyDetails/properties/${typeId}`);
+        console.log(response.data,"-----------------response properties, ")
         if (response.data?.property?.propertyDetails) {
           setPropertyDetails(response.data.property.propertyDetails);
         } else {

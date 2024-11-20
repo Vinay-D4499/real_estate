@@ -86,7 +86,7 @@ const getPropertyById = async (propertyId) => {
 
         // Fetch PropertyDetails with associated media and users based on property type
         const propertyDetails = await PropertyDetails.findAll({
-            where: { property_type_id: propertyId },
+            where: { id: propertyId },
             include: [
                 {
                     model: PropertyMedia,

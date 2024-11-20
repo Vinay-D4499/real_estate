@@ -5,14 +5,19 @@ import FullscreenModal from "./FullScreenModal";
 
 const AssignedProperties = () => {
   const [properties, setProperties] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Search state
+  const [searchLocation, setSearchLocation] = useState("");
 
   useEffect(() => {
     const fetchProperties = async () => {
       try {
         const response = await userSpecificProperties();
         setProperties(response);
+        setFilteredProperties(response); // Initialize filtered properties
       } catch (error) {
         console.error("Error fetching properties:", error);
       }
@@ -29,19 +34,76 @@ const AssignedProperties = () => {
     setIsModalOpen(false);
   };
 
+  const handleSearch = () => {
+    const filtered = properties.filter((property) => {
+      const { property_address } = property.PropertyDetail || {}; // Ensure PropertyDetail exists
+
+      // Normalize the search input and property location (removing extra spaces and converting to lowercase)
+      const normalizedSearchLocation = searchLocation.trim().toLowerCase();
+      const normalizedPropertyAddress = property_address
+        ? property_address.trim().toLowerCase()
+        : "";
+
+      // Check if the property address matches the search location
+      const locationMatches =
+        normalizedSearchLocation === "" ||
+        normalizedPropertyAddress.includes(normalizedSearchLocation);
+
+      return locationMatches;
+    });
+
+    setFilteredProperties(filtered);
+  };
+
+  const handleClearFilters = () => {
+    setSearchLocation("");
+    setFilteredProperties(properties); // Reset to all properties
+  };
+
   return (
     <div className="bg-gray-50 p-4">
       <h1 className="mb-4 font-extrabold text-2xl text-gray-900 dark:text-white">
+        Assigned Properties
       </h1>
-      <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
-        {properties.map((property) => (
-          <PropertyCard
-            key={property.id}
-            property={property}
-            onMediaClick={openModal}
-          />
-        ))}
+
+      {/* Search Filter (Location Only) */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <input
+          type="text"
+          placeholder="Search by Location"
+          value={searchLocation}
+          onChange={(e) => setSearchLocation(e.target.value)}
+          className="p-2 border rounded"
+        />
+        <button
+          onClick={handleSearch}
+          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Search
+        </button>
+        <button
+          onClick={handleClearFilters}
+          className="p-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+        >
+          Clear Filters
+        </button>
       </div>
+
+      {/* Property Cards */}
+      <div className="gap-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+        {filteredProperties.length > 0 ? (
+          filteredProperties.map((property) => (
+            <PropertyCard
+              key={property.id}
+              property={property}
+              onMediaClick={openModal}
+            />
+          ))
+        ) : (
+          <p className="text-gray-500">No properties found.</p>
+        )}
+      </div>
+
       <FullscreenModal
         media={selectedMedia}
         isOpen={isModalOpen}
