@@ -79,40 +79,40 @@ const AddCustomerForm = () => {
 
     return (
         <>
-            <div className="flex items-center justify-center min-h-screen bg-gray-100">
-                <form onSubmit={handleSubmit} className="w-full max-w-lg p-8 bg-white rounded-lg shadow-md">
-                    <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Add Customer</h2>
+            <div className="flex justify-center items-center bg-gray-100 min-h-screen">
+                <form onSubmit={handleSubmit} className="bg-white shadow-md p-8 rounded-lg w-full max-w-lg">
+                    <h2 className="mb-6 font-bold text-2xl text-center text-gray-800">Add Customer</h2>
 
                     {/* Customer Name */}
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                        <label className="block mb-2 font-bold text-gray-700 text-sm">Name</label>
                         <input
                             type="text"
                             name="name"
                             value={userData.name}
                             onChange={handleChange}
                             required
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-3 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
                     {/* Phone Number */}
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Phone</label>
+                        <label className="block mb-2 font-bold text-gray-700 text-sm">Phone</label>
                         <input
                             type="tel"
                             name="phone"
                             value={userData.phone}
                             onChange={handleChange}
                             required
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="px-3 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
 
                     {/* Budget Range Selection */}
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Budget Range</label>
-                        <div className="grid grid-cols-2 gap-2">
+                        <label className="block mb-2 font-bold text-gray-700 text-sm">Budget Range</label>
+                        <div className="gap-2 grid grid-cols-2">
                             {budgetRanges.map((range, index) => (
                                 <label key={index} className="flex items-center">
                                     <input
@@ -131,8 +131,8 @@ const AddCustomerForm = () => {
 
                     {/* Property Types */}
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Property Types</label>
-                        <div className="grid grid-cols-2 gap-2">
+                        <label className="block mb-2 font-bold text-gray-700 text-sm">Property Types</label>
+                        <div className="gap-2 grid grid-cols-2">
                             {propertyTypes.map(property => (
                                 <label key={property.id} className="flex items-center uppercase">
                                     <input
@@ -150,14 +150,14 @@ const AddCustomerForm = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-500 text-white font-bold py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                        className="bg-blue-500 hover:bg-blue-600 focus:bg-blue-600 py-2 rounded-md w-full font-bold text-white focus:outline-none"
                     >
                         Create User
                     </button>
                 </form>
             </div>
             {/* <Conversation /> */}
-            <AllCustomerDetails />
+            {/* <AllCustomerDetails /> */}
             {/* <ConversationLayout /> */}
             {/* <ChatContainer whatsappUserId={919845964499}/> */}
         </>
