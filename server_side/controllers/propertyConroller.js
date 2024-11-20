@@ -1,11 +1,11 @@
 const propertyServices = require('../services/propertyService');
 const { NotFoundError, BadRequestError } = require('../errors/httpErrors');
 
-const addPropertyType = async (req,res, next)=>{
+const addPropertyType = async (req, res, next) => {
     try {
         const id = req.user;
-        const {propertyType} = req.body;
-        const property = await propertyServices.addPropertyType(id,propertyType);
+        const { propertyType } = req.body;
+        const property = await propertyServices.addPropertyType(id, propertyType);
 
         return res.status(201).json({ message: 'Proerty added successfully', property: property });
 
@@ -14,10 +14,10 @@ const addPropertyType = async (req,res, next)=>{
     }
 }
 
-const addPropertyTypetouser = async (req,res, next)=>{
+const addPropertyTypetouser = async (req, res, next) => {
     try {
-       
-        const {propertyTypeId, userId} = req.body;
+
+        const { propertyTypeId, userId } = req.body;
         const property = await propertyServices.addPropertyTypetouser(propertyTypeId, userId);
 
         return res.status(201).json({ message: 'Proerty added successfully', property: property });
@@ -29,14 +29,14 @@ const addPropertyTypetouser = async (req,res, next)=>{
 
 
 
-const getAllPropertyTypes = async (req, res, next)=>{
+const getAllPropertyTypes = async (req, res, next) => {
     const properties = await propertyServices.getAllPropertyTypes();
 
-    return res.status(200).json({message : 'Fetched All properties', properties : properties})
+    return res.status(200).json({ message: 'Fetched All properties', properties: properties })
 }
 
 const assignPropertyTypesToUser = async (req, res, next) => {
-    const { userId, propertyTypeIds } = req.body; 
+    const { userId, propertyTypeIds } = req.body;
 
     if (!userId || !propertyTypeIds || !Array.isArray(propertyTypeIds)) {
         return res.status(400).json({ message: 'Invalid input data' });
@@ -53,9 +53,9 @@ const assignPropertyTypesToUser = async (req, res, next) => {
 
 const deleteProperty = async (req, res, next) => {
     try {
-       
+
         const { propertyId } = req.params; // Property ID from URL params
-          console.log(propertyId , "===================>");
+        console.log(propertyId, "===================>");
         // Call the service method to delete the property by ID and user ID
         const result = await propertyServices.deleteProperty(propertyId);
 
@@ -71,7 +71,7 @@ const deleteProperty = async (req, res, next) => {
 
 const assignedPropertiesbyuser = async (req, res, next) => {
     const { userId } = req.params;
-    console.log(userId,"useridcon")
+    console.log(userId, "useridcon")
     try {
         const result = await propertyServices.assignedPropertyTypes(userId);
         if (!result || result.length === 0) {

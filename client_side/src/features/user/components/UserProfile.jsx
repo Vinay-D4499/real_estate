@@ -3,6 +3,7 @@ import { fetchAdminData, fetchUserData } from './userAPI';
 import toast from 'react-hot-toast';
 import DisplayProfilePicture from './DisplayProfilePicture';
 import AdminProfilePicture from './AdminProfilePicture';
+import AssignedProperties from '../properties_assigned/AssignedProperties';
 
 const UserProfile = () => {
     const [user, setUser] = useState({});
@@ -22,15 +23,14 @@ const UserProfile = () => {
         getUserData();
     }, []);
 
-    if (loading) return <p className="text-center mt-4 text-gray-500">Loading...</p>;
+    if (loading) return <p className="mt-4 text-center text-gray-500">Loading...</p>;
 
     return (
-        <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
-            <h1 className="text-2xl font-semibold text-gray-800 mb-4 text-center">Profile</h1>
+        <>
+        {/* <div className="bg-white shadow-lg mx-auto mt-10 p-6 rounded-lg max-w-md">
+            <h1 className="mb-4 font-semibold text-2xl text-center text-gray-800">Profile</h1>
             <div className="flex flex-col items-center space-y-4">
-                <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-3xl font-bold">
-                    {/* {user.name?.charAt(0)} */}
-                    {/* <DisplayProfilePicture id={user.id} height='24' width='24'/> */}
+                <div className="flex justify-center items-center bg-gray-200 rounded-full w-24 h-24 font-bold text-3xl text-gray-500">
                     {role === 'ADMIN' ? (
                         <>
                             <AdminProfilePicture id={user.id} height="h-24" width="w-24" />
@@ -42,17 +42,15 @@ const UserProfile = () => {
                     )}
                 </div>
                 <div className="text-center">
-                    <p className="text-lg font-semibold text-gray-700">{user.name}</p>
-                    <p className="text-sm text-gray-500">{user.email}</p>
-                    <p className="text-sm text-gray-500">{user.phone}</p>
+                    <p className="font-semibold text-gray-700 text-lg">{user.name}</p>
+                    <p className="text-gray-500 text-sm">{user.email}</p>
+                    <p className="text-gray-500 text-sm">{user.phone}</p>
                 </div>
             </div>
-            {/* <div className="mt-6 flex justify-center">
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition">
-                    Edit Profile
-                </button>
-            </div> */}
-        </div>
+           
+        </div> */}
+        <AssignedProperties />
+        </>
     );
 };
 

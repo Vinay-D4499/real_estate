@@ -51,7 +51,7 @@ const ChatList = ({ setWhatsappUserId }) => {
           <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{activeUsers.length}</span>
         </div>
 
-        <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
+        <div className="flex flex-col space-y-1 mt-4 -mx-2 h-96 overflow-y-auto">
           {activeUsers.length > 0 ? (
             activeUsers.map((user) => (
               <button 

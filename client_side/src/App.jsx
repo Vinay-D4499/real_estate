@@ -9,6 +9,12 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import LoadingAnimation from './common/LoadingAnimation';
 import ChatContainer from './whatsApp/ChatContainer';
 import HomeNavbar from './homeUI/HomeNavbar';
+import Home2 from './homeUI/home2/Home2';
+import Home3 from './homeUI/home3/Home3';
+import Home4 from './homeUI/home4/Home4';
+import Home5 from './homeUI/home5/Home5';
+import GroupMembers from './features/groups/GroupMembers';
+import AddMembersToGroup from './features/groups/AddMembersToGroup';
 
 
 
@@ -23,12 +29,16 @@ const InactiveCustomers = lazy(() => import('./features/user/components/Inactive
 const UserUpdateForm = lazy(() => import('./features/user/components/UserUpdateForm'));
 const AddCustomerForm = lazy(() => import('./features/user/components/AddCustomerForm'));
 const Home1 = lazy(() => import('./homeUI/Home1'));
-const AddProperty = lazy(() => import('./features/admin/AddProperty'));
+// const Home2 = lazy(() => import('./homeUI/home2/Home2'));
+// const Home2 = React.lazy(() => import('./homeUI/home2/Home2'));
+
+const AddProperty = lazy(() => import('./features/propertydetails/propertyTypes/AddProperty'));
 const  ReviewsCard  = lazy(() => import('./features/reviews/ReviewsCard'));
 const CustomerReviews = lazy(() => import('./features/reviews/CustomerReviews'));
 const InactiveProperties = lazy(() => import ('./features/propertydetails/Inactiveproperties'));
 const AssignedProperties = lazy(() => import('./features/propertydetails/AssinedProperties'));
 const UserDetailsById = lazy(() => import ('./features/propertydetails/UserDetailsbyid'));
+const AllGroupsDetails = lazy(() => import ('./features/groups/AllGroupsDetails'));
 
 function App() {
   const location = useLocation();
@@ -46,13 +56,13 @@ function App() {
 
 function MainContent() {
   const location = useLocation();
-  const noBreadcrumbRoutes = ['/', '/reset-password','/chats'];
+  const noBreadcrumbRoutes = ['/','/user', '/reset-password','/chats','/home1', '/home2', '/home3', '/home4','/home5'];
 
   return (
     <>
    
     <main className="flex-grow">
-      <div className="mx-auto max-w-md flex items-center justify-center">
+      <div className="flex justify-center items-center mx-auto max-w-md">
         {!noBreadcrumbRoutes.includes(location.pathname) && <Breadcrumb />}
       </div>
       <Suspense fallback={<LoadingAnimation />}>
@@ -62,6 +72,10 @@ function MainContent() {
           <Route path="/chats" element={<ChatContainer />} />
           <Route path="/home-ui-navbar" element={<HomeNavbar />} />
           <Route path="/home1" element={<Home1 />} />
+          <Route path="/home2" element={<Home2 />} />
+          <Route path="/home3" element={<Home3 />} />
+          <Route path="/home4" element={<Home4 />} />
+          <Route path="/home5" element={<Home5 />} />
           <Route
             path="/admin-profile"
             element={
@@ -164,6 +178,30 @@ function MainContent() {
             element={
               <ProtectedRoute requiredRole="ADMIN">
                 <UserDetailsById />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/group-members/:groupId"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <GroupMembers />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/groups"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AllGroupsDetails />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/groups/add-members/:groupId"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AddMembersToGroup />
               </ProtectedRoute>
             }
           />

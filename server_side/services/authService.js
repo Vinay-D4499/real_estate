@@ -61,6 +61,7 @@ const signIn = async (email, password,phone) => {
             // If not found in Admins, check in Users
             if (!user) {
                 user = await Users.findOne({ where: { phone } });
+                console.log("user :::>>>", user)
                 role = 'CUSTOMER';
             }
         }

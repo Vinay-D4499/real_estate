@@ -11,7 +11,8 @@ const Reviews = require('./reviewsModel');
 const PropertyDetails = require('./propertyDetailsModel');
 const PropertyMedia = require('./propertyMedia');
 const UserPropertyDetails = require('./userPropertyDetails')
-
+const Groups = require('./groupModel');
+const GroupUser = require('./groupUserModel');
 
 //Associations 
 Users.belongsToMany(PropertyTypes, {
@@ -39,9 +40,6 @@ WebhookMessageStatus.belongsTo(WebhookMessage, {
 });
 
 
-
-
-
 // Users and Reviews association with cascading delete and update
 Users.hasMany(Reviews, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 Reviews.belongsTo(Users, { foreignKey: 'user_id', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
@@ -66,7 +64,14 @@ PropertyMedia.belongsTo(PropertyDetails, {
 UserPropertyDetails.belongsTo(PropertyDetails, { foreignKey: 'property_id', targetKey: 'id' });
 PropertyDetails.hasMany(UserPropertyDetails, { foreignKey: 'property_id', sourceKey: 'id' });
 
-
+Users.belongsToMany(Groups, {
+  through: GroupUser,
+  foreignKey: 'userId'
+});
+Groups.belongsToMany(Users, {
+  through: GroupUser,
+  foreignKey: 'groupId'
+});
 
 const initDatabase = async () => {
   try {

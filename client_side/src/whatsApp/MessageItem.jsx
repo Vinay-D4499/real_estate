@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 const MessageItem = ({ message }) => {
   const isSent = message.direction === 'outgoing';
   const { messageBody, mimeType, mediaPathUrl, timestamp, statuses, locationName, locationAddress, locationLatitude, locationLongitude } = message;
-
+  console.log("===>",mediaPathUrl)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);

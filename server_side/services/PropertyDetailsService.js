@@ -20,7 +20,7 @@ const { sequelize } = require("../config/dbConfig");
         //     property_price,
         //     is_available
         // } = propertydetailsdata;
-        console.log("============", propertydetailsdata.property_type_id)
+        console.log("============", propertydetailsdata)
 
          console.log(propertydetailsdata,"---------------------------id")
         // Check if the property type exists in PropertyTypes table

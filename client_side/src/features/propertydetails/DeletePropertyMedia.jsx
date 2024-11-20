@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast'; // Import Toastify
-import { baseURL } from "../../../src/config/baseURL"; 
+import { baseURL } from "../../../src/config/baseURL";
+import { TrashIcon } from '@heroicons/react/24/solid'; // Import trash icon from Heroicons
 
 const DeletePropertyMedia = ({ mediaId, onDeleteSuccess }) => {
-  const [showMenu, setShowMenu] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleDelete = async () => {
@@ -26,28 +26,14 @@ const DeletePropertyMedia = ({ mediaId, onDeleteSuccess }) => {
 
   return (
     <div className="relative">
-      {/* Three dots button */}
+      {/* Trash Can Icon */}
       <button
-        className="text-gray-500 hover:text-gray-700"
-        onClick={() => setShowMenu((prev) => !prev)}
+        className="text-red-500 hover:text-red-600 "
+        onClick={() => setShowConfirmation(true)}
+        title="Delete"
       >
-        &#x22EE; {/* Unicode for vertical ellipsis */}
+        <TrashIcon className="h-6 w-6" />
       </button>
-
-      {/* Dropdown menu */}
-      {showMenu && (
-        <div className="absolute right-0 bg-white border rounded shadow-md z-10">
-          <button
-            className="block px-4 py-2 text-left text-red-500 hover:bg-red-100"
-            onClick={() => {
-              setShowMenu(false);
-              setShowConfirmation(true);
-            }}
-          >
-            Delete
-          </button>
-        </div>
-      )}
 
       {/* Confirmation Modal */}
       {showConfirmation && (

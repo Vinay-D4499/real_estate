@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import PropertyDetails from './PropertyDetails';
 
 const PropertyTable = ({ properties }) => {
-    const [selectedTypeId, setSelectedTypeId] = useState(null); // State for selected property ID
-
-    const handleShowDetails = (typeId) => {
-        setSelectedTypeId(typeId); // Set the selected property type ID
-    };
+    const [selectedTypeId, setSelectedTypeId] = useState(null);
 
     return (
         <div className="w-full max-w-4xl bg-white rounded-lg shadow-md overflow-x-auto">
@@ -23,18 +19,18 @@ const PropertyTable = ({ properties }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {properties.length > 0 ? (
+                    {properties && properties.length > 0 ? (
                         properties.map((property) => (
                             <tr key={property.id}>
                                 <td className="p-2">{property.id}</td>
                                 <td className="p-2">{property.property_name}</td>
                                 <td className="p-2">{property.property_address}</td>
-                                <td className="p-2">${property.property_price}</td>
+                                <td className="p-2">₨ {property.property_price}</td>
                                 <td className="p-2">{property.property_sq_feets_or_length}</td>
                                 <td className="p-2">{property.is_available ? "true" : "false"}</td>
                                 <td className="p-2">
                                     <button
-                                        onClick={() => handleShowDetails(property.id)}
+                                        onClick={() => setSelectedTypeId(property.id)}
                                         className="bg-blue-500 text-white py-1 px-3 rounded"
                                     >
                                         Show More Information
@@ -50,12 +46,7 @@ const PropertyTable = ({ properties }) => {
                 </tbody>
             </table>
 
-            {/* Render PropertyDetails component conditionally */}
-            {selectedTypeId && (
-                <div className="mt-4">
-                    <PropertyDetails typeId={selectedTypeId} />
-                </div>
-            )}
+            {selectedTypeId && <PropertyDetails typeId={selectedTypeId} />}
         </div>
     );
 };

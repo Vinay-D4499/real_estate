@@ -7,6 +7,7 @@ const  userproperty = require('../models/userPropertyInterestsModel')
 const createProperty = async (req, res,next) => {
 
     const { propertydetailsdata } = req.body;
+    console.log("property Details Data :: ", propertydetailsdata)
     try {
         const property = await propertyDetailsService.createProperty(propertydetailsdata);
        

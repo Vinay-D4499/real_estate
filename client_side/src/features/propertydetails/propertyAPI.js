@@ -14,7 +14,7 @@ export const fetchPropertyDetails = async () => {
         };
 
         const response = await axios.get(`${baseURL}/api/propertydetails/properties`, config);
-        console.log(response.data,"------------response.data");
+        // console.log(response.data,"------------response.data");
         return response.data; // assuming the response contains an array of property details
     } catch (error) {
         throw new Error(error.response?.data?.message || "Failed to fetch property details");

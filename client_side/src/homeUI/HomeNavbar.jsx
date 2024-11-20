@@ -20,10 +20,19 @@ const HomeNavbar = () => {
         </button>
         <div className={`lg:flex items-center ${isOpen ? "block" : "hidden"}`}>
           <Link to="/home1" className="text-white px-4 py-2 block hover:bg-blue-700">
-            Home1
+            Home 1
           </Link>
           <Link to="/home2" className="text-white px-4 py-2 block hover:bg-blue-700">
-            Home2
+            Home 2
+          </Link>
+          <Link to="/home3" className="text-white px-4 py-2 block hover:bg-blue-700">
+            Home 3
+          </Link>
+          <Link to="/home4" className="text-white px-4 py-2 block hover:bg-blue-700">
+            Home 4
+          </Link>
+          <Link to="/home5" className="text-white px-4 py-2 block hover:bg-blue-700">
+            Home 5
           </Link>
         </div>
       </div>
