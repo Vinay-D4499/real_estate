@@ -83,9 +83,9 @@ const assignedPropertiesbyuser = async (req, res, next) => {
     console.log(userId, "useridcon")
     try {
         const result = await propertyServices.assignedPropertyTypes(userId);
-        if (!result || result.length === 0) {
-            return res.status(404).json({ message: 'No property types found for the user' });
-        }
+        // if (!result || result.length === 0) {
+        //     return res.status(404).json({ message: 'No property types found for the user' });
+        // }
         res.status(200).json({ propertyTypes: result });
     } catch (error) {
         console.error(error);
