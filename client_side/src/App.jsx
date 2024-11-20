@@ -13,6 +13,8 @@ import Home2 from './homeUI/home2/Home2';
 import Home3 from './homeUI/home3/Home3';
 import Home4 from './homeUI/home4/Home4';
 import Home5 from './homeUI/home5/Home5';
+import GroupMembers from './features/groups/GroupMembers';
+import AddMembersToGroup from './features/groups/AddMembersToGroup';
 
 
 
@@ -36,6 +38,7 @@ const CustomerReviews = lazy(() => import('./features/reviews/CustomerReviews'))
 const InactiveProperties = lazy(() => import ('./features/propertydetails/Inactiveproperties'));
 const AssignedProperties = lazy(() => import('./features/propertydetails/AssinedProperties'));
 const UserDetailsById = lazy(() => import ('./features/propertydetails/UserDetailsbyid'));
+const AllGroupsDetails = lazy(() => import ('./features/groups/AllGroupsDetails'));
 
 function App() {
   const location = useLocation();
@@ -175,6 +178,30 @@ function MainContent() {
             element={
               <ProtectedRoute requiredRole="ADMIN">
                 <UserDetailsById />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/group-members/:groupId"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <GroupMembers />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/groups"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AllGroupsDetails />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/groups/add-members/:groupId"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AddMembersToGroup />
               </ProtectedRoute>
             }
           />

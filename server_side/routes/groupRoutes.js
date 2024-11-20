@@ -11,6 +11,7 @@ const upload = multer({ storage });
 
 groupRoutes.post('/creategroup', groupsController.createGroup);
 groupRoutes.get('/getAllgroups',groupsController.getAllGroups);
+groupRoutes.get('/getGroupDetailsById/:groupId',groupsController.getGroupDetailsById);
 groupRoutes.delete('/deleteGroupById/:id', groupsController.deleteGroup);
 groupRoutes.put('/editGroupById/:id',groupsController.editGroup);
 groupRoutes.put('/assignGroup',groupsController.assignGroupToUser);

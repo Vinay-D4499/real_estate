@@ -7,6 +7,7 @@ import ConfirmAddModal from './ConfirmAddModal';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import LoadingSpinner from './LoadingSpinner';
 import { baseURL } from '../../../config/baseURL';
+import SavePropertyDetails from '../SavePropertyDetails';
 
 const AddProperty = () => {
     const [propertyTypes, setPropertyTypes] = useState([]);
@@ -75,7 +76,8 @@ const AddProperty = () => {
     };
 
     return (
-        <div className="flex flex-col items-center bg-gray-100 p-4 relative min-h-screen">
+        <>
+        <div className="flex flex-col items-center bg-gray-100 p-4 relative ">
             {(showModal || showConfirmDelete || showAddConfirm) && (
                 <div className="fixed inset-0 bg-black opacity-50 z-40"></div>
             )}
@@ -127,6 +129,8 @@ const AddProperty = () => {
                 />
             )}
         </div>
+        <SavePropertyDetails />
+        </>
     );
 };
 

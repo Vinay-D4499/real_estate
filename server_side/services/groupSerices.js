@@ -91,14 +91,14 @@ const deleteGroup = async (groupId) => {
 };
 
 
-const editGroup = async (requesterId, groupData) => {
+const editGroup = async (id, groupData) => {
     try {
         // const requester = await Admin.findByPk(requesterId);
         // if (!requester) {
         //     throw new ForbiddenError('Access Forbidden');
         // }
 
-        const groupToUpdate = await Groups.findByPk(requesterId);
+        const groupToUpdate = await Groups.findByPk(id);
         if (!groupToUpdate) {
             throw new NotFoundError('Group to update not found');
         }
@@ -118,9 +118,37 @@ const editGroup = async (requesterId, groupData) => {
     }
 }
 
+const getGroupDetailsById = async (groupId) => {
+    try {
+        // const requester = await Admin.findByPk(requesterId);
+        // if (!requester) {
+        //     throw new ForbiddenError('Access Forbidden');
+        // }
+
+        const groupData = await Groups.findByPk(groupId);
+        if (!groupData) {
+            throw new NotFoundError('Group to update not found');
+        }
+
+        // if (requester.role !== 'ADMIN') {
+        //     throw new ForbiddenError('Access Forbidden');
+        // }
+
+        
+        return groupData;
+
+    } catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        throw error;
+    }
+}
+
 module.exports = {
     createGroup,
     getAllGroups,
     deleteGroup,
-    editGroup
+    editGroup,
+    getGroupDetailsById
 }

@@ -1,12 +1,12 @@
 const { NotFoundError, ForbiddenError } = require('../errors/httpErrors');
- const { Admins,User,Groups } = require('../models');
+//  const { Admins,User } = require('../models');
 const PropertyTypes = require('../models/propertyTypesModel');
 const UserGroups = require('../models/groupUserModel');
 //const Admins = require('../models/adminModel');
 const GroupUser = require('../models/groupUserModel');
 const { findUserById } = require('../controllers/userController');
-
-
+const Groups = require('../models/groupModel');
+const User = require('../models/userModel');
 
 
 const assignGroupToUser = async (userId, groupIds) => {
@@ -32,7 +32,7 @@ const assignGroupToUser = async (userId, groupIds) => {
 
 const addUserToGroup = async (userId, groupId) => {
     try {
-        const group = await Groups.findByPk(groupId);
+        const group = await Groups.findOne({where:{groupId:groupId}});
         if (!group) throw new Error('Group not found');
 
         const user = await User.findByPk(userId);
@@ -41,6 +41,7 @@ const addUserToGroup = async (userId, groupId) => {
         await group.addUser(user);
         return { message: 'User added to group successfully' };
     } catch (error) {
+        console.log(error)
         throw error;
     }
 };

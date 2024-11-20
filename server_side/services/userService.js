@@ -3,6 +3,7 @@ const Users = require('../models/userModel');
 const { BadRequestError, NotFoundError, InternalServerError, ForbiddenError } = require('../errors/httpErrors'); 
 // const Admin = require('../models/adminModel');
 const { Admin } = require('../models');
+const Groups = require('../models/groupModel');
 
 const saltRounds = 10;
 
@@ -147,6 +148,7 @@ const getAllCustomerDetails = async (requesterId) => {
                 isActive: true
             },
             order: [['id', 'DESC']],
+            include:'Groups',
         });
         
         return customers;

@@ -3,8 +3,8 @@ const { NotFoundError, BadRequestError, InternalServerError } = require('../erro
 
 const createUserPropertyDetails = async (req, res,next) => {
     try {
-      
-        const userPropertyDetail = await userPropertyDetailsService.createUserPropertyDetail(req.body);
+      const {userId, property_id} = req.body;
+        const userPropertyDetail = await userPropertyDetailsService.createUserPropertyDetail({userId, property_id});
         res.status(201).json(userPropertyDetail);
     } catch (error) {
         console.log(error,"-----er")
@@ -36,6 +36,24 @@ const getAllUserPropertyDetails = async (req, res,next) => {
 const getUserPropertyDetailById = async (req, res) => {
     const {id} = req.body;
    
+    try {
+        const userPropertyDetail = await userPropertyDetailsService.getUserPropertyDetailById(id);
+        res.status(200).json(userPropertyDetail);
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            res.status(404).json({ message: error.message });
+        } else if (error instanceof BadRequestError) {
+            res.status(400).json({ message: error.message });
+        } else {
+            next(error);
+        }
+    }
+};
+
+const getUserPropertyDetailByTokenId = async (req, res) => {
+    console.log("=====inside getUserPropertyDetailByTokenId======")
+    const id = req.user;
+   console.log("---->>",id)
     try {
         const userPropertyDetail = await userPropertyDetailsService.getUserPropertyDetailById(id);
         res.status(200).json(userPropertyDetail);
@@ -107,6 +125,7 @@ module.exports = {
     createUserPropertyDetails,
     getAllUserPropertyDetails,
     getUserPropertyDetailById,
+    getUserPropertyDetailByTokenId,
     updateUserPropertyDetail,
     deleteUserPropertyDetail,
     fecthuserdeatils,

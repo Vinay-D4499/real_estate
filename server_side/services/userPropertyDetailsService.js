@@ -2,13 +2,13 @@ const UserPropertyDetails = require('../models/userPropertyDetails'); // Make su
 const { NotFoundError, BadRequestError, InternalServerError } = require('../errors/httpErrors'); // Import custom errors
 const propertydetails = require('../models/propertyDetailsModel')
 const propertymedia = require('../models/propertyMedia')
-const PropertyType =require('../models/propertyTypesModel');
+const PropertyType = require('../models/propertyTypesModel');
 const User = require('../models/userModel');
 
 const createUserPropertyDetail = async (data) => {
     try {
-       
-           // Check for undefined, null, or empty object
+
+        // Check for undefined, null, or empty object
         if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
             throw new BadRequestError('propertydetails is required and cannot be empty');
         }
@@ -31,11 +31,15 @@ const getAllUserPropertyDetails = async () => {
 
 const getUserPropertyDetailById = async (userId) => {
     try {
-       
-        if(!userId){
-            throw new BadRequestError('id undefined');  
+
+        if (!userId) {
+            throw new BadRequestError('id undefined');
         }
-        const userPropertyDetail = await UserPropertyDetails.findByPk(userId);
+        const userPropertyDetail = await UserPropertyDetails.findAll(
+            {
+                where: { userId: userId }
+            }
+        );
         if (!userPropertyDetail) throw new NotFoundError('UserPropertyDetail not found');
         return userPropertyDetail;
     } catch (error) {
@@ -51,8 +55,8 @@ const getUserPropertyDetailById = async (userId) => {
 
 const updateUserPropertyDetail = async (id, data) => {
     try {
-        if(!id ){
-            throw new BadRequestError('id undefined');  
+        if (!id) {
+            throw new BadRequestError('id undefined');
         }
         if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
             throw new BadRequestError('propertydetails is required and cannot be empty');
@@ -75,9 +79,9 @@ const updateUserPropertyDetail = async (id, data) => {
 
 const deleteUserPropertyDetail = async (id) => {
     try {
-      
-        if(!id){
-            throw new BadRequestError('data undefined'); 
+
+        if (!id) {
+            throw new BadRequestError('data undefined');
         }
         const userPropertyDetail = await UserPropertyDetails.findByPk(id);
         if (!userPropertyDetail) throw new NotFoundError('UserPropertyDetail not found');
@@ -97,49 +101,49 @@ const deleteUserPropertyDetail = async (id) => {
 
 const getuserById = async (userId) => {
     try {
-     
+
         const userPropertydetails = await UserPropertyDetails.findAll({
-            where : {
-                userId : userId,
+            where: {
+                userId: userId,
             },
             include: [
                 {
                     model: propertydetails, // Include associated PropertyMedia
                     // as: 'property', // Alias for the media relation
                     attributes: ['id', 'property_name', 'property_type_id', 'property_description', 'property_address', 'property_maplocation', 'property_sq_feets_or_length', 'property_price', 'is_available', 'createdAt', 'updatedAt'],
-                    
+
                     include: [
                         {
                             model: propertymedia, // Include associated PropertyMedia
                             as: 'media',
-                            attributes: ['propertyDetails_id','propertymedia_img', 'propertymedia_video'], // Select relevant fields from PropertyMedia
+                            attributes: ['propertyDetails_id', 'propertymedia_img', 'propertymedia_video'], // Select relevant fields from PropertyMedia
                         }
                     ]// Select the relevant fields from PropertyMedia
                 },
             ]
         });
-            console.log(userPropertydetails,"----------------userPropertydetails");
-          if(!userPropertydetails){
+        console.log(userPropertydetails, "----------------userPropertydetails");
+        if (!userPropertydetails) {
             throw new NotFoundError("Invalid userID Id");
-          }
-   
+        }
 
-          const propertytype = await PropertyType.findOne({
-            where : {
-                id : userId
+
+        const propertytype = await PropertyType.findOne({
+            where: {
+                id: userId
             }
-          })
-          console.log(propertytype,"----------------userPropertydetails");
-          if(!propertytype){
+        })
+        console.log(propertytype, "----------------userPropertydetails");
+        if (!propertytype) {
             throw new NotFoundError("Invalid userID Id");
-          }
-    
-           console.log(propertytype.id,"---------------------prid");
+        }
+
+        console.log(propertytype.id, "---------------------prid");
 
 
         // Fetch associated Users (if any) related to the PropertyType
         const users = await User.findOne({
-            where : { id : userId},
+            where: { id: userId },
             include: [
                 {
                     model: PropertyType, // Directly include the related PropertyTypes for Users
@@ -147,12 +151,12 @@ const getuserById = async (userId) => {
                 }
             ]
         });
-        
+
 
         // Return all the fetched data in a single object
-        return { 
-           
-                // All PropertyMedia associated with the PropertyType
+        return {
+
+            // All PropertyMedia associated with the PropertyType
             users,            // Associated users
             userPropertydetails,
             // propertyMedia,

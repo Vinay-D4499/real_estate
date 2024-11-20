@@ -85,7 +85,7 @@ export const fetchAllCustomers = async () => {
         };
 
         const response = await axios.get(`${baseURL}/api/user/getAllCustomerDetails`, config)
-        // console.log(response)
+        console.log(response)
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || "An error occurred!");
@@ -222,5 +222,23 @@ export const activateUserById = async (id) => {
     } catch (error) {
         console.error('Error deleting user:', error);
         throw new Error(error.response?.data?.message || "Failed to deactivate user!");
+    }
+};
+
+export const userSpecificProperties = async (id) => {
+    try {
+        const token = localStorage.getItem('token');
+        // Config for sending the JWT token to the server
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        // console.log(token)
+        const response = await axios.get(`${baseURL}/api/userproperty/getUserPropertyDetailByTokenId`, config);
+        return response.data; 
+    } catch (error) {
+        console.error('Error fetching user specific details :', error);
+        throw new Error(error.response?.data?.message || "Failed to fetch user specific properties");
     }
 };
