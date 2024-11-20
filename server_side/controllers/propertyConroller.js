@@ -35,6 +35,15 @@ const getAllPropertyTypes = async (req, res, next) => {
     return res.status(200).json({ message: 'Fetched All properties', properties: properties })
 }
 
+const getAllPropertyTypeById = async (req, res, next) => {
+    const {id} = req.body;
+
+    const propertyType = await propertyServices.getAllPropertyTypeById(id);
+
+    return res.status(200).json({message:'Fethced Property Type Details', propertyType : propertyType})
+
+}
+
 const assignPropertyTypesToUser = async (req, res, next) => {
     const { userId, propertyTypeIds } = req.body;
 
@@ -88,6 +97,7 @@ const assignedPropertiesbyuser = async (req, res, next) => {
 module.exports = {
     addPropertyType,
     getAllPropertyTypes,
+    getAllPropertyTypeById,
     assignPropertyTypesToUser,
     deleteProperty,
     assignedPropertiesbyuser,

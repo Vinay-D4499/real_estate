@@ -123,6 +123,49 @@ const getPropertyById = async (propertyId) => {
         throw new Error('Error fetching property');
     }
 };
+const getPropertyDetailsById = async (id) => {
+    try {
+        console.log(id, "----------propertyId");
+
+        // Fetch PropertyDetails with associated media and users based on property type
+        const propertyDetails = await PropertyDetails.findAll({
+            where: { id: id },
+            include: [
+                {
+                    model: PropertyMedia,
+                    as: 'media',
+                    attributes: ['propertyDetails_id', 'propertymedia_img', 'propertymedia_video','propertymedia_id'],
+                    required: false // This allows fetching properties without media as well
+                }
+            ]
+        });
+
+        // Check if PropertyDetails exist
+        if (!propertyDetails || propertyDetails.length === 0) {
+            throw new NotFoundError("PropertyDetails not found for this id");
+        }
+
+        // Fetch associated Users with PropertyTypes (if needed)
+        const users = await User.findAll({
+            include: [
+                {
+                    model: PropertyType,
+                    attributes: ['id', 'name']
+                }
+            ]
+        });
+
+        // Return the result
+        return { 
+            propertyDetails,
+            users
+        };
+
+    } catch (error) {
+        console.error("Error fetching property:", error);
+        throw new Error('Error fetching property');
+    }
+};
 
 
 
@@ -192,6 +235,7 @@ module.exports = {
     createProperty,
     getAllProperties,
     getPropertyById,
+    getPropertyDetailsById,
     updateProperty,
     deactivateProperty,
     // deleteProperty,

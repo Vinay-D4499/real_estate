@@ -91,6 +91,49 @@ const updateUserPropertyDetail = async (id, data) => {
     }
 };
 
+const assignPropertyDetailsToUser = async (userIds, propertyId) => {
+    try {
+        if (!Array.isArray(userIds) || userIds.length === 0) {
+            throw new BadRequestError('userIds must be a non-empty array');
+        }
+        if (!propertyId) {
+            throw new BadRequestError('propertyId is required');
+        }
+
+        const existingEntries = await UserPropertyDetails.findAll({
+            where: {
+                userId: userIds,
+                property_id: propertyId,
+            },
+        });
+
+        const existingUserIds = existingEntries.map(entry => entry.userId);
+
+        // Filter out userIds that already have the propertyId assigned
+        const newUserIds = userIds.filter(userId => !existingUserIds.includes(userId));
+
+        if (newUserIds.length === 0) {
+            return { message: 'All userId-propertyId pairs already exist' };
+        }
+
+        const newEntries = newUserIds.map(userId => ({
+            userId,
+            property_id: propertyId,
+        }));
+
+        await UserPropertyDetails.bulkCreate(newEntries);
+
+        return { message: `${newEntries.length} new entries added successfully` };
+    } catch (error) {
+        console.error("Service Error in assignPropertyDetailsToUser:", error);
+        if (error instanceof BadRequestError) {
+            throw error; // Re-throw if it's a BadRequestError
+        }
+        throw new InternalServerError('Error assigning property details to users');
+    }
+};
+
+
 const deleteUserPropertyDetail = async (id) => {
     try {
 
@@ -184,6 +227,7 @@ const getuserById = async (userId) => {
 module.exports = {
     createUserPropertyDetail,
     getAllUserPropertyDetails,
+    assignPropertyDetailsToUser,
     getUserPropertyDetailById,
     updateUserPropertyDetail,
     deleteUserPropertyDetail,

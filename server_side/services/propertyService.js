@@ -62,6 +62,21 @@ const addPropertyTypetouser = async (propertyTypeId,userId) => {
     }
 }
 
+const getAllPropertyTypeById = async (id)=>{
+    try {
+        const propertyType = await PropertyTypes.findByPk(id);
+        if(!propertyType){
+            throw new NotFoundError('Property type not found');
+        }
+        return propertyType;
+    } catch (error) {
+        console.error("error while fetching property details by id ", error)
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        throw error;
+    }
+}
 
 const getAllPropertyTypes = async ()=>{
     try {
@@ -150,6 +165,7 @@ const assignedPropertyTypes = async (userId) => {
 module.exports = {
     addPropertyType,
     getAllPropertyTypes,
+    getAllPropertyTypeById,
     assignPropertyTypesToUser,
     deleteProperty,
     assignedPropertyTypes,

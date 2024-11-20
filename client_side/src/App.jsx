@@ -15,6 +15,7 @@ import Home4 from './homeUI/home4/Home4';
 import Home5 from './homeUI/home5/Home5';
 import GroupMembers from './features/groups/GroupMembers';
 import AddMembersToGroup from './features/groups/AddMembersToGroup';
+import AssignPropertyDetailsToUser from './features/propertydetails/AssignPropertyDetailsToUser';
 
 
 
@@ -63,7 +64,7 @@ function MainContent() {
    
     <main className="flex-grow">
       <div className="flex justify-center items-center mx-auto max-w-md">
-        {!noBreadcrumbRoutes.includes(location.pathname) && <Breadcrumb />}
+        {/* {!noBreadcrumbRoutes.includes(location.pathname) && <Breadcrumb />} */}
       </div>
       <Suspense fallback={<LoadingAnimation />}>
         <Routes>
@@ -202,6 +203,14 @@ function MainContent() {
             element={
               <ProtectedRoute requiredRole="ADMIN">
                 <AddMembersToGroup />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/assign-property-details/:property_id"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <AssignPropertyDetailsToUser />
               </ProtectedRoute>
             }
           />

@@ -41,9 +41,21 @@ const getPropertyById = async (req, res, next) => {
     const {propertyId} = req.params;
     try {
         const property = await propertyDetailsService.getPropertyById(propertyId);
-        if (!property) throw new NotFoundError('Property not found');
+        // if (!property) throw new NotFoundError('Property not found');
         res.status(200).json({ property });
     } catch (error) {
+        console.log("error from getPorpertyById ::::>>>>", error)
+        next(error);
+    }
+};
+const getPropertyDetailsById = async (req, res, next) => {
+    const {id} = req.params;
+    try {
+        const property = await propertyDetailsService.getPropertyDetailsById(id);
+        // if (!property) throw new NotFoundError('Property not found');
+        res.status(200).json({ property });
+    } catch (error) {
+        console.log("error from getPorpertyById ::::>>>>", error)
         next(error);
     }
 };
@@ -94,6 +106,7 @@ module.exports = {
     createProperty,
     getAllProperties,
     getPropertyById,
+    getPropertyDetailsById,
     updateProperty,
     deactivate_property_available,
 };

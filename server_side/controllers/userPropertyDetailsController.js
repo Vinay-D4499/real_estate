@@ -84,6 +84,23 @@ const updateUserPropertyDetail = async (req, res) => {
     }
 };
 
+const assignPropertyDetailsToUser = async (req, res, next) => {
+    try {
+        const { userIds, propertyId } = req.body;
+
+        const result = await userPropertyDetailsService.assignPropertyDetailsToUser(userIds, propertyId);
+        res.status(201).json(result);
+    } catch (error) {
+        console.error("assignPropertyDetailsToUser :: ", error)
+        if (error instanceof BadRequestError) {
+            res.status(400).json({ message: error.message });
+        } else {
+            next(error);
+        }
+    }
+};
+
+
 const deleteUserPropertyDetail = async (req, res) => {
      const {id} =req.body;
     
@@ -125,6 +142,7 @@ module.exports = {
     createUserPropertyDetails,
     getAllUserPropertyDetails,
     getUserPropertyDetailById,
+    assignPropertyDetailsToUser,
     getUserPropertyDetailByTokenId,
     updateUserPropertyDetail,
     deleteUserPropertyDetail,

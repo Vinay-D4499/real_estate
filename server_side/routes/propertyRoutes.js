@@ -8,6 +8,7 @@ propertyRoutes.post('/addPropertyType', verifyToken,  propertyController.addProp
 // propertyRoutes.post('/addPropertyType/:propertyType', verifyToken,  propertyController.addPropertyType);
 
 propertyRoutes.get('/getAllPropertyTypes', propertyController.getAllPropertyTypes);
+propertyRoutes.get('/getAllPropertyTypeById', propertyController.getAllPropertyTypeById);
 
 propertyRoutes.get('/assignPropertyTypesToUser', propertyController.assignPropertyTypesToUser);
 propertyRoutes.get('/assignedPropertyTypesbyuserid/:userId', propertyController.assignedPropertiesbyuser);

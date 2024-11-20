@@ -27,7 +27,7 @@ const UserProfile = () => {
 
     return (
         <>
-        {/* <div className="bg-white shadow-lg mx-auto mt-10 p-6 rounded-lg max-w-md">
+        <div className="bg-white shadow-lg mx-auto mt-10 p-6 rounded-lg max-w-md">
             <h1 className="mb-4 font-semibold text-2xl text-center text-gray-800">Profile</h1>
             <div className="flex flex-col items-center space-y-4">
                 <div className="flex justify-center items-center bg-gray-200 rounded-full w-24 h-24 font-bold text-3xl text-gray-500">
@@ -48,7 +48,7 @@ const UserProfile = () => {
                 </div>
             </div>
            
-        </div> */}
+        </div>
         <AssignedProperties />
         </>
     );

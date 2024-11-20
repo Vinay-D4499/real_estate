@@ -9,6 +9,7 @@ userPropertyDetailsrouter.get('/details', userPropertyDetailsController.getAllUs
 userPropertyDetailsrouter.get('/detail', userPropertyDetailsController.getUserPropertyDetailById);
 userPropertyDetailsrouter.get('/getUserPropertyDetailByTokenId',verifyToken,  userPropertyDetailsController.getUserPropertyDetailByTokenId);
 userPropertyDetailsrouter.put('/update/:userid', userPropertyDetailsController.updateUserPropertyDetail);
+userPropertyDetailsrouter.post('/assignPropertyDetailsToUser', userPropertyDetailsController.assignPropertyDetailsToUser);
 userPropertyDetailsrouter.delete('/delete', userPropertyDetailsController.deleteUserPropertyDetail);
 userPropertyDetailsrouter.get('/getdetailsbyid', userPropertyDetailsController.fecthuserdeatils);
 
