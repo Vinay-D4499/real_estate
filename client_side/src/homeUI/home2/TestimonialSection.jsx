@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
-import { Autoplay, Pagination } from 'swiper/modules'; // Adjust import based on version
+import { Autoplay, Pagination } from 'swiper/modules'; 
 
 
 const testimonials = [
@@ -83,9 +83,9 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section id="testimonials" className="py-16 bg-gradient-to-r from-[#A1C4FD] via-[#C2E9FB] to-[#E8F9FD]">
-      <h2 className="text-4xl font-extrabold text-center mb-12 text-gray-800">What Our Clients Say</h2>
-      <div className="container mx-auto">
+    <section id="testimonials" className="bg-gradient-to-r from-[#A1C4FD] via-[#C2E9FB] to-[#E8F9FD] py-16">
+      <h2 className="mb-12 font-extrabold text-4xl text-center text-gray-800">What Our Clients Say</h2>
+      <div className="mx-auto container">
         <Swiper
           modules={[Autoplay, Pagination]}
           spaceBetween={50}
@@ -105,14 +105,14 @@ const TestimonialsSection = () => {
           {testimonials.map((testimonial) => (
             <SwiperSlide
               key={testimonial.id}
-              className="group relative overflow-hidden rounded-xl shadow-lg bg-white p-6 flex flex-col items-center text-center transition-all duration-500 transform hover:scale-105 hover:shadow-xl"
+              className="relative flex flex-col items-center bg-white shadow-lg hover:shadow-xl p-6 rounded-xl text-center transform transition-all duration-500 overflow-hidden group hover:scale-105"
             >
-              <div className="w-24 h-24 rounded-full overflow-hidden mb-4">
+              <div className="mb-4 rounded-full w-24 h-24 overflow-hidden">
                 <img src={testimonial.image} alt={testimonial.name} className="w-full h-full object-cover" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">{testimonial.name}</h3>
-              <p className="text-lg font-medium text-gray-500">{testimonial.title}</p>
-              <p className="text-md text-gray-700 mt-4">{testimonial.text}</p>
+              <h3 className="font-semibold text-gray-800 text-xl">{testimonial.name}</h3>
+              <p className="font-medium text-gray-500 text-lg">{testimonial.title}</p>
+              <p className="mt-4 text-gray-700 text-md">{testimonial.text}</p>
             </SwiperSlide>
           ))}
         </Swiper>

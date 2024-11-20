@@ -4,6 +4,8 @@ const propertydetails = require('../models/propertyDetailsModel')
 const propertymedia = require('../models/propertyMedia')
 const PropertyType = require('../models/propertyTypesModel');
 const User = require('../models/userModel');
+const PropertyDetails = require('../models/propertyDetailsModel');
+const PropertyMedia = require('../models/propertyMedia');
 
 const createUserPropertyDetail = async (data) => {
     try {
@@ -37,12 +39,24 @@ const getUserPropertyDetailById = async (userId) => {
         }
         const userPropertyDetail = await UserPropertyDetails.findAll(
             {
-                where: { userId: userId }
+                where: { userId: userId },
+                include:[
+                    {
+                        model:PropertyDetails,
+                        include:[
+                           {
+                            model:PropertyMedia,
+                            as:'media'
+                           }
+                        ]
+                    }
+                ]
             }
         );
         if (!userPropertyDetail) throw new NotFoundError('UserPropertyDetail not found');
         return userPropertyDetail;
     } catch (error) {
+        console.log("error  retrieving UserPropertyDetail",error)
         if (error instanceof NotFoundError) {
             throw error; // Re-throw if it's a NotFoundError
         }

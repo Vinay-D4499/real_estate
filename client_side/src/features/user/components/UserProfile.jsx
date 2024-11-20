@@ -26,12 +26,11 @@ const UserProfile = () => {
     if (loading) return <p className="mt-4 text-center text-gray-500">Loading...</p>;
 
     return (
-        <div className="bg-white shadow-lg mx-auto mt-10 p-6 rounded-lg max-w-md">
+        <>
+        {/* <div className="bg-white shadow-lg mx-auto mt-10 p-6 rounded-lg max-w-md">
             <h1 className="mb-4 font-semibold text-2xl text-center text-gray-800">Profile</h1>
             <div className="flex flex-col items-center space-y-4">
                 <div className="flex justify-center items-center bg-gray-200 rounded-full w-24 h-24 font-bold text-3xl text-gray-500">
-                    {/* {user.name?.charAt(0)} */}
-                    {/* <DisplayProfilePicture id={user.id} height='24' width='24'/> */}
                     {role === 'ADMIN' ? (
                         <>
                             <AdminProfilePicture id={user.id} height="h-24" width="w-24" />
@@ -48,13 +47,10 @@ const UserProfile = () => {
                     <p className="text-gray-500 text-sm">{user.phone}</p>
                 </div>
             </div>
-            <AssignedProperties />
-            {/* <div className="flex justify-center mt-6">
-                <button className="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-white transition">
-                    Edit Profile
-                </button>
-            </div> */}
-        </div>
+           
+        </div> */}
+        <AssignedProperties />
+        </>
     );
 };
 

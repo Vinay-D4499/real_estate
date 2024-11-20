@@ -56,13 +56,13 @@ function App() {
 
 function MainContent() {
   const location = useLocation();
-  const noBreadcrumbRoutes = ['/', '/reset-password','/chats','/home1', '/home2', '/home3', '/home4','/home5'];
+  const noBreadcrumbRoutes = ['/','/user', '/reset-password','/chats','/home1', '/home2', '/home3', '/home4','/home5'];
 
   return (
     <>
    
     <main className="flex-grow">
-      <div className="mx-auto max-w-md flex items-center justify-center">
+      <div className="flex justify-center items-center mx-auto max-w-md">
         {!noBreadcrumbRoutes.includes(location.pathname) && <Breadcrumb />}
       </div>
       <Suspense fallback={<LoadingAnimation />}>
