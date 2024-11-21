@@ -27,29 +27,37 @@ const UserProfile = () => {
 
     return (
         <>
-        <div className="bg-white shadow-lg mx-auto mt-10 p-6 rounded-lg max-w-md">
-            <h1 className="mb-4 font-semibold text-2xl text-center text-gray-800">Profile</h1>
-            <div className="flex flex-col items-center space-y-4">
-                <div className="flex justify-center items-center bg-gray-200 rounded-full w-24 h-24 font-bold text-3xl text-gray-500">
-                    {role === 'ADMIN' ? (
-                        <>
-                            <AdminProfilePicture id={user.id} height="h-24" width="w-24" />
-                        </>
-                    ) : (
-                        <>
-                            <DisplayProfilePicture id={user.id} height="h-24" width="w-24" />
-                        </>
-                    )}
+            <div className="bg-white shadow-lg mx-auto mt-10 p-6 rounded-lg max-w-md">
+                <h1 className="mb-4 font-semibold text-2xl text-center text-gray-800">Profile</h1>
+                <div className="flex flex-col items-center space-y-4">
+                    <div className="flex justify-center items-center bg-gray-200 rounded-full w-24 h-24 font-bold text-3xl text-gray-500">
+                        {role === 'ADMIN' ? (
+                            <>
+                                <AdminProfilePicture id={user.id} height="h-24" width="w-24" />
+                            </>
+                        ) : (
+                            <>
+                                <DisplayProfilePicture id={user.id} height="h-24" width="w-24" />
+                            </>
+                        )}
+                    </div>
+                    <div className="text-center">
+                        <p className="font-semibold text-gray-700 text-lg">{user.name}</p>
+                        <p className="text-gray-500 text-sm">{user.email}</p>
+                        <p className="text-gray-500 text-sm">{user.phone}</p>
+                    </div>
                 </div>
-                <div className="text-center">
-                    <p className="font-semibold text-gray-700 text-lg">{user.name}</p>
-                    <p className="text-gray-500 text-sm">{user.email}</p>
-                    <p className="text-gray-500 text-sm">{user.phone}</p>
-                </div>
+
             </div>
-           
-        </div>
-        <AssignedProperties />
+            {role === 'ADMIN' ? (
+                <>
+                ""
+                </>
+            ) : (
+                <>
+                    <AssignedProperties />
+                </>
+            )}
         </>
     );
 };

@@ -152,6 +152,7 @@ const assignedPropertyTypes = async (userId) => {
             ],
             attributes: ['id', 'name'], // Fetch only required property type details
         });
+        console.log("results ::", result)
         return result;
     } catch (error) {
         console.error('Error fetching property types:', error);

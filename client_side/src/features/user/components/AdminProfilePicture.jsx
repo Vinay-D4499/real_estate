@@ -50,20 +50,20 @@ const AdminProfilePicture = ({ id, height = 'w-10', width = 'h-10', isEditable =
                 )}
 
                 {/* Floating image on hover */}
-                {profilePictureUrl && (
-                    <div className="absolute top-0 left-0 w-48 h-48 lg:w-56 lg:h-56 rounded-full border border-gray-300 shadow-lg overflow-hidden hidden group-hover:flex justify-center items-center bg-white z-50">
+                {/* {profilePictureUrl && (
+                    <div className="group-hover:flex top-0 left-0 z-50 absolute justify-center items-center border-gray-300 hidden bg-white shadow-lg border rounded-full w-48 lg:w-56 h-48 lg:h-56 overflow-hidden">
                         <img
                             src={profilePictureUrl}
                             alt="Profile"
                             className="w-full h-full object-cover"
                         />
                     </div>
-                )}
+                )} */}
             </div>
 
             {isEditable && (
-                <label htmlFor={`upload-input-${id}`} className="absolute -bottom-2 -right-2">
-                    <PencilIcon className="w-6 h-6 sm:w-6 sm:h-6 text-gray-600 bg-white rounded-full p-1 border border-gray-300 shadow-md cursor-pointer transition-transform duration-200 hover:scale-105" />
+                <label htmlFor={`upload-input-${id}`} className="-right-2 -bottom-2 absolute">
+                    <PencilIcon className="border-gray-300 bg-white shadow-md p-1 border rounded-full w-6 sm:w-6 h-6 sm:h-6 text-gray-600 transition-transform duration-200 cursor-pointer hover:scale-105" />
                     <input
                         id={`upload-input-${id}`} 
                         type="file"

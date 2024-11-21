@@ -85,7 +85,7 @@ const Navbar = () => {
     {
       title: 'Account',
       links: [
-        { label: 'About', path: '/about' },
+        // { label: 'About', path: '/about' },
         { label: 'Update Password', path: '/update-password' },
         { label: 'Reviews', path: '/review' },
       ],
