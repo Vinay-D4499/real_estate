@@ -55,43 +55,43 @@ const ReviewDetails = () => {
 
  
   return (
-    <div className="overflow-x-auto flex justify-center items-center min-h-screen p-4">
+    <div className="flex justify-center items-center p-4 min-h-screen overflow-x-auto">
       {reviews.length === 0 ? (
         <p className="text-center">No reviews found for this user.</p>
       ) : (
-        <div className="w-full max-w-4xl mx-auto mt-6">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+        <div className="mx-auto mt-6 w-full max-w-4xl">
+          <table className="border-gray-200 bg-white shadow-md border rounded-lg min-w-full">
             <thead>
               <tr className="bg-blue-100">
-                <th className="py-3 px-4 border-b font-semibold text-gray-700">Rating</th>
-                <th className="py-3 px-4 border-b font-semibold text-gray-700">Review Text</th>
+                <th className="px-4 py-3 border-b font-semibold text-gray-700">Rating</th>
+                <th className="px-4 py-3 border-b font-semibold text-gray-700">Review Text</th>
               </tr>
             </thead>
             <tbody>
               {reviews.map((review) => (
                 <tr key={review.id} className="hover:bg-gray-50 transition-colors">
                   {/* Rating Column */}
-                  <td className="py-4 px-4 border-b text-center">
-                    <div className="font-semibold text-gray-800 mb-1">Rating: {review.rating}</div>
+                  <td className="px-4 py-4 border-b text-center">
+                    <div className="mb-1 font-semibold text-gray-800">Rating: {review.rating}</div>
                     {renderStars(review.rating)}
                   </td>
 
                   {/* Review Text Column */}
-                  <td className="py-4 px-4 border-b text-gray-700">
+                  <td className="px-4 py-4 border-b text-gray-700">
                     {/* User Name and Date */}
-                    <div className="text-sm text-gray-600 mb-2">
+                    <div className="mb-2 text-center text-gray-600 text-sm">
                       {review.User ? review.User.name : "N/A"} &bull; {new Date(review.review_date).toLocaleDateString()}
                     </div>
 
                     {/* Review Text */}
-                    <div className="text-gray-800 mb-3 whitespace-pre-wrap">
+                    <div className="mb-3 text-center text-gray-800 whitespace-pre-wrap">
                       {review.review_text}
                     </div>
 
                     {/* Actions */}
-                    <div className="flex space-x-2">
-                      <button onClick={() => handleEdit(review)} className="text-blue-500">
-                        <PencilIcon className="h-5 w-5" />
+                    <div className="space-x-2 text-center">
+                      <button onClick={() => handleEdit(review)} className="text-blue-500 text-center">
+                        <PencilIcon className="w-5 h-5" />
                       </button>
                       <DeleteReview reviewId={review.id} token={token} setReviews={setReviews} reviews={reviews} />
                     </div>

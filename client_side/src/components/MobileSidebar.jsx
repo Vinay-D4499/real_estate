@@ -4,6 +4,7 @@ import { FaTimes } from 'react-icons/fa';
 import DisplayProfilePicture from '../features/user/components/DisplayProfilePicture'; // Importing Profile Component
 import AdminProfilePicture from '../features/user/components/AdminProfilePicture'; // Admin Profile Component
 import './navbarCss.css';
+
 const MobileSidebar = ({
   isOpen,
   toggleMenu,
@@ -34,6 +35,12 @@ const MobileSidebar = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isOpen, toggleMenu]);
+
+  // Prevent event propagation for the close button
+  const handleCloseClick = (event) => {
+    event.stopPropagation();
+    toggleMenu();
+  };
 
   // Render links by mapping over grouped data
   const renderLinks = (links) =>
@@ -66,12 +73,12 @@ const MobileSidebar = ({
       } transition-transform duration-300 ease-in-out z-50`}
     >
       {/* Close Button */}
-      <button
-        onClick={toggleMenu}
+      {/* <button
+        onClick={handleCloseClick}
         className="top-4 right-4 absolute text-white focus:outline-none"
       >
         <FaTimes size={24} />
-      </button>
+      </button> */}
 
       {/* Profile Section */}
       {isLoggedIn && (

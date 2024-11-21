@@ -38,6 +38,7 @@ const  ReviewsCard  = lazy(() => import('./features/reviews/ReviewsCard'));
 const CustomerReviews = lazy(() => import('./features/reviews/CustomerReviews'));
 const InactiveProperties = lazy(() => import ('./features/propertydetails/Inactiveproperties'));
 const AssignedProperties = lazy(() => import('./features/propertydetails/AssinedProperties'));
+const AssignedPropertiesUser = lazy(() => import('./features/user/properties_assigned/AssignedProperties.jsx'));
 const UserDetailsById = lazy(() => import ('./features/propertydetails/UserDetailsbyid'));
 const AllGroupsDetails = lazy(() => import ('./features/groups/AllGroupsDetails'));
 
@@ -162,6 +163,14 @@ function MainContent() {
             element={
               <ProtectedRoute>
                  <InactiveProperties />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/explore-properties"
+            element={
+              <ProtectedRoute>
+                 <AssignedPropertiesUser />
               </ProtectedRoute>
             }
           />

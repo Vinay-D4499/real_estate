@@ -99,7 +99,7 @@ const CreateReview = () => {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label htmlFor="reviewType" className="block font-medium text-gray-700 text-sm">Review Type</label>
             <select
               id="reviewType"
@@ -111,7 +111,7 @@ const CreateReview = () => {
               <option value="SERVICE">Service</option>
               <option value="PRODUCT">Product</option>
             </select>
-          </div>
+          </div> */}
 
           <div className="flex justify-center">
             <button

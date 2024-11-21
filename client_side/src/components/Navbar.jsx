@@ -79,7 +79,7 @@ const Navbar = () => {
       title: 'Explore',
       links: [
         { label: 'Dashboard', path: '/user' },
-        { label: 'Explore Properties', path: '/explore' },
+        { label: 'Explore Properties', path: '/explore-properties' },
       ],
     },
     {

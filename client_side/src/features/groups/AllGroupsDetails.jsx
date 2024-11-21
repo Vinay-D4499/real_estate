@@ -6,15 +6,18 @@ import { Link } from 'react-router-dom';
 
 const AllGroupsDetails = () => {
   const [groups, setGroups] = useState([]);
+  const [filteredGroups, setFilteredGroups] = useState([]);
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchAllGroupDetails();
         setGroups(response.groups || []);
+        setFilteredGroups(response.groups || []);
       } catch (error) {
         console.error('Error fetching group details:', error);
       }
@@ -23,6 +26,17 @@ const AllGroupsDetails = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // Filter groups based on search term
+    const filtered = groups.filter((group) => {
+      return (
+        group.groupName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        group.groupType.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    });
+    setFilteredGroups(filtered);
+  }, [searchTerm, groups]);
+
   const handleEditClick = (groupId) => {
     setSelectedGroupId(groupId);
     setIsEditModalOpen(true);
@@ -30,20 +44,30 @@ const AllGroupsDetails = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold text-center mb-6">Group Details</h1>
-      <div className="flex justify-end mb-4">
+      <h1 className="mb-6 font-bold text-2xl text-center">Group Details</h1>
+
+      {/* Search Input */}
+      <div className="flex justify-between items-center mb-4">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search by group name or type"
+          className="px-4 py-2 border rounded-lg w-1/3"
+        />
         <button
-          className="bg-green-500 text-white rounded px-4 py-2 hover:bg-green-600"
+          className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white"
           onClick={() => setIsCreateModalOpen(true)}
         >
           Create New Group
         </button>
       </div>
-      {groups.length > 0 ? (
+
+      {filteredGroups.length > 0 ? (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+          <table className="bg-white shadow-md rounded-lg min-w-full overflow-hidden">
             <thead>
-              <tr className="bg-blue-500 text-white text-sm uppercase text-left">
+              <tr className="bg-blue-500 text-left text-sm text-white uppercase">
                 <th className="p-4">#</th>
                 <th className="p-4">Group Name</th>
                 <th className="p-4">Group Type</th>
@@ -53,10 +77,10 @@ const AllGroupsDetails = () => {
               </tr>
             </thead>
             <tbody>
-              {groups.map((group, index) => (
+              {filteredGroups.map((group, index) => (
                 <tr
                   key={group.groupId}
-                  className="border-b hover:bg-gray-100 text-sm"
+                  className="hover:bg-gray-100 border-b text-sm"
                 >
                   <td className="p-4">{index + 1}</td>
                   <td className="p-4">{group.groupName}</td>
@@ -64,14 +88,16 @@ const AllGroupsDetails = () => {
                   <td className="p-4">{group.groupDescr}</td>
                   <td className="p-4">
                     <button
-                      className="bg-yellow-500 text-white rounded px-3 py-1 flex items-center hover:bg-yellow-600"
+                      className="flex items-center bg-yellow-500 hover:bg-yellow-600 px-3 py-1 rounded text-white"
                       onClick={() => handleEditClick(group.groupId)}
                     >
                       <span>Edit</span>
                     </button>
                   </td>
-                  <td className='text-indigo-600 font-semibold underline '>
-                    <Link to={`/group-members/${group.groupId}`} >Group Members</Link>
+                  <td className="font-semibold text-indigo-600 underline">
+                    <Link to={`/group-members/${group.groupId}`}>
+                      Group Members
+                    </Link>
                   </td>
                 </tr>
               ))}

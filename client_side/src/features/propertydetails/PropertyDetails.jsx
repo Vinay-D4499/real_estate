@@ -138,7 +138,7 @@ const PropertyDetails = ({ typeId }) => {
             >
               ✖
             </button>
-            <h2 className="mb-4 font-semibold text-xl">Update Property Details</h2>
+            <h2 className="mb-4 font-semibold text-xl">Updated Property Details Successfylly </h2>
             <AddPropertyDetails
               details={editDetails}
               onDetailsUpdate={handleDetailsUpdate} // Handle the updated details

@@ -35,7 +35,7 @@ const AddPropertyDetails = ({ details }) => {
         `${baseURL}/api/propertyDetails/properties/${details.id}`,
         payload
       );
-      alert('Property details updated successfully!');
+      // alert('Property details updated successfully!');
       handleClose(); // Close the modal after successful submission
     } catch (error) {
       console.error('Failed to update property details:', error);
@@ -61,33 +61,33 @@ const AddPropertyDetails = ({ details }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white w-full max-w-4xl mx-4 sm:mx-6 lg:mx-auto p-6 rounded-lg shadow-lg relative overflow-y-auto max-h-[calc(100vh-50px)]">
+    <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+      <div className="relative bg-white shadow-lg mx-4 sm:mx-6 lg:mx-auto p-6 rounded-lg w-full max-w-4xl max-h-[calc(100vh-50px)] overflow-y-auto">
         {/* Close Icon */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          className="top-4 right-4 absolute text-gray-500 hover:text-gray-700"
         >
           <FaTimes className="w-6 h-6" />
         </button>
 
-        <h2 className="text-2xl font-semibold text-center mb-4">
+        <h2 className="mb-4 font-semibold text-2xl text-center">
           Edit Property Details
         </h2>
 
         <form onSubmit={handleSubmit}>
           {/* Responsive Grid for Inputs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
             <input
               type="text"
               name="property_name"
               value={formData.property_name}
               onChange={handleInputChange}
               placeholder="Property Name"
-              className="border p-2 rounded-md w-full"
+              className="p-2 border rounded-md w-full"
             />
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block mb-1 font-medium text-gray-700 text-sm">
                 Property Type
               </label>
               <PropertyTypes
@@ -100,7 +100,7 @@ const AddPropertyDetails = ({ details }) => {
               value={formData.property_description}
               onChange={handleInputChange}
               placeholder="Description"
-              className="border p-2 rounded-md w-full md:col-span-2"
+              className="md:col-span-2 p-2 border rounded-md w-full"
             ></textarea>
             <input
               type="text"
@@ -108,7 +108,7 @@ const AddPropertyDetails = ({ details }) => {
               value={formData.property_address}
               onChange={handleInputChange}
               placeholder="Address"
-              className="border p-2 rounded-md w-full"
+              className="p-2 border rounded-md w-full"
             />
             <input
               type="text"
@@ -116,7 +116,7 @@ const AddPropertyDetails = ({ details }) => {
               value={formData.property_maplocation}
               onChange={handleInputChange}
               placeholder="Map Location"
-              className="border p-2 rounded-md w-full"
+              className="p-2 border rounded-md w-full"
             />
             <input
               type="number"
@@ -124,7 +124,7 @@ const AddPropertyDetails = ({ details }) => {
               value={formData.property_sq_feets_or_length}
               onChange={handleInputChange}
               placeholder="Sq Feet or Length"
-              className="border p-2 rounded-md w-full"
+              className="p-2 border rounded-md w-full"
             />
             <input
               type="number"
@@ -132,7 +132,7 @@ const AddPropertyDetails = ({ details }) => {
               value={formData.property_price}
               onChange={handleInputChange}
               placeholder="Price"
-              className="border p-2 rounded-md w-full"
+              className="p-2 border rounded-md w-full"
             />
             <select
               name="is_available"
@@ -140,7 +140,7 @@ const AddPropertyDetails = ({ details }) => {
               onChange={(e) =>
                 setFormData({ ...formData, is_available: e.target.value === 'true' })
               }
-              className="border p-2 rounded-md w-full"
+              className="p-2 border rounded-md w-full"
             >
               <option value="true">Available</option>
               <option value="false">Unavailable</option>
@@ -149,7 +149,7 @@ const AddPropertyDetails = ({ details }) => {
 
           {/* Media Uploader */}
           <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">Upload Property Media</h3>
+            <h3 className="mb-2 font-semibold text-lg">Upload Property Media</h3>
             <MediaUploader
               propertyId={details.id}
               onUploadComplete={handleUploadComplete}
@@ -161,13 +161,13 @@ const AddPropertyDetails = ({ details }) => {
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+              className="bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-md text-white"
             >
               Close
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+              className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-white"
             >
               Save Changes
             </button>
@@ -233,35 +233,35 @@ export default AddPropertyDetails;
 //   };
 
 //   return (
-//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-//       <div className="bg-white w-full max-w-4xl mx-4 sm:mx-6 lg:mx-auto p-6 rounded-lg shadow-lg relative overflow-y-auto max-h-[calc(100vh-50px)]">
+//     <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+//       <div className="relative bg-white shadow-lg mx-4 sm:mx-6 lg:mx-auto p-6 rounded-lg w-full max-w-4xl max-h-[calc(100vh-50px)] overflow-y-auto">
 //         {/* Close Icon */}
 //         <button
 //           onClick={onClose}
-//           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+//           className="top-4 right-4 absolute text-gray-500 hover:text-gray-700"
 //         >
 //           <FaTimes className="w-6 h-6" />
 //         </button>
 
-//         <h2 className="text-2xl font-semibold text-center mb-4">
+//         <h2 className="mb-4 font-semibold text-2xl text-center">
 //           Edit Property Details
 //         </h2>
 
 //         <form onSubmit={handleSubmit}>
 //           {/* Responsive Grid for Inputs */}
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
 //             <input
 //               type="text"
 //               name="property_name"
 //               value={formData.property_name}
 //               onChange={handleInputChange}
 //               placeholder="Property Name"
-//               className="border p-2 rounded-md w-full"
+//               className="p-2 border rounded-md w-full"
 //             />
 
 //             {/* Property Types Dropdown */}
 //             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-1">
+//               <label className="block mb-1 font-medium text-gray-700 text-sm">
                 
 //               <PropertyTypes
 //                 onSelectType={handlePropertyTypeChange}
@@ -276,7 +276,7 @@ export default AddPropertyDetails;
 //               value={formData.property_description}
 //               onChange={handleInputChange}
 //               placeholder="Description"
-//               className="border p-2 rounded-md w-full md:col-span-2"
+//               className="md:col-span-2 p-2 border rounded-md w-full"
 //             ></textarea>
 //             <input
 //               type="text"
@@ -284,7 +284,7 @@ export default AddPropertyDetails;
 //               value={formData.property_address}
 //               onChange={handleInputChange}
 //               placeholder="Address"
-//               className="border p-2 rounded-md w-full"
+//               className="p-2 border rounded-md w-full"
 //             />
 //             <input
 //               type="text"
@@ -292,7 +292,7 @@ export default AddPropertyDetails;
 //               value={formData.property_maplocation}
 //               onChange={handleInputChange}
 //               placeholder="Map Location"
-//               className="border p-2 rounded-md w-full"
+//               className="p-2 border rounded-md w-full"
 //             />
 //             <input
 //               type="number"
@@ -300,7 +300,7 @@ export default AddPropertyDetails;
 //               value={formData.property_sq_feets_or_length}
 //               onChange={handleInputChange}
 //               placeholder="Sq Feet or Length"
-//               className="border p-2 rounded-md w-full"
+//               className="p-2 border rounded-md w-full"
 //             />
 //             <input
 //               type="number"
@@ -308,7 +308,7 @@ export default AddPropertyDetails;
 //               value={formData.property_price}
 //               onChange={handleInputChange}
 //               placeholder="Price"
-//               className="border p-2 rounded-md w-full"
+//               className="p-2 border rounded-md w-full"
 //             />
 //             <select
 //               name="is_available"
@@ -316,7 +316,7 @@ export default AddPropertyDetails;
 //               onChange={(e) =>
 //                 setFormData({ ...formData, is_available: e.target.value === 'true' })
 //               }
-//               className="border p-2 rounded-md w-full"
+//               className="p-2 border rounded-md w-full"
 //             >
 //               <option value="true">Available</option>
 //               <option value="false">Unavailable</option>
@@ -325,7 +325,7 @@ export default AddPropertyDetails;
 
 //           {/* Media Uploader */}
 //           <div className="mt-4">
-//             <h3 className="text-lg font-semibold mb-2">Upload Property Media</h3>
+//             <h3 className="mb-2 font-semibold text-lg">Upload Property Media</h3>
 //             <MediaUploader
 //               propertyId={details.id}
 //               onUploadComplete={handleUploadComplete}
@@ -337,13 +337,13 @@ export default AddPropertyDetails;
 //             <button
 //               type="button"
 //               onClick={onClose}
-//               className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+//               className="bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-md text-white"
 //             >
 //               Close
 //             </button>
 //             <button
 //               type="submit"
-//               className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+//               className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-md text-white"
 //             >
 //               Save Changes
 //             </button>
