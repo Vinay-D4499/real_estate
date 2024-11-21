@@ -108,7 +108,7 @@ const MobileSidebar = ({
             Logout
           </button>
         ) : (
-          <Link to="/login" onClick={toggleMenu} className="block mt-6 hover:text-blue-400">
+          <Link to="/" onClick={toggleMenu} className="block mt-6 hover:text-blue-400">
             Login
           </Link>
         )}
