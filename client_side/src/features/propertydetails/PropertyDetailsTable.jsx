@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropertyDetails from './PropertyDetails';
 import { Link } from 'react-router-dom';
+import { FaCheckCircle } from 'react-icons/fa';
+import { FaSquareXmark } from 'react-icons/fa6';
 
 const PropertyTable = ({ properties }) => {
-    console.log("properties :::>>>>>", properties)
     const [selectedTypeId, setSelectedTypeId] = useState(null);
+    const detailsRef = useRef(null); // Reference for the PropertyDetails component
+
+    const handleMoreClick = (propertyId) => {
+        setSelectedTypeId(propertyId); // Set the selected property ID
+        setTimeout(() => {
+            if (detailsRef.current) {
+                detailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 0);
+    };
 
     return (
         <div className="bg-white shadow-md rounded-lg w-full max-w-4xl overflow-x-auto">
@@ -30,31 +41,53 @@ const PropertyTable = ({ properties }) => {
                                 <td className="p-2">{property.property_address}</td>
                                 <td className="p-2">₨ {property.property_price}</td>
                                 <td className="p-2">{property.property_sq_feets_or_length}</td>
-                                <td className="p-2">{property.is_available ? "true" : "false"}</td>
+                                <td className="p-2">
+                                    {property.is_available ? (
+                                        <FaCheckCircle
+                                            className="text-2xl text-green-500"
+                                            title="ACTIVE"
+                                        />
+                                    ) : (
+                                        <FaSquareXmark
+                                            className="text-2xl text-red-500"
+                                            title="INACTIVE"
+                                        />
+                                    )}
+                                </td>
                                 <td className="p-2">
                                     <button
-                                        onClick={() => setSelectedTypeId(property.id)}
+                                        onClick={() => handleMoreClick(property.id)}
                                         className="bg-blue-500 px-3 py-1 rounded text-white"
                                     >
-                                        Show More Information
+                                        More...
                                     </button>
                                 </td>
-                                <td>
-                                    <Link to={`/assign-property-details/${property.id}`}
-                                     className="bg-green-500 px-3 py-1 rounded text-white"
-                                     >Assign To User</Link>
+                                <td className='p-2'>
+                                    <Link
+                                        to={`/assign-property-details/${property.id}`}
+                                        className="bg-green-500 my-2 px-3 py-1 rounded text-white"
+                                        title='Publish this Property to Customer'
+                                    >
+                                        Publish 
+                                    </Link>
                                 </td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="7" className="p-2 text-center">No properties found</td>
+                            <td colSpan="8" className="p-2 text-center">
+                                No properties found
+                            </td>
                         </tr>
                     )}
                 </tbody>
             </table>
 
-            {selectedTypeId && <PropertyDetails typeId={selectedTypeId} />}
+            {selectedTypeId && (
+                <div ref={detailsRef}>
+                    <PropertyDetails typeId={selectedTypeId} />
+                </div>
+            )}
         </div>
     );
 };

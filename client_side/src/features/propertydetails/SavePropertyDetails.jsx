@@ -11,7 +11,7 @@ const SavePropertyDetails = () => {
 
   return (
     <>
-    <h4 className="text-4xl text-center">Select a Property type to add details </h4>
+    <h4 className="justify-center my-3 py-4 text-4xl text-center">Select a Property type to add details </h4>
     <div className="ml-9">
       <PropertyTypes onSelectType={handleSelectType} />
       {selectedTypeId && (

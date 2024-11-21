@@ -13,18 +13,18 @@ const PropertyFilters = ({
     recordsPerPage,
 }) => {
     return (
-        <div className="w-full max-w-4xl mb-4 flex flex-col md:flex-row gap-4">
+        <div className="flex md:flex-row flex-col gap-4 mb-4 w-full max-w-4xl">
             <input
                 type="text"
                 placeholder="Search by property name"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="border p-2 rounded"
+                className="p-2 border rounded"
             />
             <select
                 value={locationFilter}
                 onChange={(e) => setLocationFilter(e.target.value)}
-                className="border p-2 rounded"
+                className="p-2 border rounded"
             >
                 <option value="">All Locations</option>
                 {locations.map((location, index) => (
@@ -36,7 +36,7 @@ const PropertyFilters = ({
             <select
                 value={budgetFilter}
                 onChange={(e) => setBudgetFilter(e.target.value)}
-                className="border p-2 rounded"
+                className="p-2 border rounded"
             >
                 <option value="">All Budgets</option>
                 {budgetRanges.map((range, index) => (
@@ -48,11 +48,11 @@ const PropertyFilters = ({
             <select
                 value={recordsPerPage}
                 onChange={(e) => setRecordsPerPage(parseInt(e.target.value))}
-                className="border p-2 rounded"
+                className="p-2 border rounded"
             >
-                <option value={5}>5 records per page</option>
                 <option value={10}>10 records per page</option>
                 <option value={20}>20 records per page</option>
+                <option value={30}>30 records per page</option>
             </select>
         </div>
     );

@@ -6,7 +6,7 @@ const PropertyContainer = () => {
   const [selectedTypeId, setSelectedTypeId] = useState(null);
 
   const handleTypeSelection = (typeId) => {
-    console.log(typeId,"----typeId")
+    // console.log(typeId,"----typeId")
     setSelectedTypeId(typeId);
   };
 

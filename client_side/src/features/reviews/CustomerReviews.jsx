@@ -70,16 +70,16 @@ const CustomerReviews = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 bg-gray-100">
+    <div className="bg-gray-100 mx-auto p-4 container">
       {/* Rating Distribution Section */}
-      <h2 className="text-lg font-semibold mb-4 h-10">Rating Distribution</h2>
+      <h2 className="mb-4 h-10 font-semibold text-lg">Rating Distribution</h2>
       <div className="space-y-1">
         {[1, 2, 3, 4, 5].map((rating) => (
           <div key={rating} className="flex items-center text-xs">
             <span className="mr-1 text-base">{renderStars(rating)}</span>
-            <div className="w-1/4 bg-gray-300 rounded-full h-3">
+            <div className="bg-gray-300 rounded-full w-1/4 h-3">
               <div
-                className="bg-yellow-500 h-3 rounded-full"
+                className="bg-yellow-500 rounded-full h-3"
                 style={{ width: `${ratingDistribution[rating]}%` }}
               />
             </div>
@@ -89,11 +89,11 @@ const CustomerReviews = () => {
       </div>
 
       {/* Carousel Section for Reviews */}
-      <h2 className="text-lg font-semibold mb-4 mt-8">Top Reviews</h2>
-      <div className="relative flex items-center justify-center">
+      <h2 className="mt-8 mb-4 font-semibold text-lg">Top Reviews</h2>
+      <div className="relative flex justify-center items-center">
         <button
           onClick={prevSlide}
-          className="absolute left-0 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+          className="left-0 z-20 absolute bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
         >
           &#9664;
         </button>
@@ -114,17 +114,17 @@ const CustomerReviews = () => {
                   'https://lara.blr1.cdn.digitaloceanspaces.com/real_estate/profile_pictures/default.png'
                 }
                 alt="Customer Avatar"
-                className="w-12 h-12 rounded-full object-cover absolute top-2 left-2 border-2 border-white"
+                className="top-2 left-2 absolute border-2 border-white rounded-full w-12 h-12 object-cover"
               />
               
               {/* Review Content */}
               <div className="ml-16"> {/* Adds space for the picture */}
-                <p className="text-xl font-semibold mb-1">{getDefaultValue(customer.name)}</p>
-                <p className="text-lg font-medium text-yellow-500 mb-1">
+                <p className="mb-1 font-semibold text-xl">{getDefaultValue(customer.name)}</p>
+                <p className="mb-1 font-medium text-lg text-yellow-500">
                   {renderStars(review.rating)}
                 </p>
-                <p className="text-gray-700 mb-1">{getDefaultValue(review.review_text)}</p>
-                <div className="text-sm text-gray-400">
+                <p className="mb-1 text-gray-700">{getDefaultValue(review.review_text)}</p>
+                <div className="text-gray-400 text-sm">
                   <span>{new Date(review.review_date).toLocaleDateString()}</span>
                 </div>
               </div>
@@ -134,7 +134,7 @@ const CustomerReviews = () => {
 
         <button
           onClick={nextSlide}
-          className="absolute right-0 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+          className="right-0 absolute bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
         >
           &#9654;
         </button>

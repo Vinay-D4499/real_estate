@@ -97,7 +97,7 @@ const PropertyTypes = ({ onSelectType, selectedTypeId }) => {
   }
 
   return (
-    <div>
+    <div className='my-3'>
       <h2>Property Types</h2>
       {propertyTypes.length === 0 ? (
         <p>No property types available.</p>

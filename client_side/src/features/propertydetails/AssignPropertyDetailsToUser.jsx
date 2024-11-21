@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { fetchAllCustomers } from '../user/components/userAPI';
 import UserDetails from '../user/components/UserDetails';
 import toast from 'react-hot-toast';
-import { assignPropertyDetailsToUser } from './propertyAPI';
+import { assignPropertyDetailsToUser, getPropertyDetailsById } from './propertyAPI';
 
 const AssignPropertyDetailsToUser = () => {
     const { property_id } = useParams();
@@ -12,6 +12,7 @@ const AssignPropertyDetailsToUser = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedGroup, setSelectedGroup] = useState('');
     const [selectedUserIds, setSelectedUserIds] = useState([]);
+    const [propertyDetails , setPropertyDetails] = useState({});
 
     const fetchCustomerDetails = async () => {
         try {
@@ -23,8 +24,18 @@ const AssignPropertyDetailsToUser = () => {
         }
     };
 
+    const fetchPropertyDetails = async ()=>{
+        try {
+            const response = await getPropertyDetailsById(property_id);
+            setPropertyDetails(response)
+        } catch (error) {
+            console.error("Error fetching Property Details ", error)
+        }
+    }
+
     useEffect(() => {
         fetchCustomerDetails();
+        fetchPropertyDetails();
     }, []);
 
     const handleSearch = (query) => {
@@ -88,6 +99,12 @@ const AssignPropertyDetailsToUser = () => {
 
     return (
         <div className="bg-gray-50 p-6 min-h-screen">
+            {propertyDetails ? (
+                <>
+                </>
+            ):(
+                <></>
+            )}
             <h1 className="mb-6 font-bold text-2xl text-center">Assigning Property to Users</h1>
             <div className="flex md:flex-row flex-col justify-between items-center space-y-4 md:space-y-0 mb-6">
                 {/* Search Input */}

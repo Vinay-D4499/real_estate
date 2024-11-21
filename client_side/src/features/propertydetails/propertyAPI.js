@@ -42,3 +42,14 @@ export const getPropertyTypeById = async (id) => {
         throw new Error(error.response?.data?.message || "Failed to fetch property type details");
     }
 };
+
+export const getPropertyDetailsById = async (id) => {
+    try {
+        const response = await axios.get(`${baseURL}/api/propertyDetails/getPropertyDetailsById/${id}`);
+        console.log(response.data,"------------response.data");
+        return response.data; // assuming the response contains an array of property details
+    } catch (error) {
+        console.error("Error while fetching Property details :: >>", error);
+        throw new Error(error.response?.data?.message || "Failed to fetch property details");
+    }
+};

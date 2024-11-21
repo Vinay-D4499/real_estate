@@ -130,6 +130,16 @@ const getUsersForGroupController = async (req, res) => {
     }
 };
 
+const assingPropertyDetailsToGroup = async (req, res) =>{
+    const {groupId, propertyIds} = req.body;
+    try {
+        const assignPropDetailsToGroup = await groupServices.assingPropertyDetailsToGroup({groupId, propertyIds});
+    } catch (error) {
+        console.log("error assigning property details to group :", error)
+        next(error);
+    }
+}
+
 module.exports = {
     createGroup,
     getAllGroups,

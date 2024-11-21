@@ -69,13 +69,13 @@ const CreateReview = () => {
   };
 
   return (
-    <div className="flex justify-center items-center p-6 bg-gray-100 rounded-lg shadow-lg mt-6 w-full max-w-lg mx-auto">
+    <div className="flex justify-center items-center bg-gray-100 shadow-lg mx-auto mt-6 rounded-lg w-full max-w-lg">
       <div className="w-full">
-        <h2 className="text-2xl font-semibold text-center mb-4">Create a Review</h2>
+        <h2 className="mb-4 font-semibold text-2xl text-center">Create a Review</h2>
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="rating" className="block text-sm font-medium text-gray-700">Rating (1-5)</label>
+            <label htmlFor="rating" className="block font-medium text-gray-700 text-sm">Rating (1-5)</label>
             <input
               type="number"
               id="rating"
@@ -84,28 +84,28 @@ const CreateReview = () => {
               placeholder="Enter rating (1-5)"
               value={newReview.rating}
               onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value) })}
-              className="w-full p-3 border border-gray-300 rounded-lg mt-2"
+              className="border-gray-300 mt-2 p-3 border rounded-lg w-full"
             />
           </div>
 
           <div>
-            <label htmlFor="reviewText" className="block text-sm font-medium text-gray-700">Review Text</label>
+            <label htmlFor="reviewText" className="block font-medium text-gray-700 text-sm">Review Text</label>
             <textarea
               id="reviewText"
               placeholder="Write your review"
               value={newReview.review_text}
               onChange={(e) => setNewReview({ ...newReview, review_text: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg mt-2"
+              className="border-gray-300 mt-2 p-3 border rounded-lg w-full"
             />
           </div>
 
           <div>
-            <label htmlFor="reviewType" className="block text-sm font-medium text-gray-700">Review Type</label>
+            <label htmlFor="reviewType" className="block font-medium text-gray-700 text-sm">Review Type</label>
             <select
               id="reviewType"
               value={newReview.review_type}
               onChange={(e) => setNewReview({ ...newReview, review_type: e.target.value })}
-              className="w-full p-3 border border-gray-300 rounded-lg mt-2"
+              className="border-gray-300 mt-2 p-3 border rounded-lg w-full"
             >
               <option value="OTHER">Other</option>
               <option value="SERVICE">Service</option>
@@ -116,13 +116,13 @@ const CreateReview = () => {
           <div className="flex justify-center">
             <button
               onClick={handleCreateReview}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+              className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg text-white transition duration-200"
             >
               Submit Review
             </button>
           </div>
 
-          {message && <p className="text-sm text-red-500 mt-2 text-center">{message}</p>}
+          {message && <p className="mt-2 text-center text-red-500 text-sm">{message}</p>}
         </div>
       </div>
     </div>
