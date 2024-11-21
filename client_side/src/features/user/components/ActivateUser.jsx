@@ -23,12 +23,12 @@ const ActivateUser = ({ id, refreshCustomerData }) => {
         <div>
             <button
                 onClick={() => setIsModalOpen(true)}
-                className="px-2 py-2 text-white bg-green-200 rounded hover:bg-green-700"
+                className="bg-green-200 hover:bg-green-700 px-2 py-2 rounded text-white"
             >
-                {/* <CheckCircleIcon className="h-6 w-6" /> */}
-                <div className="relative inline-block group">
-                    <CheckCircleIcon className="h-8 w-8 text-green-500" />
-                    <div className="absolute left-1/2 bottom-full mb-2 w-max p-2 text-sm text-white bg-black rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform -translate-x-1/2">
+                {/* <CheckCircleIcon className="w-6 h-6" /> */}
+                <div className="inline-block relative group">
+                    <CheckCircleIcon className="w-8 h-8 text-green-500" />
+                    <div className="bottom-full left-1/2 absolute bg-black opacity-0 group-hover:opacity-100 mb-2 p-2 rounded-md w-max text-sm text-white transform transition-opacity -translate-x-1/2 duration-300">
                         Activate User
                     </div>
                 </div>
@@ -36,20 +36,20 @@ const ActivateUser = ({ id, refreshCustomerData }) => {
 
             {/* Confirmation Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-50">
-                    <div className="bg-white rounded-lg shadow-md w-96 p-6">
-                        <h2 className="text-lg font-semibold">Confirm Activation</h2>
+                <div className="z-50 fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+                    <div className="bg-white shadow-md p-6 rounded-lg w-96">
+                        <h2 className="font-semibold text-lg">Confirm Activation</h2>
                         <p className="mt-2">Are you sure you want to activate this user?</p>
-                        <div className="mt-4 flex justify-end">
+                        <div className="flex justify-end mt-4">
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className="mr-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                                className="bg-gray-300 hover:bg-gray-400 mr-2 px-4 py-2 rounded"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleActivate}
-                                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white"
                             >
                                 Activate
                             </button>
@@ -57,7 +57,7 @@ const ActivateUser = ({ id, refreshCustomerData }) => {
                     </div>
                 </div>
             )}
-            <CustomerReviews />
+            {/* <CustomerReviews /> */}
         </div>
     );
 };
