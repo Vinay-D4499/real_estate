@@ -48,7 +48,7 @@ const MobileSidebar = ({
               <Link
                 to={link.path}
                 onClick={toggleMenu} // Close menu on link click
-                className="block text-white hover:text-indigo-400"
+                className="block ml-2 text-white hover:text-indigo-40"
               >
                 {link.label}
               </Link>
@@ -75,7 +75,7 @@ const MobileSidebar = ({
 
       {/* Profile Section */}
       {isLoggedIn && (
-        <div className="p-6 text-center">
+        <div className="p-2 text-center">
           {role === 'ADMIN' ? (
             <AdminProfilePicture id={user.id} height="h-16" width="w-16" />
           ) : (
