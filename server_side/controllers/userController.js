@@ -294,80 +294,80 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
 //     }
 // };
 
-// const sendAutomatedWhatsAppMessages = async (req, res) => {
-//     try {
-//         const now = new Date();
+const sendAutomatedWhatsAppMessagesTemplate = async (req, res) => {
+    try {
+        const now = new Date();
 
-//         // Testing range: 5 to 20 minutes ago
-//         const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-//         const sixMinutesAgo = new Date(now.getTime() - 40 * 60 * 1000);
+        // Testing range: 5 to 20 minutes ago
+        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+        const sixMinutesAgo = new Date(now.getTime() - 40 * 60 * 1000);
 
-//         // Fetch users whose last interaction time is within the specified range
-//         const usersToNotify = await Users.findAll({
-//             where: {
-//                 last_interaction_time: {
-//                     // [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
-//                     [Op.between]: [sixMinutesAgo, fiveMinutesAgo] // Adjusted for testing purposes
-//                 }
-//             }
-//         });
+        // Fetch users whose last interaction time is within the specified range
+        const usersToNotify = await Users.findAll({
+            where: {
+                last_interaction_time: {
+                    // [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
+                    [Op.between]: [sixMinutesAgo, fiveMinutesAgo] // Adjusted for testing purposes
+                }
+            }
+        });
 
-//         if (usersToNotify.length === 0) {
-//             console.log("No users found with last interaction time in the specified range.");
-//             return res.status(200).json({ message: "No users found in the specified range." });
-//         }
+        if (usersToNotify.length === 0) {
+            console.log("No users found with last interaction time in the specified range.");
+            return res.status(200).json({ message: "No users found in the specified range." });
+        }
 
-//         for (const user of usersToNotify) {
-//             const to = `91${user.phone}`; // Add country code prefix to the phone number
+        for (const user of usersToNotify) {
+            const to = `91${user.phone}`; // Add country code prefix to the phone number
 
-//             try {
-//                 const response = await axios({
-//                     url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
-//                     method: "POST",
-//                     headers: {
-//                         "Authorization": `Bearer ${process.env.WHATSAPP_TOKEN}`,
-//                         "Content-Type": "application/json"
-//                     },
-//                     data: {
-//                         messaging_product: "whatsapp",
-//                         to: to, // Target user phone number
-//                         type: "template", // Using template message
-//                         template: {
-//                             name: "re_connect", // Provide the approved template name here 
-//                             language: { code: "en" }, // Language code for the template
-//                             components: [
-//                                 {
-//                                     type: "body" // No parameters are passed as the template is static
-//                                 }
-//                             ]
-//                         }
-//                     }
-//                 });
+            try {
+                const response = await axios({
+                    url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${process.env.WHATSAPP_TOKEN}`,
+                        "Content-Type": "application/json"
+                    },
+                    data: {
+                        messaging_product: "whatsapp",
+                        to: to, // Target user phone number
+                        type: "template", // Using template message
+                        template: {
+                            name: "re_connect", // Provide the approved template name here 
+                            language: { code: "en_US" }, // Language code for the template
+                            components: [
+                                {
+                                    type: "body" // No parameters are passed as the template is static
+                                }
+                            ]
+                        }
+                    }
+                });
 
-//                 // Save message details to the WebhookMessage table
-//                 const messageData = {
-//                     whatsappUserId: to,
-//                     whatsappUserName: user.name || null, // Save user name if available
-//                     phoneNumberId: process.env.PHONE_NUMBER_ID,
-//                     messageId: response.data.messages[0].id, // WhatsApp message ID
-//                     messageBody: "Template Message Sent", // Log that a template message was used
-//                     timestamp: new Date(),
-//                     direction: "outgoing" // Mark the message as outgoing
-//                 };
+                // Save message details to the WebhookMessage table
+                const messageData = {
+                    whatsappUserId: to,
+                    whatsappUserName: user.name || null, // Save user name if available
+                    phoneNumberId: process.env.PHONE_NUMBER_ID,
+                    messageId: response.data.messages[0].id, // WhatsApp message ID
+                    messageBody: "Template Message Sent", // Log that a template message was used
+                    timestamp: new Date(),
+                    direction: "outgoing" // Mark the message as outgoing
+                };
 
-//                 await WebhookMessage.create(messageData);
-//                 console.log(`Template message sent to ${user.phone} and saved to WebhookMessage table.`);
-//             } catch (error) {
-//                 console.error(`Error sending template message to ${user.phone}:`, error.response ? error.response.data : error.message);
-//             }
-//         }
+                await WebhookMessage.create(messageData);
+                console.log(`Template message sent to ${user.phone} and saved to WebhookMessage table.`);
+            } catch (error) {
+                console.error(`Error sending template message to ${user.phone}:`, error.response ? error.response.data : error.message);
+            }
+        }
 
-//         return res.status(200).json({ message: "Template messages sent successfully." });
-//     } catch (error) {
-//         console.error("Error in sendAutomatedWhatsAppMessages:", error.message);
-//         return res.status(500).json({ error: "Failed to send template messages." });
-//     }
-// };
+        return res.status(200).json({ message: "Template messages sent successfully." });
+    } catch (error) {
+        console.error("Error in sendAutomatedWhatsAppMessages:", error.message);
+        return res.status(500).json({ error: "Failed to send template messages." });
+    }
+};
 
 
 const createUserByRequest = async (req, res, next) => {
@@ -735,4 +735,5 @@ module.exports = {
     deleteUserById,
     activateUserById,
     sendAutomatedWhatsAppMessages,
+    sendAutomatedWhatsAppMessagesTemplate,
 };

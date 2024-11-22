@@ -41,4 +41,6 @@ router.put('/activateUserById/:id', userController.activateUserById);
 
 router.post('/sendAutomatedWhatsAppMessages', userController.sendAutomatedWhatsAppMessages);
 
+router.post('/sendAutomatedWhatsAppMessagesTemplate', userController.sendAutomatedWhatsAppMessagesTemplate);
+
 module.exports = router;
