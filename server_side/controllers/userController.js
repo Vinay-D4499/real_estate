@@ -297,17 +297,18 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
 const sendAutomatedWhatsAppMessagesTemplate = async (req, res) => {
     try {
         const now = new Date();
-
-        // Testing range: 5 to 20 minutes ago
-        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-        const sixMinutesAgo = new Date(now.getTime() - 40 * 60 * 1000);
+        const twentyThreeHoursAgo = new Date(now.getTime() - 23 * 60 * 60 * 1000);
+        const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        // // Testing range: 5 to 20 minutes ago
+        // const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+        // const sixMinutesAgo = new Date(now.getTime() - 40 * 60 * 1000);
 
         // Fetch users whose last interaction time is within the specified range
         const usersToNotify = await Users.findAll({
             where: {
                 last_interaction_time: {
-                    // [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
-                    [Op.between]: [sixMinutesAgo, fiveMinutesAgo] // Adjusted for testing purposes
+                    [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
+                    // [Op.between]: [sixMinutesAgo, fiveMinutesAgo] // Adjusted for testing purposes
                 }
             }
         });
