@@ -297,8 +297,6 @@ webhookRoutes.get('/webhook', (req, res) => {
 
 //-----------------------------------------------------------////
 
-const { Op } = require("sequelize");
-const Users = require("../models/Users"); // Import your Users model
 
 webhookRoutes.post('/webhook', async (req, res) => {
     const bodyParam = req.body;
