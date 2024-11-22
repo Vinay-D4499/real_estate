@@ -333,7 +333,7 @@ const sendAutomatedWhatsAppMessagesTemplate = async (req, res) => {
                         to: to, // Target user phone number
                         type: "template", // Using template message
                         template: {
-                            name: 're_connect',
+                            name: 'hello_world',
                             language: {
                                 code: 'en_US'
                             }
