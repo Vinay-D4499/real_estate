@@ -9,7 +9,7 @@ const Users = sequelize.define('Users', {
     phone: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique:true
+        unique: true
     },
     location: {
         type: DataTypes.STRING,
@@ -54,10 +54,18 @@ const Users = sequelize.define('Users', {
         allowNull: false,
         defaultValue: true, // Set default to true
     },
-   
+    last_interaction_time: {
+        type: DataTypes.DATE,
+        allowNull: true, // Optional, can be null
+    }
 }, {
     timestamps: true,
     tableName: 'Users'
 });
 
 module.exports = Users;
+
+
+// ALTER TABLE real_estate.users
+// ADD COLUMN last_interaction_time DATETIME NULL;
+
