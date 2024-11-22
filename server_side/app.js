@@ -7,6 +7,7 @@ const cors = require('cors');
 const { initDatabase } = require('./models'); // Import the database initializer
 const errorHandler = require('./middlewares/errorMiddleware');
 const axios = require('axios');
+const cron = require("node-cron");
 
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -58,6 +59,16 @@ const createAdminUserOnStart = async () => {
         console.error('Error creating admin user:', error.response ? error.response.data : error.message);
     }
 };
+
+cron.schedule("*/5 * * * *", async () => {
+    try {
+        console.log("Executing automated message sending task...");
+        const response = await axios.post(`http://localhost:${PORT}/api/user/sendAutomatedWhatsAppMessages`);
+        console.log("Task result:", response.data);
+    } catch (error) {
+        console.error("Error executing automated message sending task:", error.message);
+    }
+});
 
 
 // Initialize database and start the server
