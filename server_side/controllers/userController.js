@@ -148,7 +148,7 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
             where: {
                 last_interaction_time: {
                     // [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
-                    [Op.between]: [sixMinutesAgo, fiveMinutesAgo]
+                    [Op.between]: [fiveMinutesAgo,sixMinutesAgo ]
                 }
             }
         });
