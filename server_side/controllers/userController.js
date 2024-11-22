@@ -333,13 +333,10 @@ const sendAutomatedWhatsAppMessagesTemplate = async (req, res) => {
                         to: to, // Target user phone number
                         type: "template", // Using template message
                         template: {
-                            name: "re_connect", // Provide the approved template name here 
-                            language: { code: "en_US" }, // Language code for the template
-                            components: [
-                                {
-                                    type: "body" // No parameters are passed as the template is static
-                                }
-                            ]
+                            name: 're_connect',
+                            language: {
+                                code: 'en_US'
+                            }
                         }
                     }
                 });
@@ -347,7 +344,7 @@ const sendAutomatedWhatsAppMessagesTemplate = async (req, res) => {
                 // Save message details to the WebhookMessage table
                 const messageData = {
                     whatsappUserId: to,
-                    whatsappUserName: user.name || null, // Save user name if available
+                    whatsappUserName: user.name || null, 
                     phoneNumberId: process.env.PHONE_NUMBER_ID,
                     messageId: response.data.messages[0].id, // WhatsApp message ID
                     messageBody: "Template Message Sent", // Log that a template message was used
