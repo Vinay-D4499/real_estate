@@ -331,7 +331,7 @@ webhookRoutes.post('/webhook', async (req, res) => {
                                 if (user) {
                                     console.log("user found ")
                                     // Update the last_interaction_time column
-                                    await User.update({ last_interaction_time: timestamp });
+                                    await User.update({ last_interaction_time: timestamp }, { where: { phone: userPhone } });
                                     console.log(`Updated last_interaction_time for user: ${userPhone}`);
                                 } else {
                                     console.log(`Phone number not found in Users table: ${userPhone}`);
