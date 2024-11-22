@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Rings } from 'react-loader-spinner';
 
 const SignInForm = ({ onSubmit, loading }) => {
-    const [inputValue, setInputValue] = useState("admin@admin.com");  // For email or phone number
-    const [password, setPassword] = useState('Admin@1234');
+    const [inputValue, setInputValue] = useState("");  // For email or phone number
+    const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = (e) => {
