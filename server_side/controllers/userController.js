@@ -334,7 +334,7 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
                         type: "template", // Using template message
                         template: {
                             name: "re_connect", // Provide the approved template name here 
-                            language: { code: "en_US" }, // Language code for the template
+                            language: { code: "en" }, // Language code for the template
                             components: [
                                 {
                                     type: "body" // No parameters are passed as the template is static
