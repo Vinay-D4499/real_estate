@@ -39,4 +39,6 @@ router.put('/deleteUserById/:id', userController.deleteUserById);
 
 router.put('/activateUserById/:id', userController.activateUserById);
 
+router.post('/sendAutomatedWhatsAppMessages', userController.sendAutomatedWhatsAppMessages);
+
 module.exports = router;
