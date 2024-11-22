@@ -112,7 +112,7 @@ async function sendTextMessage(to, phone, email, password, userId) {
 
         // Store the outgoing message in WebhookMessage
         const messageData = {
-            whatsappUserId: `91${to}`, 
+            whatsappUserId: `91${to}`,
             whatsappUserName: null, // If user name is unknown at this point
             phoneNumberId: process.env.PHONE_NUMBER_ID,
             messageId: response.data.messages[0].id, // WhatsApp's message ID
@@ -137,13 +137,18 @@ async function sendTextMessage(to, phone, email, password, userId) {
 const sendAutomatedWhatsAppMessages = async (req, res) => {
     try {
         const now = new Date();
-        const twentyThreeHoursAgo = new Date(now.getTime() - 23 * 60 * 60 * 1000);
-        const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        // const twentyThreeHoursAgo = new Date(now.getTime() - 23 * 60 * 60 * 1000);
+        // const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+        const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+        const sixMinutesAgo = new Date(now.getTime() - 6 * 60 * 1000);
+
 
         const usersToNotify = await Users.findAll({
             where: {
                 last_interaction_time: {
-                    [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
+                    // [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
+                    [Op.between]: [sixMinutesAgo, fiveMinutesAgo]
                 }
             }
         });
@@ -227,7 +232,7 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
 // async function sendTextMessage(to, phone, email, password) {
 //     try {
 //         const messageBody = `Welcome! Here are your login credentials:\nPhone: ${phone}\nPassword: ${password}\n\nPlease use these to log in and update your password. Login here: ${baseURL}/signin`;
-        
+
 //         // Send the message via WhatsApp API
 //         const response = await axios({
 //             url: `https://graph.facebook.com/v20.0/${process.env.PHONE_NUMBER_ID}/messages`,
@@ -254,10 +259,10 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
 //             timestamp: new Date(),
 //             direction: 'outgoing'
 //         };
-        
+
 //         await WebhookMessage.create(messageData);
 //         console.log("Outgoing message saved to WebhookMessage table");
-        
+
 //         return response.data;
 
 //     } catch (error) {
@@ -323,7 +328,7 @@ const findUserById = async (req, res, next) => {
 };
 const findUserByPhoneNumber = async (req, res, next) => {
     // const { id } = req.params;
-    const {phone} = req.body;
+    const { phone } = req.body;
     console.log("received phone number ::::>>>>>", phone)
     try {
         const user = await userService.findUserByPhoneNumber(phone);
@@ -382,8 +387,8 @@ const updateUserById = async (req, res, next) => {
         return next(new BadRequestError('Validation failed'));
     }
 
-    const userIdToUpdate = req.params.id; 
-    const requesterId = req.user; 
+    const userIdToUpdate = req.params.id;
+    const requesterId = req.user;
 
     const {
         name,
@@ -467,7 +472,7 @@ const updateProfilePicture = async (req, res, next) => {
 
         // to create specific folder structure based on client name
         const clientName = process.env.CLIENT_NAME || 'default_client';
-        
+
         /* The image will be stored inside <CLIENT_NAME>/profile_pictures folder */
         const fileKey = `${clientName}/profile_pictures/${uuidv4()}_${req.file.originalname}`;
 
@@ -516,7 +521,7 @@ const updateAdminProfilePicture = async (req, res, next) => {
 
         // to create specific folder structure based on client name
         const clientName = process.env.CLIENT_NAME || 'default_client';
-        
+
         /* The image will be stored inside <CLIENT_NAME>/profile_pictures folder */
         const fileKey = `${clientName}/profile_pictures/${uuidv4()}_${req.file.originalname}`;
 
@@ -613,9 +618,9 @@ const getAdminProfilePicture = async (req, res, next) => {
 };
 
 const deleteUserById = async (req, res, next) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     console.log(`Attempting to delete user with ID: ${id}`);
-    
+
     try {
         const result = await userService.deactivateUserById(id);
         return res.status(200).json({ message: 'User deactivated successfully', result });
@@ -625,9 +630,9 @@ const deleteUserById = async (req, res, next) => {
 };
 
 const activateUserById = async (req, res, next) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     console.log(`Attempting to delete user with ID: ${id}`);
-    
+
     try {
         const result = await userService.activateUserById(id);
         return res.status(200).json({ message: 'User deactivated successfully', result });
