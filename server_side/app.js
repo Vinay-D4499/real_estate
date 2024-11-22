@@ -64,7 +64,7 @@ const createAdminUserOnStart = async () => {
 The task will run every 30 minutes of every hour, every day, every month, and every day of the week.
 The other asterisks (*) represent "every" for each unit of time (hour, day, month, and day of the week).
 */
-cron.schedule("*/3 * * * *", async () => {
+cron.schedule("*/30 * * * *", async () => {
     try {
         console.log("Executing automated message sending task...");
         const response = await axios.post(`http://localhost:${PORT}/api/user/sendAutomatedWhatsAppMessages`);

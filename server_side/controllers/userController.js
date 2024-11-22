@@ -137,18 +137,18 @@ async function sendTextMessage(to, phone, email, password, userId) {
 const sendAutomatedWhatsAppMessages = async (req, res) => {
     try {
         const now = new Date();
-        // const twentyThreeHoursAgo = new Date(now.getTime() - 23 * 60 * 60 * 1000);
-        // const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        const twentyThreeHoursAgo = new Date(now.getTime() - 23 * 60 * 60 * 1000);
+        const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-        const fiveMinutesAgo = new Date(now.getTime() - 1 * 60 * 1000);
-        const sixMinutesAgo = new Date(now.getTime() - 59 * 60 * 1000);
+        // const fiveMinutesAgo = new Date(now.getTime() - 1 * 60 * 1000);
+        // const sixMinutesAgo = new Date(now.getTime() - 59 * 60 * 1000);
 
 
         const usersToNotify = await Users.findAll({
             where: {
                 last_interaction_time: {
-                    // [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
-                    [Op.between]: [sixMinutesAgo, fiveMinutesAgo]
+                    [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
+                    // [Op.between]: [sixMinutesAgo, fiveMinutesAgo]
                 }
             }
         });
