@@ -297,17 +297,17 @@ async function sendTextMessage(to, phone, email, password, userId) {
 const sendAutomatedWhatsAppMessages = async (req, res) => {
     try {
         const now = new Date();
-        // const twentyThreeHoursAgo = new Date(now.getTime() - 23 * 60 * 60 * 1000);
-        // const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
+        // Testing range: 5 to 20 minutes ago
         const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
         const sixMinutesAgo = new Date(now.getTime() - 20 * 60 * 1000);
 
+        // Fetch users whose last interaction time is within the specified range
         const usersToNotify = await Users.findAll({
             where: {
                 last_interaction_time: {
                     // [Op.between]: [twentyFourHoursAgo, twentyThreeHoursAgo]
-                    [Op.between]: [sixMinutesAgo, fiveMinutesAgo]
+                    [Op.between]: [sixMinutesAgo, fiveMinutesAgo] // Adjusted for testing purposes
                 }
             }
         });
@@ -318,7 +318,7 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
         }
 
         for (const user of usersToNotify) {
-            const to = `91${user.phone}`;
+            const to = `91${user.phone}`; // Add country code prefix to the phone number
 
             try {
                 const response = await axios({
@@ -330,31 +330,29 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
                     },
                     data: {
                         messaging_product: "whatsapp",
-                        to: to,
-                        type: "template",
+                        to: to, // Target user phone number
+                        type: "template", // Using template message
                         template: {
                             name: "re_connect", // Provide the approved template name here 
-                            language: { code: "en_US" },
+                            language: { code: "en_US" }, // Language code for the template
                             components: [
                                 {
-                                    type: "body",
-                                    // parameters: [
-                                    //     { type: "text", text: user.name || "there" }
-                                    // ]
+                                    type: "body" // No parameters are passed as the template is static
                                 }
                             ]
                         }
                     }
                 });
 
+                // Save message details to the WebhookMessage table
                 const messageData = {
                     whatsappUserId: to,
-                    whatsappUserName: user.name || null,
+                    whatsappUserName: user.name || null, // Save user name if available
                     phoneNumberId: process.env.PHONE_NUMBER_ID,
-                    messageId: response.data.messages[0].id,
+                    messageId: response.data.messages[0].id, // WhatsApp message ID
                     messageBody: "Template Message Sent", // Log that a template message was used
                     timestamp: new Date(),
-                    direction: "outgoing"
+                    direction: "outgoing" // Mark the message as outgoing
                 };
 
                 await WebhookMessage.create(messageData);
