@@ -141,7 +141,7 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
         // const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
         const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-        const sixMinutesAgo = new Date(now.getTime() - 20 * 60 * 1000);
+        const sixMinutesAgo = new Date(now.getTime() - 40 * 60 * 1000);
 
 
         const usersToNotify = await Users.findAll({
