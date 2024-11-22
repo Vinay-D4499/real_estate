@@ -300,7 +300,7 @@ const sendAutomatedWhatsAppMessages = async (req, res) => {
 
         // Testing range: 5 to 20 minutes ago
         const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-        const sixMinutesAgo = new Date(now.getTime() - 20 * 60 * 1000);
+        const sixMinutesAgo = new Date(now.getTime() - 40 * 60 * 1000);
 
         // Fetch users whose last interaction time is within the specified range
         const usersToNotify = await Users.findAll({
