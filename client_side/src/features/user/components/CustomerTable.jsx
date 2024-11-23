@@ -3,6 +3,7 @@ import DisplayProfilePicture from './DisplayProfilePicture';
 import { Link } from 'react-router-dom';
 import DeactivateUser from './DeactivateUser';
 import ActivateUser from './ActivateUser';
+import { FaPen } from 'react-icons/fa';
 
 const CustomerTable = ({ customers, refreshCustomerData, isCustomersActive }) => {
     return (
@@ -44,12 +45,12 @@ const CustomerTable = ({ customers, refreshCustomerData, isCustomersActive }) =>
                             <td className="p-2 text-sm">{customer.address || 'N/A'}</td>
                             <td className="p-2 text-sm">{customer.referred_by || 'N/A'}</td>
                             <td className="p-2 text-sm"><Link to={`/assign-properties/${customer.id}`} className="hover:text-indigo-400">
-                                    Assigning propertytypes
+                                    Assigning property types
                                 </Link></td>
 
                             <td className="p-2 text-sm">
                                 <Link to={`/update-user/${customer.id}`} className="hover:text-indigo-400">
-                                    Update Details
+                                    Update&nbsp;Details&nbsp;<FaPen />&nbsp;
                                 </Link>
                             </td>
                             <td className="p-2 text-sm">

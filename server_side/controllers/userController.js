@@ -61,12 +61,12 @@ const createUser = async (req, res, next) => {
     const transaction = await sequelize.transaction();
     try {
         const id = req.user;
-        const { name, email, phone, propertyTypeIds, budget_min, budget_max } = req.body;
+        const { name, email, phone, propertyTypeIds, budget_min, budget_max,brief_description,location } = req.body;
         const password = 'User@12345';
         const role = req.body.role || 'CUSTOMER';
 
         // Create the user
-        const newUser = await userService.createUser(id, { name, email, phone, password, role, budget_min, budget_max }, { transaction });
+        const newUser = await userService.createUser(id, { name, email, phone, password, role, budget_min, budget_max, brief_description,location }, { transaction });
 
         if (propertyTypeIds && Array.isArray(propertyTypeIds)) {
             await propertyServices.assignPropertyTypesToUser(newUser.id, propertyTypeIds, { transaction });

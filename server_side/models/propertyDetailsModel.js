@@ -29,7 +29,7 @@ const PropertyDetails = sequelize.define('PropertyDetails', {
         allowNull: true
     },
     property_sq_feets_or_length: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING, 
         allowNull: true
     },
     property_price: {

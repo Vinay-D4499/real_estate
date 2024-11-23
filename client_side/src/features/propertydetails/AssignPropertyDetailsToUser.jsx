@@ -206,7 +206,7 @@ const AssignPropertyDetailsToUser = () => {
                 <div className="mt-6 text-center">
                     <button
                         onClick={() => handleAssignProperty(selectedUserIds)}
-                        className="bg-green-500 px-6 py-3 rounded-lg text-white"
+                        className="bg-green-900 px-6 py-3 rounded-lg text-white"
                     >
                         Assign Property to Selected Users
                     </button>

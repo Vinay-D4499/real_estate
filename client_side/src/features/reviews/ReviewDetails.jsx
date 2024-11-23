@@ -55,11 +55,11 @@ const ReviewDetails = () => {
 
  
   return (
-    <div className="flex justify-center items-center p-4 min-h-screen overflow-x-auto">
+    <div className="flex justify-center items-center p-1 min-h-screen overflow-x-auto">
       {reviews.length === 0 ? (
         <p className="text-center">No reviews found for this user.</p>
       ) : (
-        <div className="mx-auto mt-6 w-full max-w-4xl">
+        <div className="mx-auto mt-2 w-full max-w-4xl">
           <table className="border-gray-200 bg-white shadow-md border rounded-lg min-w-full">
             <thead>
               <tr className="bg-blue-100">

@@ -69,9 +69,9 @@ const CreateReview = () => {
   };
 
   return (
-    <div className="flex justify-center items-center bg-gray-100 shadow-lg mx-auto mt-6 rounded-lg w-full max-w-lg">
+    <div className="flex justify-center items-center bg-gray-100 shadow-lg mx-auto mt-1 rounded-lg w-full max-w-lg">
       <div className="w-full">
-        <h2 className="mb-4 font-semibold text-2xl text-center">Create a Review</h2>
+        <h2 className="mb-4 font-semibold text-2xl text-center">Give Feedback</h2>
 
         <div className="space-y-4">
           <div>

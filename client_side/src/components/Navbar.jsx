@@ -52,7 +52,7 @@ const Navbar = () => {
       links: [
         { label: 'Add Customer', path: '/add-customer' },
         { label: 'View Customers', path: '/view-customers' },
-        { label: 'Inactive Customers', path: '/inactive-customers' },
+        
       ],
     },
     {
@@ -69,6 +69,7 @@ const Navbar = () => {
         { label: 'Groups', path: '/groups' },
         { label: 'Customer Reviews', path: '/customer-reviews' },
         { label: 'Update Password', path: '/update-password' },
+        { label: 'Inactive Customers', path: '/inactive-customers' },
       ],
     },
   ];

@@ -7,9 +7,11 @@ const AddCustomerForm = () => {
     const [userData, setUserData] = useState({
         name: '',
         phone: '',
-        budgetRange: {} // For storing selected budget range with min and max values
+        budgetRange: {}, // For storing selected budget range with min and max values
+        location: '',
+        brief_description: ''
     });
-    const [errors, setErrors] = useState({ name: '', phone: '' });
+    const [errors, setErrors] = useState({ name: '', phone: '', location: '' });
     const [propertyTypes, setPropertyTypes] = useState([]);
     const [selectedPropertyTypes, setSelectedPropertyTypes] = useState([]);
 
@@ -40,7 +42,7 @@ const AddCustomerForm = () => {
 
     const validate = () => {
         let isValid = true;
-        const newErrors = { name: '', phone: '' };
+        const newErrors = { name: '', phone: '', location: '' };
 
         if (userData.name.trim().length < 3) {
             newErrors.name = 'Name must be at least 3 characters long.';
@@ -50,6 +52,11 @@ const AddCustomerForm = () => {
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(userData.phone)) {
             newErrors.phone = 'Phone number must be exactly 10 digits.';
+            isValid = false;
+        }
+
+        if (userData.location.trim().length < 3) {
+            newErrors.location = 'Location must be at least 3 characters long.';
             isValid = false;
         }
 
@@ -78,18 +85,34 @@ const AddCustomerForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!validate()) return;
-
+    
         const { min: budget_min, max: budget_max } = userData.budgetRange;
+    
+        // If brief_description is empty, set it to null
+        const brief_description = userData.brief_description.trim() || null;
+    
         try {
             const response = await createUser({
                 ...userData,
                 propertyTypeIds: selectedPropertyTypes,
                 budget_min,
-                budget_max
+                budget_max,
+                brief_description
             });
             toast.success(response.message);
+    
+            // Clear the form after successful submission
+            setUserData({
+                name: '',
+                phone: '',
+                budgetRange: {},
+                location: '',
+                brief_description: ''
+            });
+            setSelectedPropertyTypes([]);
+            setErrors({ name: '', phone: '', location: '' }); // Clear validation errors if any
         } catch (error) {
             console.error(error);
             toast.error(error.message || 'Failed to create user');
@@ -133,6 +156,22 @@ const AddCustomerForm = () => {
                     {errors.phone && <p className="mt-1 text-red-500 text-sm">{errors.phone}</p>}
                 </div>
 
+                {/* Location */}
+                <div className="mb-4">
+                    <label className="block mb-2 font-bold text-gray-700 text-sm">Location</label>
+                    <input
+                        type="text"
+                        name="location"
+                        value={userData.location}
+                        onChange={handleChange}
+                        required
+                        className={`px-3 py-2 border rounded-md w-full focus:outline-none focus:ring-2 ${
+                            errors.location ? 'border-red-500' : 'focus:ring-blue-500'
+                        }`}
+                    />
+                    {errors.location && <p className="mt-1 text-red-500 text-sm">{errors.location}</p>}
+                </div>
+
                 {/* Budget Range Selection */}
                 <div className="mb-4">
                     <label className="block mb-2 font-bold text-gray-700 text-sm">Budget Range</label>
@@ -173,6 +212,19 @@ const AddCustomerForm = () => {
                             </label>
                         ))}
                     </div>
+                </div>
+
+                {/* Brief Description */}
+                <div className="mb-4">
+                    <label className="block mb-2 font-bold text-gray-700 text-sm">Brief Description (Optional)</label>
+                    <textarea
+                        name="brief_description"
+                        value={userData.brief_description}
+                        onChange={handleChange}
+                        rows="3"
+                        placeholder="Add a brief description (optional)"
+                        className="px-3 py-2 border rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
                 </div>
 
                 <button

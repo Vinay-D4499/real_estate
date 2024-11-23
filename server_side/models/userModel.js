@@ -36,6 +36,10 @@ const Users = sequelize.define('Users', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    brief_description: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     referred_by: {
         type: DataTypes.STRING,
         allowNull: true
@@ -69,3 +73,5 @@ module.exports = Users;
 // ALTER TABLE real_estate.users
 // ADD COLUMN last_interaction_time DATETIME NULL;
 
+// ALTER TABLE real_estate.users
+// ADD COLUMN brief_description VARCHAR(255) DEFAULT NULL;

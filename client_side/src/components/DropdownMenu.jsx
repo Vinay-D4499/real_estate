@@ -23,7 +23,7 @@ const DropdownMenu = ({ title, links }) => {
 
   return (
     <div
-      className="relative"
+      className="relative w-fit"
       onMouseEnter={handleMouseEnter}  // Open dropdown on hover
       onMouseLeave={handleMouseLeave}  // Close dropdown after delay when mouse leaves
     >
@@ -32,12 +32,12 @@ const DropdownMenu = ({ title, links }) => {
         <FaChevronDown size={12} />
       </button>
       {isOpen && (
-        <div className="z-50 absolute bg-gray-700 shadow-lg mt-2 p-2 rounded-md max-h-60 text-white overflow-y-auto">
+        <div className="z-50 absolute bg-gray-700 shadow-lg mt-2 p-2 rounded-md max-h-80 text-white overflow-y-auto">
           {links.map((link, index) => (
             <Link
               key={index}
               to={link.path}
-              className="block hover:bg-gray-600 px-4 py-2 text-sm"
+              className="block hover:bg-gray-600 px-4 py-2 text-sm w-44"
             >
               {link.label}
             </Link>

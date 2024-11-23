@@ -15,12 +15,15 @@ const AddProperty = () => {
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [showAddConfirm, setShowAddConfirm] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [showTable, setShowTable] = useState(false);
     const [propertyToDelete, setPropertyToDelete] = useState(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        fetchPropertyTypes();
-    }, []);
+        if (showTable) {
+            fetchPropertyTypes();
+        }
+    }, [showTable]);
 
     const fetchPropertyTypes = async () => {
         setLoading(true);
@@ -46,7 +49,7 @@ const AddProperty = () => {
             await axios.post(`${baseURL}/api/properties/addPropertyType`, { propertyType }, config);
             toast.success('Property type added successfully!');
             setPropertyType('');
-            fetchPropertyTypes();
+            if (showTable) fetchPropertyTypes();
         } catch (error) {
             console.error('Error adding property type:', error);
             toast.error('Error adding property type.');
@@ -77,59 +80,73 @@ const AddProperty = () => {
 
     return (
         <>
-        <div className="flex flex-col items-center bg-gray-100 p-4 relative ">
-            {(showModal || showConfirmDelete || showAddConfirm) && (
-                <div className="fixed inset-0 bg-black opacity-50 z-40"></div>
-            )}
+            <div className="flex flex-col items-center bg-gray-100 p-4 relative">
+                {(showModal || showConfirmDelete || showAddConfirm) && (
+                    <div className="fixed inset-0 bg-black opacity-50 z-40"></div>
+                )}
 
-            <button
-                onClick={() => setShowModal(true)}
-                className="bg-blue-500 text-white rounded px-4 py-2 mb-4 hover:bg-blue-600 transition duration-200"
-            >
-                Add Property Type
-            </button>
+                <div className="flex space-x-4">
+                    <button
+                        onClick={() => setShowModal(true)}
+                        className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 transition duration-200"
+                    >
+                        Add Property Type
+                    </button>
+                    <button
+                        onClick={() => setShowTable(!showTable)}
+                        className="bg-green-500 text-white rounded px-4 py-2 hover:bg-green-600 transition duration-200"
+                    >
+                        {showTable ? 'Hide Property Types' : 'Show Property Types'}
+                    </button>
+                </div>
 
-            <h2 className="text-2xl font-semibold text-center mb-4">Property Types</h2>
+                <h2 className="text-2xl font-semibold text-center mt-4 mb-6">
+                    Manage Property Types
+                </h2>
 
-            {loading ? (
-                <LoadingSpinner />
-            ) : (
-                <PropertyTable
-                    propertyTypes={propertyTypes}
-                    confirmDelete={(id) => {
-                        setPropertyToDelete(id);
-                        setShowConfirmDelete(true);
-                    }}
-                />
-            )}
+                {showTable && (
+                    <div className="w-full max-w-4xl">
+                        {loading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            <PropertyTable
+                                propertyTypes={propertyTypes}
+                                confirmDelete={(id) => {
+                                    setPropertyToDelete(id);
+                                    setShowConfirmDelete(true);
+                                }}
+                            />
+                        )}
+                    </div>
+                )}
 
-            {showModal && (
-                <AddPropertyModal
-                    propertyType={propertyType}
-                    setPropertyType={setPropertyType}
-                    onSubmit={() => {
-                        setShowModal(false);
-                        setShowAddConfirm(true);
-                    }}
-                    onCancel={() => setShowModal(false)}
-                />
-            )}
+                {showModal && (
+                    <AddPropertyModal
+                        propertyType={propertyType}
+                        setPropertyType={setPropertyType}
+                        onSubmit={() => {
+                            setShowModal(false);
+                            setShowAddConfirm(true);
+                        }}
+                        onCancel={() => setShowModal(false)}
+                    />
+                )}
 
-            {showAddConfirm && (
-                <ConfirmAddModal
-                    onConfirm={confirmAddProperty}
-                    onCancel={() => setShowAddConfirm(false)}
-                />
-            )}
+                {showAddConfirm && (
+                    <ConfirmAddModal
+                        onConfirm={confirmAddProperty}
+                        onCancel={() => setShowAddConfirm(false)}
+                    />
+                )}
 
-            {showConfirmDelete && (
-                <ConfirmDeleteModal
-                    onConfirm={deleteProperty}
-                    onCancel={() => setShowConfirmDelete(false)}
-                />
-            )}
-        </div>
-        <SavePropertyDetails />
+                {showConfirmDelete && (
+                    <ConfirmDeleteModal
+                        onConfirm={deleteProperty}
+                        onCancel={() => setShowConfirmDelete(false)}
+                    />
+                )}
+            </div>
+            <SavePropertyDetails />
         </>
     );
 };

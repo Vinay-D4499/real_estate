@@ -196,7 +196,7 @@ const AssignedProperties = () => {
                     className="mt-1 block w-full p-2 border border-gray-300 rounded"
                 />
             </div>
-                                    {/* <div className="mb-4">
+                                    <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Budget Range
                         </label>
@@ -222,7 +222,7 @@ const AssignedProperties = () => {
                             </label>
                             ))}
                         </div>
-                        </div>; */}
+                        </div>
 
                             {/* Display Assigned Properties */}
             <div className="mb-4">
