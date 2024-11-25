@@ -10,9 +10,6 @@ const MessageList = ({ messages, user }) => {
   const bottomRef = useRef(null);
   const chatContainerRef = useRef(null);
 
-  // Log the original messages to confirm `mediaPathUrl` exists initially
-  console.log("Original messages:", messages);
-
   // Scroll to the bottom when messages change
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -37,20 +34,18 @@ const MessageList = ({ messages, user }) => {
     return groups;
   }, {});
 
- // Modify the filtering condition in MessageList
-const filteredMessages = Object.keys(groupedMessages).reduce((filtered, date) => {
-  const matchingMessages = groupedMessages[date].filter((message) => 
-    (message.messageBody?.toLowerCase().includes(searchTerm.toLowerCase()) || message.mediaPathUrl)
-  );
-  if (matchingMessages.length) {
-    filtered[date] = matchingMessages;
-  }
-  return filtered;
-}, {});
-
-
-  // Log filtered messages to verify `mediaPathUrl` is retained after filtering
-  console.log("Filtered messages:", filteredMessages);
+  // Modify the filtering condition to exclude images
+  const filteredMessages = Object.keys(groupedMessages).reduce((filtered, date) => {
+    const matchingMessages = groupedMessages[date].filter((message) => 
+      searchTerm 
+        ? message.messageBody?.toLowerCase().includes(searchTerm.toLowerCase()) // Only include text messages
+        : true // Include all messages if search is empty
+    );
+    if (matchingMessages.length) {
+      filtered[date] = matchingMessages;
+    }
+    return filtered;
+  }, {});
 
   return (
     <div ref={chatContainerRef} onScroll={handleScroll} className="relative h-full overflow-y-auto custom-scrollbar">
@@ -88,11 +83,9 @@ const filteredMessages = Object.keys(groupedMessages).reduce((filtered, date) =>
               <div className="text-center text-gray-500 my-4 text-sm">
                 {format(new Date(date), 'EEEE, MMMM d, yyyy')}
               </div>
-              {filteredMessages[date].map((message, index) => {
-                // Log each message to check `mediaPathUrl` before passing to MessageItem
-                console.log("Rendering MessageItem with message:", message);
-                return <MessageItem key={index} message={message} />;
-              })}
+              {filteredMessages[date].map((message, index) => (
+                <MessageItem key={index} message={message} />
+              ))}
             </div>
           ))
         ) : (

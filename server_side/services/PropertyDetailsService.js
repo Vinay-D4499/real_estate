@@ -185,11 +185,31 @@ const getPropertyDetailsById = async (id) => {
         if (!property) {
             throw new NotFoundError('id not exists'); // Property not found
         }
+        console.log("Property types :::", property)
         return await property.update(propertydetailsdata);
     } catch (error) {
+        console.log("Error saving Property Details :: ",error )
         throw new InternalServerError('Error updating property');
     }
 }
+
+const updatePropertyStatus = async (propertyId, is_available) => {
+    try {
+        const property = await PropertyDetails.findOne({ where: { id: propertyId } });
+
+        if (!property) {
+            throw new NotFoundError('Property not found');
+        }
+
+        // Update only the `is_available` field
+        await property.update({ is_available });
+        return property;
+    } catch (error) {
+        console.error("Error updating property status:", error);
+        throw new InternalServerError('Error updating property status');
+    }
+};
+
 
 // Service method to deactivate a property
 const deactivateProperty = async (propertyId) => {
@@ -236,6 +256,7 @@ module.exports = {
     getAllProperties,
     getPropertyById,
     getPropertyDetailsById,
+    updatePropertyStatus,
     updateProperty,
     deactivateProperty,
     // deleteProperty,

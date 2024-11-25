@@ -3,8 +3,9 @@ import PropertyDetails from './PropertyDetails';
 import { Link } from 'react-router-dom';
 import { FaCheckCircle } from 'react-icons/fa';
 import { FaSquareXmark } from 'react-icons/fa6';
+import toast from 'react-hot-toast';
 
-const PropertyTable = ({ properties }) => {
+const PropertyTable = ({ properties, onToggleStatus }) => {
     const [selectedTypeId, setSelectedTypeId] = useState(null);
     const detailsRef = useRef(null); // Reference for the PropertyDetails component
 
@@ -15,6 +16,16 @@ const PropertyTable = ({ properties }) => {
                 detailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, 0);
+    };
+
+    const handleStatusToggle = async (propertyId, currentStatus) => {
+        try {
+            // Call the function passed as a prop to toggle the status
+            await onToggleStatus(propertyId, !currentStatus);
+            toast.success('Status updated successfully!');
+        } catch (error) {
+            toast.error('Failed to update status. Please try again.');
+        }
     };
 
     return (
@@ -44,13 +55,15 @@ const PropertyTable = ({ properties }) => {
                                 <td className="p-2">
                                     {property.is_available ? (
                                         <FaCheckCircle
-                                            className="text-2xl text-green-500"
+                                            className="text-2xl text-green-500 cursor-pointer"
                                             title="ACTIVE"
+                                            onClick={() => handleStatusToggle(property.id, property.is_available)}
                                         />
                                     ) : (
                                         <FaSquareXmark
-                                            className="text-2xl text-red-500"
+                                            className="text-2xl text-red-500 cursor-pointer"
                                             title="INACTIVE"
+                                            onClick={() => handleStatusToggle(property.id, property.is_available)}
                                         />
                                     )}
                                 </td>
@@ -62,13 +75,13 @@ const PropertyTable = ({ properties }) => {
                                         More...
                                     </button>
                                 </td>
-                                <td className='p-2'>
+                                <td className="p-2">
                                     <Link
                                         to={`/assign-property-details/${property.id}`}
                                         className="bg-green-500 my-2 px-3 py-1 rounded text-white"
-                                        title='Publish this Property to Customer'
+                                        title="Publish this Property to Customer"
                                     >
-                                        Publish 
+                                        Publish
                                     </Link>
                                 </td>
                             </tr>

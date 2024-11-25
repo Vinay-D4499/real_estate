@@ -14,7 +14,7 @@ const SavePropertyDetailsFrom = ({ propertyTypeId }) => {
     property_price: "",
     is_available: true, // Always set to true
   });
-
+console.log("property type Id ", propertyTypeId)
   useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
@@ -39,13 +39,25 @@ const SavePropertyDetailsFrom = ({ propertyTypeId }) => {
       property_sq_feets_or_length: `${formData.property_sq_feets_or_length} ${formData.property_measurement_unit}`,
     };
 
-    console.log("Submitting form data:", finalFormData);
+    // console.log("Submitting form data:", finalFormData);
 
     try {
       await axios.post(`${baseURL}/api/propertyDetails/properties`, {
         propertydetailsdata: finalFormData,
       });
       toast.success("Property details saved successfully!");
+      setFormData({
+       
+          property_name: "",
+          property_type_id: propertyTypeId,
+          property_description: "",
+          property_address: "",
+          property_sq_feets_or_length: "",
+          property_measurement_unit: "square feet", 
+          property_price: "",
+          is_available: true, 
+        
+      })
     } catch (error) {
       console.error("Error saving property details:", error);
       toast.error("Failed to save property details. Please try again.");

@@ -16,6 +16,7 @@ const AddPropertyDetails = ({ details }) => {
     property_price: details?.property_price || '',
     is_available: details?.is_available || true,
   });
+  console.log("proerperty type id ", details.property_type_id)
 
   // Local state to manage modal visibility
   const [isModalOpen, setIsModalOpen] = useState(true);

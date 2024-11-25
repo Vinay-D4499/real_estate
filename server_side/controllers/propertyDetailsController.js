@@ -73,6 +73,26 @@ const updateProperty = async (req, res, next) => {
     }
 };
 
+const updatePropertyStatus = async (req, res, next) => {
+    const { propertyId } = req.params;
+    const { is_available } = req.body; 
+    console.log("property id to update :::", propertyId )
+
+    try {
+        if (typeof is_available !== 'boolean') {
+            return res.status(400).json({ message: '`is_available` must be a boolean value' });
+        }
+
+        const updatedProperty = await propertyDetailsService.updatePropertyStatus(propertyId, is_available);
+        if (!updatedProperty) throw new NotFoundError('Property not found');
+
+        res.status(200).json({ message: 'Property status updated successfully', updatedProperty });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 const deactivate_property_available = async (req, res) => {
     try {
         const { propertyId } = req.params;  // Get the property ID from the URL
@@ -107,6 +127,7 @@ module.exports = {
     getAllProperties,
     getPropertyById,
     getPropertyDetailsById,
+    updatePropertyStatus,
     updateProperty,
     deactivate_property_available,
 };

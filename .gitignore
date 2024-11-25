@@ -1,7 +1,11 @@
 client_side/node_moduels
 
+client_side/.env
+
 server_side/node_modules
 
 server_side/.env
 
 server_side/uploads
+
+

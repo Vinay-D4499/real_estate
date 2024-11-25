@@ -4,13 +4,17 @@ import DisplayProfilePicture from '../features/user/components/DisplayProfilePic
 
 const ChatList = ({ setWhatsappUserId }) => {
   const [activeUsers, setActiveUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchFilter, setSearchFilter] = useState('');
 
   // Fetch active users
   useEffect(() => {
     const fetchActiveUsers = async () => {
       try {
         const users = await fetchAllCustomers();
+        console.log("users ", users);
         setActiveUsers(users);
+        setFilteredUsers(users);  // Initially display all users
       } catch (error) {
         console.error('Failed to fetch active users:', error);
       }
@@ -19,8 +23,28 @@ const ChatList = ({ setWhatsappUserId }) => {
     fetchActiveUsers();
   }, []);
 
+  // Filter users based on the search field
+  useEffect(() => {
+    const filterUsers = () => {
+      const filtered = activeUsers.filter((user) => {
+        const lowercasedSearchFilter = searchFilter.toLowerCase();
+        
+        // Filter by name, phone, or location
+        const matchesName = user.name.toLowerCase().includes(lowercasedSearchFilter);
+        const matchesPhone = user.phone.includes(searchFilter);
+        const matchesLocation = user.location && user.location.toLowerCase().includes(lowercasedSearchFilter);
+
+        return matchesName || matchesPhone || matchesLocation;
+      });
+
+      setFilteredUsers(filtered);
+    };
+
+    filterUsers();
+  }, [searchFilter, activeUsers]);
+
   const handleUserClick = (phone) => {
-    setWhatsappUserId(`91${phone}`); 
+    setWhatsappUserId(`91${phone}`);
   };
 
   return (
@@ -45,18 +69,29 @@ const ChatList = ({ setWhatsappUserId }) => {
         <div className="ml-2 font-bold text-2xl">QuickChat</div>
       </div>
 
-      <div className="flex flex-col mt-8">
+      {/* Search Field */}
+      <div className="flex flex-col gap-4 mb-4">
+        <input
+          type="text"
+          placeholder="Search by name, phone or location"
+          value={searchFilter}
+          onChange={(e) => setSearchFilter(e.target.value)}
+          className="p-2 border rounded"
+        />
+      </div>
+
+      <div className="flex flex-col mt-8 overflow-y-auto">
         <div className="flex flex-row items-center justify-between text-xs">
           <span className="font-bold">Active Conversations</span>
-          <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{activeUsers.length}</span>
+          <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{filteredUsers.length}</span>
         </div>
 
         <div className="flex flex-col space-y-1 mt-4 -mx-2 h-96 overflow-y-auto">
-          {activeUsers.length > 0 ? (
-            activeUsers.map((user) => (
-              <button 
-                key={user.id} 
-                onClick={() => handleUserClick(user.phone)} 
+          {filteredUsers.length > 0 ? (
+            filteredUsers.map((user) => (
+              <button
+                key={user.id}
+                onClick={() => handleUserClick(user.phone)}
                 className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
               >
                 <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">

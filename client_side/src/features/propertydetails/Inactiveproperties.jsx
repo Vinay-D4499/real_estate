@@ -5,6 +5,8 @@ import PropertyTable from './PropertyDetailsTable';
 import PropertyFilters from './PropertyFilters';
 import Pagination from './Pagination';
 import PropertyContainer from './PropertyContainer';
+import axios from 'axios';
+import { baseURL } from '../../config/baseURL';
 
 const InactiveProperties = () => {
     const [properties, setProperties] = useState([]);
@@ -59,7 +61,33 @@ const InactiveProperties = () => {
         getPropertiesData();
     }, []);
 
+    const onToggleStatus = async (propertyId, newStatus) => {
+        try {
+            // Send the request to update the property status in the backend using axios
+            const response = await axios.put(
+                `${baseURL}/api/propertyDetails/updatePropertyStatus/${propertyId}`,
+                { is_available: newStatus }
+            );
+
+            // Check for successful response
+            if (response.status === 200) {
+                // Update the local state after successful API call
+                setProperties((prevProperties) =>
+                    prevProperties.map((property) =>
+                        property.id === propertyId ? { ...property, is_available: newStatus } : property
+                    )
+                );
+            } else {
+                throw new Error('Failed to update property status');
+            }
+        } catch (error) {
+            console.error('Failed to toggle property status:', error);
+            // Optionally, handle errors, such as displaying a message to the user
+        }
+    };
+
     useEffect(() => {
+        // Filter properties based on search and filter criteria
         const filteredData = properties.filter((property) => {
             let matchesSearch = true;
             if (searchQuery) {
@@ -87,8 +115,11 @@ const InactiveProperties = () => {
         });
 
         setFilteredProperties(filteredData);
+        // Reset page number to the first page when filters or search query changes
+        setCurrentPage(1);
     }, [searchQuery, locationFilter, budgetFilter, properties]);
 
+    // Paginate filtered properties
     const indexOfLastProperty = currentPage * recordsPerPage;
     const indexOfFirstProperty = indexOfLastProperty - recordsPerPage;
     const currentProperties = filteredProperties.slice(indexOfFirstProperty, indexOfLastProperty);
@@ -114,7 +145,7 @@ const InactiveProperties = () => {
                 <p>{error}</p>
             ) : (
                 <>
-                    <PropertyTable properties={currentProperties} />
+                    <PropertyTable properties={currentProperties} onToggleStatus={onToggleStatus} />
                     <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
                 </>
             )}
