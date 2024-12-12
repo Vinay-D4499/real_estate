@@ -16,6 +16,7 @@ import Home5 from './homeUI/home5/Home5';
 import GroupMembers from './features/groups/GroupMembers';
 import AddMembersToGroup from './features/groups/AddMembersToGroup';
 import AssignPropertyDetailsToUser from './features/propertydetails/AssignPropertyDetailsToUser';
+import CreateTemplateForm from './features/admin/CreateTemplateForm.jsx';
 
 
 
@@ -115,6 +116,14 @@ function MainContent() {
             element={
               <ProtectedRoute requiredRole="ADMIN">
                 <InactiveCustomers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-template"
+            element={
+              <ProtectedRoute requiredRole="ADMIN">
+                <CreateTemplateForm />
               </ProtectedRoute>
             }
           />

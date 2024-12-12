@@ -70,6 +70,7 @@ const Navbar = () => {
         { label: 'Customer Reviews', path: '/customer-reviews' },
         { label: 'Update Password', path: '/update-password' },
         { label: 'Inactive Customers', path: '/inactive-customers' },
+        { label: 'Whatsapp template', path: '/create-template' },
       ],
     },
   ];
