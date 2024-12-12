@@ -1,6 +1,9 @@
 const webhookService = require('../services/whatsAppWebHookService');
 const axios = require('axios');
 require('dotenv').config();
+const moment = require("moment-timezone");
+const currentDateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+
 
 
 async function fetchConversation(req, res) {
@@ -63,11 +66,14 @@ const createWhatsAppTemplate = async (req, res) => {
     try {
         const accessToken = process.env.WHATSAPP_TOKEN;
         const businessId = process.env.BUSINESS_ID;
+        console.log("business id ", businessId)
 
         // Define the template payload
+        const currentDateTime = new Date().toLocaleString("en-US", { timeZone: "UTC" });
+         console.log(currentDateTime)
         const templateData = {
-            name: "lara_tech_java_fullstack", // Template name (lowercase, underscores allowed)
-            language: { code: "en_US" }, // Language code
+            name: "lara_tech_java_fullstack",
+            language: { code: "en_US" },
             components: [
                 {
                     type: "HEADER",
@@ -76,7 +82,7 @@ const createWhatsAppTemplate = async (req, res) => {
                 },
                 {
                     type: "BODY",
-                    text: "Join our Java Full Stack Development course to kickstart your IT career. Enhance your skills with expert guidance and practical projects."
+                    text: `Join our Java Full Stack Development course to kickstart your IT career. Enhance your skills with expert guidance and practical projects.`
                 },
                 {
                     type: "FOOTER",
@@ -98,6 +104,7 @@ const createWhatsAppTemplate = async (req, res) => {
             ],
             category: "UTILITY"
         };
+        
 
         // Make a POST request to Meta's Graph API
         const response = await axios.post(
@@ -111,6 +118,7 @@ const createWhatsAppTemplate = async (req, res) => {
             }
         );
 
+        console.log("business id sent to facebook :", businessId)
         console.log("Template Created:", response.data);
 
         // Return success response
