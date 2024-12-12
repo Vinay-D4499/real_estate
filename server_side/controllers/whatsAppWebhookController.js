@@ -71,44 +71,52 @@ const createWhatsAppTemplate = async (req, res) => {
         // Define the template payload
         const currentDateTime = new Date().toLocaleString("en-US", { timeZone: "UTC" });
          console.log(currentDateTime)
-        const templateData = {
+         const templateData = {
             name: "lara_tech_java_fullstack",
             language: { code: "en_US" },
             components: [
-                {
-                    type: "HEADER",
-                    format: "TEXT",
-                    text: "Welcome to Lara Technologies!"
-                },
-                {
-                    type: "BODY",
-                    text: `Join our Java Full Stack Development course to kickstart your IT career. Enhance your skills with expert guidance and practical projects.`
-                },
-                {
-                    type: "FOOTER",
-                    text: "Contact us for more information."
-                },
-                {
-                    type: "BUTTONS",
-                    buttons: [
-                        {
-                            type: "QUICK_REPLY",
-                            text: "ENROLL NOW"
-                        },
-                        {
-                            type: "QUICK_REPLY",
-                            text: "MORE INFO"
-                        }
-                    ]
+              {
+                type: "HEADER",
+                format: "TEXT",
+                text: "Welcome to Lara Technologies!"
+              },
+              {
+                type: "BODY",
+                text: "Welcome to Lara Technologies,  Kickstart your IT career with our Java Full Stack Development course. Enhance your skills with expert guidance.",
+                example: {
+                  body_text: [
+                    ["John"]
+                  ]
                 }
+              },
+              {
+                type: "FOOTER",
+                text: "Contact us for more information."
+              },
+              {
+                type: "BUTTONS",
+                buttons: [
+                  {
+                    type: "URL",
+                    text: "Visit Website",
+                    url: "https://lara.co.in"
+                  },
+                  {
+                    type: "PHONE_NUMBER",
+                    text: "Call Us",
+                    phone_number: "+1234567890"
+                  }
+                ]
+              }
             ],
             category: "UTILITY"
-        };
+          };
+          
         
 
         // Make a POST request to Meta's Graph API
         const response = await axios.post(
-            `https://graph.facebook.com/v20.0/${businessId}/message_templates`,
+            `https://graph.facebook.com/v21.0/${businessId}/message_templates`,
             templateData,
             {
                 headers: {
