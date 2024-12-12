@@ -660,6 +660,8 @@ webhookRoutes.post('/sendMedia', upload.single('media'), whatsAppWebhookControll
 
 webhookRoutes.post('/createWhatsAppTemplate',  whatsAppWebhookController.createWhatsAppTemplate);
 
+webhookRoutes.post('/checkTemplateStatus',  whatsAppWebhookController.checkTemplateStatus);
+
 
 module.exports = webhookRoutes;
 
