@@ -31,7 +31,7 @@ const PORT = process.env.PORT;
 // Middleware setup
 app.use(cors({
     origin: `https://estate.laragrooming.com`, // Client side URL
-    // origin: `http://localhost:5173`, // Client side URL 
+    // origin: `http://localhost:5173`, // Client side URL  
 }));
 app.use(express.json()); // Middleware to parse JSON request body
 
